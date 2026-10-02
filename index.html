@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marco Sartore — Pianoforte, Armonia & Attività Artistica</title>
-  <meta name="description" content="Didattica individuale 1-a-1 di Pianoforte e Armonia Funzionale con Marco Sartore. Alta fedeltà audio, metodo strutturato e visione artistica.">
+  <meta name="description" content="Didattica pianistica e armonia funzionale di alto profilo con Marco Sartore. Lezioni individuali online in alta definizione audio.">
   <link rel="canonical" href="https://msartore.it/">
 
-  <!-- Google Fonts: Instrument Serif (Retro Chic) + Space Mono (Retro-Tech/Hi-Fi) + Plus Jakarta Sans -->
+  <!-- Google Fonts: Bodoni Moda + Cormorant Garamond + Plus Jakarta Sans per leggibilità perfetta -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,22 +20,24 @@
       theme: {
         extend: {
           fontFamily: {
-            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
-            mono: ['"Space Mono"', 'monospace'],
+            bodoni: ['"Bodoni Moda"', 'serif'],
+            cormorant: ['"Cormorant Garamond"', 'serif'],
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
           },
           colors: {
-            retro: {
-              black: '#0A0A0C',
-              surface: '#111215',
-              surfaceHover: '#18191E',
-              line: '#24252B',
-              paper: '#F2EEE5',
-              muted: '#878994',
-              // Rosso Studio Analogico (VU Meter / Record light)
-              vermilion: '#E63B2E',
-              vermilionLight: '#FF4D40',
-              vermilionDark: '#991B1B'
+            classic: {
+              ebony: '#080809',
+              dark: '#111114',
+              surface: '#17171C',
+              line: '#28272E',
+              lineLight: '#3D3B45',
+              ivory: '#F7F4EB',
+              cream: '#DDD7CA',
+              muted: '#96939E',
+              // Rame Satinato / Bronzo Antico (colore dei pedali e della ghisa interna del pianoforte)
+              bronze: '#C59B6D',
+              bronzeHover: '#D4AF83',
+              bronzeMuted: '#68523A'
             }
           }
         }
@@ -44,44 +46,34 @@
   </script>
 
   <style>
-    /* Texture a griglia tecnica retrò */
-    .retro-grid {
-      background-size: 40px 40px;
-      background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    }
-    
-    /* Bordo ad alta precisione con croce di registro */
-    .crosshair-corner {
+    /* Bordo sottile classico d'altri tempi */
+    .frame-classic {
+      border: 1px solid #28272E;
       position: relative;
     }
-    .crosshair-corner::before {
-      content: "+";
+    .frame-classic::after {
+      content: "";
       position: absolute;
-      top: -9px;
-      left: -6px;
-      font-family: monospace;
-      font-size: 13px;
-      color: #E63B2E;
-      line-height: 1;
+      inset: 4px;
+      border: 1px solid rgba(197, 155, 109, 0.2);
+      pointer-events: none;
     }
 
-    /* Menu mobile con discesa fluida */
+    /* Tendina menu mobile con scivolamento morbido */
     #mobile-menu {
-      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
       max-height: 0;
       opacity: 0;
       overflow: hidden;
     }
     #mobile-menu.open {
-      max-height: 520px;
+      max-height: 480px;
       opacity: 1;
     }
 
-    /* Accordion FAQ fluido */
+    /* Accordion FAQ classico */
     .faq-panel {
-      transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
       max-height: 0;
       opacity: 0;
       overflow: hidden;
@@ -92,78 +84,72 @@
     }
   </style>
 </head>
-<body class="bg-retro-black text-retro-paper font-sans antialiased selection:bg-retro-vermilion selection:text-white retro-grid">
+<body class="bg-classic-ebony text-classic-cream font-sans antialiased selection:bg-classic-bronze selection:text-black">
 
   <!-- ========================================================= -->
   <!-- 1. HEADER / NAVIGATION BAR                                -->
   <!-- ========================================================= -->
-  <header class="fixed top-0 left-0 w-full z-50 bg-retro-black/90 backdrop-blur-md border-b border-retro-line">
-    <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+  <header class="fixed top-0 left-0 w-full z-50 bg-classic-ebony/95 backdrop-blur-md border-b border-classic-line">
+    <div class="max-w-6xl mx-auto px-6 h-24 flex items-center justify-between">
       
-      <!-- Brand Identità con codifica visiva -->
-      <a href="#" class="group flex items-center gap-3 tracking-tighter">
-        <span class="inline-block w-2.5 h-2.5 bg-retro-vermilion rounded-none transform rotate-45 group-hover:rotate-180 transition-transform duration-500"></span>
+      <!-- Brand Monogramma & Nome Classico -->
+      <a href="#" class="group flex items-center gap-3.5">
+        <span class="w-8 h-8 border border-classic-bronze/60 flex items-center justify-center font-bodoni text-xs text-classic-bronze group-hover:border-classic-bronze transition-colors">
+          MS
+        </span>
         <div class="flex flex-col">
-          <span class="font-mono text-xs text-retro-vermilion tracking-widest leading-none">M_SARTORE</span>
-          <span class="font-serif text-2xl font-normal tracking-wide text-retro-paper group-hover:text-white transition-colors">Marco Sartore</span>
+          <span class="font-bodoni text-xl tracking-[0.18em] text-classic-ivory uppercase group-hover:text-classic-bronze transition-colors">
+            Marco Sartore
+          </span>
+          <span class="font-cormorant italic text-xs text-classic-bronze tracking-widest">
+            Pianoforte & Armonia
+          </span>
         </div>
       </a>
 
-      <!-- Desktop Navigation -->
-      <nav class="hidden md:flex items-center gap-8 text-xs font-mono uppercase tracking-widest text-retro-muted">
-        <a href="#lezioni" class="hover:text-retro-paper hover:text-retro-vermilion transition-colors"><span class="text-retro-vermilion font-bold mr-1">01.</span>Lezioni</a>
-        <a href="#chi-sono" class="hover:text-retro-paper hover:text-retro-vermilion transition-colors"><span class="text-retro-vermilion font-bold mr-1">02.</span>Chi Sono</a>
-        <a href="#concerti" class="hover:text-retro-paper hover:text-retro-vermilion transition-colors"><span class="text-retro-vermilion font-bold mr-1">03.</span>Concerti</a>
-        <a href="#faq" class="hover:text-retro-paper hover:text-retro-vermilion transition-colors"><span class="text-retro-vermilion font-bold mr-1">04.</span>FAQ</a>
-        <a href="#contatti" class="hover:text-retro-paper hover:text-retro-vermilion transition-colors"><span class="text-retro-vermilion font-bold mr-1">05.</span>Contatti</a>
+      <!-- Desktop Navigation Classica -->
+      <nav class="hidden md:flex items-center gap-8 text-[11px] font-sans uppercase tracking-[0.25em] text-classic-muted">
+        <a href="#lezioni" class="hover:text-classic-bronze transition-colors">Lezioni</a>
+        <a href="#chi-sono" class="hover:text-classic-bronze transition-colors">Chi Sono</a>
+        <a href="#concerti" class="hover:text-classic-bronze transition-colors">Concerti</a>
+        <a href="#faq" class="hover:text-classic-bronze transition-colors">FAQ</a>
+        <a href="#contatti" class="hover:text-classic-bronze transition-colors">Contatti</a>
       </nav>
 
-      <!-- CTA Button Retro-Tech Desktop -->
+      <!-- CTA Button Desktop Classico con doppio bordo -->
       <div class="hidden md:flex items-center">
         <!-- LINK GOOGLE CALENDAR QUI -->
         <a href="https://calendar.google.com/calendar/appointments/schedules/YOUR-LINK-HERE" 
            target="_blank" 
            rel="noopener noreferrer" 
-           class="group relative inline-flex items-center gap-3 px-5 py-2.5 bg-retro-surface border border-retro-vermilion text-retro-paper hover:bg-retro-vermilion hover:text-white text-xs font-mono uppercase tracking-widest transition-all duration-300">
-          <span class="w-1.5 h-1.5 bg-retro-vermilion group-hover:bg-white rounded-full animate-ping"></span>
-          Prenota 15 Min
-          <span class="font-mono">→</span>
+           class="px-6 py-2.5 border border-classic-bronze text-classic-ivory hover:bg-classic-bronze hover:text-classic-ebony text-xs font-sans uppercase tracking-[0.2em] transition-all duration-300">
+          Prenota Incontro (15 min)
         </a>
       </div>
 
-      <!-- Hamburger Button Animato -->
-      <button id="mobile-menu-btn" class="md:hidden relative w-10 h-10 border border-retro-line text-retro-paper flex flex-col justify-center items-center gap-1 hover:border-retro-vermilion transition-colors" aria-label="Menu">
-        <span id="line-1" class="w-5 h-[1.5px] bg-retro-paper transition-all duration-300"></span>
-        <span id="line-2" class="w-5 h-[1.5px] bg-retro-paper transition-all duration-300"></span>
-        <span id="line-3" class="w-5 h-[1.5px] bg-retro-paper transition-all duration-300"></span>
+      <!-- Hamburger Button per Mobile -->
+      <button id="mobile-menu-btn" class="md:hidden w-10 h-10 border border-classic-line text-classic-cream flex flex-col justify-center items-center gap-1.5 hover:border-classic-bronze transition-colors" aria-label="Menu">
+        <span id="line-1" class="w-5 h-[1px] bg-current transition-all duration-300"></span>
+        <span id="line-2" class="w-5 h-[1px] bg-current transition-all duration-300"></span>
+        <span id="line-3" class="w-5 h-[1px] bg-current transition-all duration-300"></span>
       </button>
     </div>
 
     <!-- Mobile Navigation Dropdown animata -->
-    <div id="mobile-menu" class="md:hidden bg-retro-surface border-b border-retro-line">
-      <div class="px-6 py-6 space-y-4 font-mono text-xs uppercase tracking-widest">
-        <a href="#lezioni" class="mobile-link block text-retro-muted hover:text-white py-1.5 border-b border-retro-line/50">
-          <span class="text-retro-vermilion mr-2">01.</span>Lezioni & Metodo
-        </a>
-        <a href="#chi-sono" class="mobile-link block text-retro-muted hover:text-white py-1.5 border-b border-retro-line/50">
-          <span class="text-retro-vermilion mr-2">02.</span>Chi Sono
-        </a>
-        <a href="#concerti" class="mobile-link block text-retro-muted hover:text-white py-1.5 border-b border-retro-line/50">
-          <span class="text-retro-vermilion mr-2">03.</span>Concerti & Date
-        </a>
-        <a href="#faq" class="mobile-link block text-retro-muted hover:text-white py-1.5 border-b border-retro-line/50">
-          <span class="text-retro-vermilion mr-2">04.</span>Domande Frequenti
-        </a>
-        <a href="#contatti" class="mobile-link block text-retro-muted hover:text-white py-1.5 border-b border-retro-line/50">
-          <span class="text-retro-vermilion mr-2">05.</span>Contatti
-        </a>
+    <div id="mobile-menu" class="md:hidden bg-classic-dark border-b border-classic-line">
+      <div class="px-6 py-8 space-y-4 text-xs uppercase tracking-[0.25em] text-classic-cream">
+        <a href="#lezioni" class="mobile-link block py-2 border-b border-classic-line/40 hover:text-classic-bronze">Lezioni & Metodo</a>
+        <a href="#chi-sono" class="mobile-link block py-2 border-b border-classic-line/40 hover:text-classic-bronze">Chi Sono</a>
+        <a href="#concerti" class="mobile-link block py-2 border-b border-classic-line/40 hover:text-classic-bronze">Concerti & Archivio</a>
+        <a href="#faq" class="mobile-link block py-2 border-b border-classic-line/40 hover:text-classic-bronze">Domande Frequenti</a>
+        <a href="#contatti" class="mobile-link block py-2 border-b border-classic-line/40 hover:text-classic-bronze">Contatti</a>
         <div class="pt-4">
           <!-- LINK GOOGLE CALENDAR QUI (Mobile) -->
           <a href="https://calendar.google.com/calendar/appointments/schedules/YOUR-LINK-HERE" 
              target="_blank" 
              rel="noopener noreferrer" 
-             class="block w-full text-center py-3.5 bg-retro-vermilion text-white text-xs font-mono uppercase tracking-widest">
-            ● Prenota Chiamata Conoscitiva
+             class="block w-full text-center py-3.5 border border-classic-bronze bg-classic-bronze text-classic-ebony font-semibold uppercase tracking-[0.2em] text-[11px]">
+            Prenota Colloquio Conoscitivo
           </a>
         </div>
       </div>
@@ -171,188 +157,163 @@
   </header>
 
   <!-- ========================================================= -->
-  <!-- 2. HERO SECTION (Ispirazione Vinyl Gatefold / Hi-Fi)       -->
+  <!-- 2. HERO SECTION                                           -->
   <!-- ========================================================= -->
-  <section class="relative pt-36 pb-20 md:pt-48 md:pb-32 border-b border-retro-line">
-    <div class="max-w-6xl mx-auto px-6">
+  <section class="relative pt-44 pb-28 md:pt-56 md:pb-40 border-b border-classic-line">
+    <div class="max-w-5xl mx-auto px-6 text-center">
       
-      <!-- Telemetria di studio e status bar -->
-      <div class="flex flex-wrap items-center justify-between gap-4 border-b border-retro-line pb-4 mb-12 text-xs font-mono text-retro-muted">
-        <div class="flex items-center gap-3">
-          <span class="inline-flex items-center gap-1.5 text-retro-vermilion uppercase font-semibold">
-            <span class="w-2 h-2 rounded-full bg-retro-vermilion animate-pulse"></span>
-            REC LIVE
-          </span>
-          <span class="text-retro-line">/</span>
-          <span>AUDIO: 24-BIT / 96kHz DIRECT</span>
-        </div>
-        <div class="flex items-center gap-4">
-          <span>OPUS: 2026</span>
-          <span class="text-retro-line">/</span>
-          <span>LOCATION: ONLINE & ON STAGE</span>
-        </div>
+      <!-- Fregio Superiore Discreto -->
+      <div class="flex items-center justify-center gap-4 text-classic-bronze text-xs mb-8">
+        <span class="w-12 h-[1px] bg-classic-bronze/40"></span>
+        <span class="font-cormorant italic text-sm tracking-[0.3em] uppercase">Docenza 1-a-1 & Attività Artistica</span>
+        <span class="w-12 h-[1px] bg-classic-bronze/40"></span>
       </div>
 
-      <!-- Main Headline in Stile Tipografico Editoriale -->
-      <div class="max-w-5xl crosshair-corner">
-        <h1 class="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-[5.8rem] font-light leading-[1.02] tracking-tight text-white mb-8">
-          La logica dell’<span class="italic font-normal text-retro-paper">Armonia</span>.<br />
-          L’architettura del <span class="text-retro-vermilion font-normal">Pianoforte</span>.
-        </h1>
+      <!-- Main Headline Bodoni -->
+      <h1 class="font-bodoni text-4xl sm:text-6xl md:text-7xl font-normal text-classic-ivory leading-[1.12] mb-8 tracking-tight">
+        L'Arte della Consapevolezza Armonica <br class="hidden sm:inline" />
+        <span class="font-cormorant italic font-light text-classic-bronze block mt-2">e la Padronanza del Tocco.</span>
+      </h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end mt-12 pt-8 border-t border-retro-line">
-          <div class="md:col-span-7">
-            <p class="text-base sm:text-lg text-retro-muted font-light leading-relaxed">
-              Percorsi individuali online per pianisti, compositori e musicisti. Un approccio rigoroso e creativo che decostruisce la partitura, elimina il timore dell'armonia funzionale e libera la sensibilità esecutiva alla tastiera.
-            </p>
-          </div>
+      <p class="font-cormorant text-lg sm:text-xl md:text-2xl text-classic-cream/90 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+        Percorsi didattici d'élite per comprendere a fondo l'armonia, liberare la tecnica pianistica ed esprimersi con autentica eleganza esecutiva.
+      </p>
 
-          <div class="md:col-span-5 flex flex-col sm:flex-row md:flex-col items-start gap-3">
-            <!-- LINK GOOGLE CALENDAR QUI (Hero Button) -->
-            <a href="https://calendar.google.com/calendar/appointments/schedules/YOUR-LINK-HERE" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="w-full sm:w-auto md:w-full inline-flex items-center justify-between px-6 py-4 bg-retro-vermilion hover:bg-retro-vermilionLight text-white font-mono text-xs uppercase tracking-widest transition-all">
-              <span>Prenota Sessione (15 Min)</span>
-              <span>→</span>
-            </a>
-            <span class="text-[11px] font-mono text-retro-muted block">
-              // Primo colloquio gratuito via Google Meet HD
-            </span>
-          </div>
-        </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+        <!-- LINK GOOGLE CALENDAR QUI -->
+        <a href="https://calendar.google.com/calendar/appointments/schedules/YOUR-LINK-HERE" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="w-full sm:w-auto px-9 py-4 bg-classic-bronze hover:bg-classic-bronzeHover text-classic-ebony text-xs uppercase tracking-[0.22em] font-semibold transition-all duration-300">
+          Prenota Incontro Preliminare (15 min)
+        </a>
+
+        <a href="#lezioni" class="w-full sm:w-auto px-8 py-4 border border-classic-lineLight hover:border-classic-bronze text-classic-ivory text-xs uppercase tracking-[0.2em] transition-all duration-300">
+          I Percorsi Didattici
+        </a>
+      </div>
+
+      <div class="mt-8 flex items-center justify-center gap-3 text-xs font-cormorant italic text-classic-muted">
+        <span>— Gratuito e senza impegno</span>
+        <span>•</span>
+        <span>Colloquio individuale su Google Meet HD —</span>
       </div>
 
     </div>
   </section>
 
   <!-- ========================================================= -->
-  <!-- 3. SEZIONE LEZIONI & CORSI (Design a Moduli Console)      -->
+  <!-- 3. SEZIONE LEZIONI & CORSI                                -->
   <!-- ========================================================= -->
-  <section id="lezioni" class="py-24 border-b border-retro-line">
+  <section id="lezioni" class="py-28 border-b border-classic-line bg-classic-dark/40">
     <div class="max-w-6xl mx-auto px-6">
       
-      <!-- Sezione Header numerato -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-retro-line pb-6">
-        <div>
-          <span class="font-mono text-xs text-retro-vermilion uppercase tracking-widest">[ 01 // DIDATTICA ]</span>
-          <h2 class="font-serif text-4xl sm:text-5xl font-light text-white mt-2">I Corsi e il Metodo</h2>
-        </div>
-        <p class="font-mono text-xs text-retro-muted mt-3 md:mt-0 max-w-sm">
-          Flessibilità totale nella prenotazione, profondità accademica e qualità audio senza compressione vocale.
-        </p>
+      <!-- Titolo Sezione -->
+      <div class="text-center max-w-2xl mx-auto mb-20">
+        <span class="font-cormorant italic text-sm text-classic-bronze tracking-[0.25em] block uppercase mb-2">Metodo & Rigore</span>
+        <h2 class="font-bodoni text-3xl sm:text-4xl md:text-5xl font-normal text-classic-ivory">I Programmi di Studio</h2>
+        <div class="w-16 h-[1px] bg-classic-bronze mx-auto mt-6"></div>
       </div>
 
       <!-- Griglia Corsi (Pianoforte & Armonia) -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         
-        <!-- Modulo 1: Pianoforte -->
-        <div class="group border border-retro-line bg-retro-surface p-8 sm:p-10 hover:border-retro-vermilion transition-colors relative">
-          <div class="flex justify-between items-start mb-8 font-mono text-xs text-retro-muted border-b border-retro-line pb-4">
-            <span class="text-retro-vermilion font-bold">MOD. 01A</span>
-            <span>PIANOFORTE // CLASSICO & MODERNO</span>
+        <!-- Corso 1: Pianoforte -->
+        <div class="frame-classic bg-classic-dark p-8 sm:p-12 transition-colors hover:border-classic-bronze/60">
+          <div class="flex items-center justify-between mb-6">
+            <span class="font-cormorant italic text-sm text-classic-bronze">Corso I</span>
+            <span class="text-xs uppercase tracking-[0.2em] text-classic-muted">Interpretazione & Tecnica</span>
           </div>
-          <h3 class="font-serif text-3xl font-light text-white mb-4">Esecuzione, Suono e Tocco</h3>
-          <p class="text-retro-muted text-sm leading-relaxed mb-8 font-light">
-            Dalla fisiologia della mano alla padronanza del timbro pianistico. Analisi dettagliata del fraseggio, uso del pedale di risonanza, articolazione del tocco ed interpretazione del repertorio.
+          <h3 class="font-bodoni text-2xl sm:text-3xl text-classic-ivory mb-4">Pianoforte: Repertorio e Suono</h3>
+          <p class="text-classic-muted text-sm leading-relaxed mb-8 font-light">
+            Dalla fisiologia del movimento allo sviluppo del tocco espressivo. Lavoriamo sull'ascolto interiore, la graduazione dei pesi delle braccia, la fluidità dinamica e la lettura interpretativa della pagina musicale.
           </p>
-          <div class="space-y-3 font-mono text-xs text-retro-paper pt-4 border-t border-retro-line">
-            <div class="flex items-center justify-between">
-              <span class="text-retro-muted">Biomeccanica & Postura:</span>
-              <span class="text-retro-vermilion">Rilassamento e peso</span>
+          <div class="space-y-3 pt-6 border-t border-classic-line/80 font-cormorant text-base text-classic-cream">
+            <div class="flex items-center gap-3">
+              <span class="text-classic-bronze">✦</span> Impostazione fisiologica, rilassamento e postura
             </div>
-            <div class="flex items-center justify-between">
-              <span class="text-retro-muted">Repertorio di Studio:</span>
-              <span class="text-retro-vermilion">Personalizzato</span>
+            <div class="flex items-center gap-3">
+              <span class="text-classic-bronze">✦</span> Controllo timbrico del tocco e pedalizzazione raffinata
             </div>
-            <div class="flex items-center justify-between">
-              <span class="text-retro-muted">Dinamica & Tocco:</span>
-              <span class="text-retro-vermilion">Controllo micrometrico</span>
+            <div class="flex items-center gap-3">
+              <span class="text-classic-bronze">✦</span> Studio del repertorio classico e contemporaneo
             </div>
           </div>
         </div>
 
-        <!-- Modulo 2: Armonia Funzionale -->
-        <div class="group border border-retro-line bg-retro-surface p-8 sm:p-10 hover:border-retro-vermilion transition-colors relative">
-          <div class="flex justify-between items-start mb-8 font-mono text-xs text-retro-muted border-b border-retro-line pb-4">
-            <span class="text-retro-vermilion font-bold">MOD. 02B</span>
-            <span>ARMONIA // FUNZIONALE & JAZZ</span>
+        <!-- Corso 2: Armonia -->
+        <div class="frame-classic bg-classic-dark p-8 sm:p-12 transition-colors hover:border-classic-bronze/60">
+          <div class="flex items-center justify-between mb-6">
+            <span class="font-cormorant italic text-sm text-classic-bronze">Corso II</span>
+            <span class="text-xs uppercase tracking-[0.2em] text-classic-muted">Analisi & Composizione</span>
           </div>
-          <h3 class="font-serif text-3xl font-light text-white mb-4">Struttura, Voicings e Analisi</h3>
-          <p class="text-retro-muted text-sm leading-relaxed mb-8 font-light">
-            Smetti di considerare la teoria come un insieme di regole astratte. Impara a riconoscere le tensioni, a comporre voicings avanzati e a ri-armonizzare qualsiasi tema al volo sulla tastiera.
+          <h3 class="font-bodoni text-2xl sm:text-3xl text-classic-ivory mb-4">Armonia Funzionale & Jazz</h3>
+          <p class="text-classic-muted text-sm leading-relaxed mb-8 font-light">
+            Decifrare la logica architettonica che governa ogni brano. Dallo studio dei gradi e delle cadenze alla costruzione dei voicings a più parti, re-armonizzazione e improvvisazione consapevole.
           </p>
-          <div class="space-y-3 font-mono text-xs text-retro-paper pt-4 border-t border-retro-line">
-            <div class="flex items-center justify-between">
-              <span class="text-retro-muted">Analisi Armonica:</span>
-              <span class="text-retro-vermilion">Applicata al brano</span>
+          <div class="space-y-3 pt-6 border-t border-classic-line/80 font-cormorant text-base text-classic-cream">
+            <div class="flex items-center gap-3">
+              <span class="text-classic-bronze">✦</span> Analisi armonica applicata direttamente alla tastiera
             </div>
-            <div class="flex items-center justify-between">
-              <span class="text-retro-muted">Accordi Complessi:</span>
-              <span class="text-retro-vermilion">Drop 2, Quartali, Upper-Struct</span>
+            <div class="flex items-center gap-3">
+              <span class="text-classic-bronze">✦</span> Studio di Drop 2, voicings jazz e tensioni melodiche
             </div>
-            <div class="flex items-center justify-between">
-              <span class="text-retro-muted">Materiale Dedicato:</span>
-              <span class="text-retro-vermilion">Manuale proprietario incluso</span>
+            <div class="flex items-center gap-3">
+              <span class="text-classic-bronze">✦</span> Adozione del manuale di armonia proprietario
             </div>
           </div>
         </div>
 
       </div>
 
-      <!-- Specifiche del Servizio e Trasparenza Pacchetto (Console View) -->
-      <div class="border border-retro-line bg-retro-surface/50 p-8 sm:p-12 relative">
+      <!-- Specifiche del Pacchetto Didattico (Stile Contratto Classico) -->
+      <div class="frame-classic bg-classic-dark p-8 sm:p-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
-          <div class="lg:col-span-8 space-y-6">
-            <div class="inline-flex items-center gap-2 text-xs font-mono text-retro-vermilion uppercase tracking-widest">
-              <span class="w-1.5 h-1.5 bg-retro-vermilion"></span>
-              SPECIFICHE DEL CONTRATTO DIDATTICO
-            </div>
-            
-            <h3 class="font-serif text-3xl sm:text-4xl text-white font-normal">
-              Pacchetto 4 Lezioni Individuali (60 Min)
+          <div class="lg:col-span-8 space-y-5">
+            <span class="font-cormorant italic text-sm text-classic-bronze tracking-[0.2em] uppercase">
+              La Formula Didattica
+            </span>
+            <h3 class="font-bodoni text-2xl sm:text-3xl text-classic-ivory">
+              Pacchetto di 4 Lezioni Individuali (60 Minuti)
             </h3>
-            
-            <p class="text-retro-muted text-sm font-light leading-relaxed">
-              Lezioni 1-a-1 in alta fedeltà audio. Il pacchetto garantisce la necessaria concentrazione didattica e una programmazione rigorosa:
+            <p class="text-classic-muted text-sm leading-relaxed font-light">
+              Lezioni 1-a-1 trasmesse con audio in modalità studio ad alta fedeltà. Per preservare la continuità metodologica e conseguire risultati tangibili, il ciclo di lezioni adotta precise garanzie:
             </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs text-retro-paper">
-              <div class="p-4 border border-retro-line bg-retro-black/50">
-                <span class="text-retro-vermilion block font-bold mb-1">// VALIDITÀ 60 GIORNI</span>
-                <span class="text-retro-muted text-[11px]">Garantisce continuità e ritmo di apprendimento dalla data di acquisto.</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-3 text-xs font-sans text-classic-cream">
+              <div class="border-l border-classic-bronze/60 pl-4">
+                <strong class="text-classic-ivory block uppercase tracking-wider mb-1">Validità 60 Giorni</strong>
+                <span class="text-classic-muted leading-relaxed">Assicura la giusta cadenza di studio a partire dalla data di attivazione.</span>
               </div>
-              <div class="p-4 border border-retro-line bg-retro-black/50">
-                <span class="text-retro-vermilion block font-bold mb-1">// GESTIONE VIA GOOGLE CALENDAR</span>
-                <span class="text-retro-muted text-[11px]">Prenoti in completa autonomia gli slot liberi giorno per giorno.</span>
+              <div class="border-l border-classic-bronze/60 pl-4">
+                <strong class="text-classic-ivory block uppercase tracking-wider mb-1">Prenotazione Online</strong>
+                <span class="text-classic-muted leading-relaxed">Piena autonomia di scelta oraria tramite calendario Google dedicato.</span>
               </div>
-              <div class="p-4 border border-retro-line bg-retro-black/50">
-                <span class="text-retro-vermilion block font-bold mb-1">// FLESSIBILITÀ 24 ORE</span>
-                <span class="text-retro-muted text-[11px]">Ripiani l'appuntamento senza penali con preavviso minimo di 24 ore.</span>
+              <div class="border-l border-classic-bronze/60 pl-4">
+                <strong class="text-classic-ivory block uppercase tracking-wider mb-1">Flessibilità 24 Ore</strong>
+                <span class="text-classic-muted leading-relaxed">Possibilità di riprogrammare l'appuntamento con un preavviso di 24 ore.</span>
               </div>
-              <div class="p-4 border border-retro-line bg-retro-black/50">
-                <span class="text-retro-vermilion block font-bold mb-1">// ARCHIVIO & MATERIALI</span>
-                <span class="text-retro-muted text-[11px]">PDF, partiture e compiti inviati via email dedicata dopo ogni sessione.</span>
+              <div class="border-l border-classic-bronze/60 pl-4">
+                <strong class="text-classic-ivory block uppercase tracking-wider mb-1">Materiali via Email</strong>
+                <span class="text-classic-muted leading-relaxed">Spedizione di dispense, partiture annotate e compiti dedicati.</span>
               </div>
             </div>
           </div>
 
-          <!-- Riquadro Prenotazione Retro-Analog -->
-          <div class="lg:col-span-4 border border-retro-vermilion p-6 bg-retro-black flex flex-col justify-between h-full">
-            <div>
-              <div class="font-mono text-xs text-retro-vermilion uppercase tracking-widest mb-1">// PRIMO STEP</div>
-              <div class="font-serif text-3xl text-white mb-2 font-normal">Colloquio 15 min</div>
-              <p class="text-retro-muted text-xs font-light leading-relaxed mb-6">
-                Una sessione gratuita per ascoltarci, verificare l'inquadratura, il suono e concordare il percorso.
-              </p>
-            </div>
+          <!-- Riquadro Prenotazione -->
+          <div class="lg:col-span-4 border border-classic-lineLight p-8 bg-classic-ebony text-center">
+            <span class="font-cormorant italic text-sm text-classic-bronze block mb-1">Primo Passo</span>
+            <div class="font-bodoni text-2xl text-classic-ivory mb-3">Colloquio Preliminare</div>
+            <p class="text-classic-muted text-xs font-light leading-relaxed mb-6">
+              15 minuti gratuiti per verificare l'inquadratura, la qualità d'ascolto e definire gli obiettivi di studio.
+            </p>
             <!-- LINK GOOGLE CALENDAR QUI -->
             <a href="https://calendar.google.com/calendar/appointments/schedules/YOUR-LINK-HERE" 
                target="_blank" 
                rel="noopener noreferrer" 
-               class="w-full text-center py-3 bg-retro-vermilion hover:bg-retro-vermilionLight text-white font-mono text-xs uppercase tracking-widest transition-colors block">
-              Prenota Chiamata →
+               class="block w-full py-3.5 bg-classic-bronze hover:bg-classic-bronzeHover text-classic-ebony text-[11px] uppercase tracking-[0.2em] font-semibold transition-all">
+              Fissa la Chiamata
             </a>
           </div>
 
@@ -363,64 +324,68 @@
   </section>
 
   <!-- ========================================================= -->
-  <!-- 4. SEZIONE CHI SONO / AUTOREVOLEZZA (Bio & Manuale)       -->
+  <!-- 4. SEZIONE CHI SONO / AUTOREVOLEZZA                       -->
   <!-- ========================================================= -->
-  <section id="chi-sono" class="py-24 border-b border-retro-line bg-retro-surface/30">
+  <section id="chi-sono" class="py-28 border-b border-classic-line">
     <div class="max-w-6xl mx-auto px-6">
       
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center">
         
-        <!-- Bio Testo -->
+        <!-- Biografia -->
         <div class="lg:col-span-7 space-y-6">
-          <span class="font-mono text-xs text-retro-vermilion uppercase tracking-widest">[ 02 // PROFILO & AUTORE ]</span>
-          <h2 class="font-serif text-4xl sm:text-6xl font-light text-white leading-tight">
+          <div class="flex items-center gap-3 text-classic-bronze">
+            <span class="w-8 h-[1px] bg-classic-bronze"></span>
+            <span class="font-cormorant italic text-sm tracking-[0.2em] uppercase">Pianista, Docente e Autore</span>
+          </div>
+
+          <h2 class="font-bodoni text-3xl sm:text-5xl font-normal text-classic-ivory">
             Marco Sartore
           </h2>
-          
-          <div class="space-y-4 text-retro-muted text-sm sm:text-base leading-relaxed font-light">
+
+          <div class="space-y-4 text-classic-muted text-sm sm:text-base leading-relaxed font-light">
             <p>
-              Pianista, arrangiatore e compositore. La mia attività musicale si articola lungo due binari inscindibili: l'energia del palco e della produzione da un lato, l'indagine didattica e concettuale dall'altro.
+              La mia attività musicale affonda le radici nella tradizione pianistica classica, per poi aprirsi alle complessità dell'armonia moderna e del jazz. Considero la didattica non una semplice trasmissione di regole, bensì l'insegnamento di un linguaggio vivo.
             </p>
             <p>
-              Ho sviluppato un metodo che trasforma la teoria musicale da una serie di nozioni polverose in una vera e propria grammatica dell'orecchio. Questo approccio è confluito nel mio <strong class="text-retro-paper font-normal">manuale di armonia funzionale</strong>, scritto per consentire al musicista contemporaneo di visualizzare all'istante legami, cadenze e re-armonizzazioni direttamente sulla tastiera.
+              Nel corso della mia carriera ho affiancato alle esibizioni concertistiche la redazione di un <strong class="text-classic-ivory font-normal">manuale di armonia funzionale</strong>, concepito per dissolvere le astrattezze teoriche e fornire ai musicisti uno strumento pratico per vedere, comprendere e orchestrare il suono sulla tastiera.
             </p>
           </div>
 
-          <!-- Quote Stile Rivista Vintage / Liner Notes -->
-          <div class="border-l-2 border-retro-vermilion pl-6 py-2 my-6">
-            <blockquote class="font-serif italic text-xl sm:text-2xl text-retro-paper leading-snug">
-              "L'armonia non è un vincolo accademico. È la mappa che ti permette di orientarti sul pianoforte anche quando suoni a occhi chiusi."
-            </blockquote>
-            <cite class="block font-mono text-xs text-retro-muted uppercase tracking-wider mt-3 not-italic">
-              — Marco Sartore, Note introduttive al manuale
+          <!-- Citazione Filosofica d'Autore -->
+          <div class="border-l-2 border-classic-bronze pl-6 py-2 my-8">
+            <p class="font-cormorant italic text-xl sm:text-2xl text-classic-cream leading-relaxed">
+              "La tecnica pianistica priva di comprensione armonica è pura ginnastica digitale. Quando la mente comprende la struttura, le dita trovano finalmente la loro voce."
+            </p>
+            <cite class="block font-sans text-xs text-classic-bronze uppercase tracking-[0.25em] mt-3 not-italic">
+              — Marco Sartore
             </cite>
           </div>
         </div>
 
-        <!-- Box Spec Sheet Retro-Brutalist -->
-        <div class="lg:col-span-5 font-mono text-xs space-y-4">
+        <!-- Box Autorevolezza Stile Scheda Storica -->
+        <div class="lg:col-span-5 space-y-4">
           
-          <div class="border border-retro-line p-6 bg-retro-surface">
-            <div class="text-retro-vermilion uppercase tracking-widest mb-1 font-bold">// PUBBLICAZIONE</div>
-            <div class="font-serif text-2xl text-white font-normal mb-2">Manuale di Armonia</div>
-            <p class="text-retro-muted font-light leading-relaxed">
-              Testo operativo incentrato sulla connessione tra ascolto, visualizzazione degli intervalli e applicazione rapida.
+          <div class="frame-classic bg-classic-dark p-6">
+            <span class="font-cormorant italic text-xs text-classic-bronze tracking-widest uppercase block mb-1">Opera Teorica</span>
+            <h4 class="font-bodoni text-xl text-classic-ivory mb-2">Manuale di Armonia Funzionale</h4>
+            <p class="text-classic-muted text-xs leading-relaxed font-light">
+              Uno studio organico su scale, accordi, cadenze e modulazioni per sviluppare una visione armonica immediata.
             </p>
           </div>
 
-          <div class="border border-retro-line p-6 bg-retro-surface">
-            <div class="text-retro-vermilion uppercase tracking-widest mb-1 font-bold">// CONCERTISTA</div>
-            <div class="font-serif text-2xl text-white font-normal mb-2">Attività dal Vivo & Studio</div>
-            <p class="text-retro-muted font-light leading-relaxed">
-              Esibizioni solistiche, formazioni cameristiche e jazz ensemble, registrazione dischi e sessioni in studio.
+          <div class="frame-classic bg-classic-dark p-6">
+            <span class="font-cormorant italic text-xs text-classic-bronze tracking-widest uppercase block mb-1">Attività Concertistica</span>
+            <h4 class="font-bodoni text-xl text-classic-ivory mb-2">Palcoscenico & Recital</h4>
+            <p class="text-classic-muted text-xs leading-relaxed font-light">
+              Concerti da solista, formazioni da camera e progetti jazz, arricchiti da produzioni e registrazioni in studio.
             </p>
           </div>
 
-          <div class="border border-retro-line p-6 bg-retro-surface">
-            <div class="text-retro-vermilion uppercase tracking-widest mb-1 font-bold">// SETUP REMOTO</div>
-            <div class="font-serif text-2xl text-white font-normal mb-2">Studio Monitoring HQ</div>
-            <p class="text-retro-muted font-light leading-relaxed">
-              Interfaccia audio professionale e microfonatura stereo per cogliere ogni minima sfumatura timbrica delle lezioni online.
+          <div class="frame-classic bg-classic-dark p-6">
+            <span class="font-cormorant italic text-xs text-classic-bronze tracking-widest uppercase block mb-1">Metodo Online</span>
+            <h4 class="font-bodoni text-xl text-classic-ivory mb-2">Didattica ad Alta Risoluzione</h4>
+            <p class="text-classic-muted text-xs leading-relaxed font-light">
+              Ripresa microfonica stereo ad alta fedeltà per consentire la percezione anche dei più lievi sfumati di tocco e sustain.
             </p>
           </div>
 
@@ -432,80 +397,82 @@
   </section>
 
   <!-- ========================================================= -->
-  <!-- 5. SEZIONE CONCERTI & DATE (Stile Tour Itinerary)         -->
+  <!-- 5. SEZIONE CONCERTI & DATE DAL VIVO                       -->
   <!-- ========================================================= -->
-  <section id="concerti" class="py-24 border-b border-retro-line">
+  <section id="concerti" class="py-28 border-b border-classic-line bg-classic-dark/40">
     <div class="max-w-6xl mx-auto px-6">
       
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-retro-line pb-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b border-classic-line pb-6">
         <div>
-          <span class="font-mono text-xs text-retro-vermilion uppercase tracking-widest">[ 03 // LIVE DATES ]</span>
-          <h2 class="font-serif text-4xl sm:text-5xl font-light text-white mt-2">Appuntamenti dal Vivo</h2>
+          <span class="font-cormorant italic text-sm text-classic-bronze tracking-[0.25em] block uppercase mb-2">Attività dal Vivo</span>
+          <h2 class="font-bodoni text-3xl sm:text-5xl font-normal text-classic-ivory">I Prossimi Appuntamenti</h2>
         </div>
-        <div class="font-mono text-xs text-retro-muted mt-3 md:mt-0">
-          Booking & Produzione: <a href="mailto:info@msartore.it" class="text-retro-paper underline hover:text-retro-vermilion">info@msartore.it</a>
-        </div>
+        <p class="font-cormorant italic text-sm text-classic-muted mt-3 md:mt-0">
+          Booking & informazioni artistiche: <a href="mailto:info@msartore.it" class="text-classic-bronze hover:underline">info@msartore.it</a>
+        </p>
       </div>
 
-      <!-- Tabella Tour Style -->
-      <div class="border border-retro-line divide-y divide-retro-line mb-14 bg-retro-surface">
+      <!-- Elenco Concerti a Locandina -->
+      <div class="border border-classic-line divide-y divide-classic-line bg-classic-dark mb-16">
         
-        <!-- Live Item 1 -->
-        <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-retro-surfaceHover transition-colors">
-          <div class="flex items-center gap-6">
-            <span class="font-mono text-sm text-retro-vermilion font-bold tracking-widest min-w-[110px]">
-              24.MAG.26
-            </span>
+        <!-- Concerto 1 -->
+        <div class="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-classic-surface transition-colors">
+          <div class="flex items-start md:items-center gap-6">
+            <div class="text-center min-w-[90px] border-r border-classic-line pr-6">
+              <span class="font-bodoni text-2xl text-classic-bronze block">24</span>
+              <span class="font-sans text-[10px] tracking-[0.2em] uppercase text-classic-muted">Maggio</span>
+            </div>
             <div>
-              <div class="font-serif text-2xl text-white font-normal">Piano Solo — "Armonie in Movimento"</div>
-              <div class="font-mono text-xs text-retro-muted">Teatro Civico • Torino (TO)</div>
+              <h3 class="font-bodoni text-xl sm:text-2xl text-classic-ivory">Piano Solo — "Armonie in Movimento"</h3>
+              <p class="font-cormorant italic text-sm text-classic-muted mt-1">Teatro Civico • Torino (TO)</p>
             </div>
           </div>
-          <div class="flex items-center">
-            <a href="#contatti" class="font-mono text-xs uppercase tracking-widest text-retro-paper hover:text-retro-vermilion transition-colors">
-              [ Richiedi Dettagli ] →
+          <div>
+            <a href="#contatti" class="inline-block px-5 py-2.5 border border-classic-lineLight hover:border-classic-bronze text-classic-cream text-[11px] uppercase tracking-[0.2em] transition-colors">
+              Info & Biglietti →
             </a>
           </div>
         </div>
 
-        <!-- Live Item 2 -->
-        <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-retro-surfaceHover transition-colors">
-          <div class="flex items-center gap-6">
-            <span class="font-mono text-sm text-retro-vermilion font-bold tracking-widest min-w-[110px]">
-              12.GIU.26
-            </span>
+        <!-- Concerto 2 -->
+        <div class="p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-classic-surface transition-colors">
+          <div class="flex items-start md:items-center gap-6">
+            <div class="text-center min-w-[90px] border-r border-classic-line pr-6">
+              <span class="font-bodoni text-2xl text-classic-bronze block">12</span>
+              <span class="font-sans text-[10px] tracking-[0.2em] uppercase text-classic-muted">Giugno</span>
+            </div>
             <div>
-              <div class="font-serif text-2xl text-white font-normal">Jazz Trio Session & Original Compositions</div>
-              <div class="font-mono text-xs text-retro-muted">Auditorium San Fedele • Milano (MI)</div>
+              <h3 class="font-bodoni text-xl sm:text-2xl text-classic-ivory">Jazz Trio Session & Original Compositions</h3>
+              <p class="font-cormorant italic text-sm text-classic-muted mt-1">Auditorium San Fedele • Milano (MI)</p>
             </div>
           </div>
-          <div class="flex items-center">
-            <a href="#contatti" class="font-mono text-xs uppercase tracking-widest text-retro-paper hover:text-retro-vermilion transition-colors">
-              [ Richiedi Dettagli ] →
+          <div>
+            <a href="#contatti" class="inline-block px-5 py-2.5 border border-classic-lineLight hover:border-classic-bronze text-classic-cream text-[11px] uppercase tracking-[0.2em] transition-colors">
+              Info & Biglietti →
             </a>
           </div>
         </div>
 
       </div>
 
-      <!-- Archivio Artistico Vintage -->
+      <!-- Archivio Artistico Recente -->
       <div>
-        <div class="font-mono text-xs text-retro-vermilion uppercase tracking-widest mb-4">// ARCHIVIO RECENTE & CRONOLOGIA</div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-mono text-xs">
-          <div class="p-4 border border-retro-line bg-retro-black">
-            <span class="text-retro-muted block">ANNO: 2025</span>
-            <div class="text-retro-paper mt-1">Recital Pianistico Classico</div>
-            <span class="text-retro-muted text-[11px]">Sala Concerti • Genova</span>
+        <h4 class="font-cormorant italic text-base text-classic-bronze mb-4">Cronologia & Archivio Recente</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+          <div class="p-5 border border-classic-line bg-classic-ebony">
+            <span class="text-classic-bronze block font-cormorant italic mb-1">Stagione 2025</span>
+            <strong class="text-classic-ivory block font-normal mb-1">Recital Pianistico Classico</strong>
+            <span class="text-classic-muted">Sala Concerti • Genova</span>
           </div>
-          <div class="p-4 border border-retro-line bg-retro-black">
-            <span class="text-retro-muted block">ANNO: 2025</span>
-            <div class="text-retro-paper mt-1">Registrazione Album Studio</div>
-            <span class="text-retro-muted text-[11px]">Pianoforte, Rhodes e Synth</span>
+          <div class="p-5 border border-classic-line bg-classic-ebony">
+            <span class="text-classic-bronze block font-cormorant italic mb-1">Stagione 2025</span>
+            <strong class="text-classic-ivory block font-normal mb-1">Registrazione Album in Studio</strong>
+            <span class="text-classic-muted">Pianoforte Acustico & Arrangiamenti</span>
           </div>
-          <div class="p-4 border border-retro-line bg-retro-black">
-            <span class="text-retro-muted block">ANNO: 2024</span>
-            <div class="text-retro-paper mt-1">Masterclass Armonia Funzionale</div>
-            <span class="text-retro-muted text-[11px]">Sessione Intensiva Online</span>
+          <div class="p-5 border border-classic-line bg-classic-ebony">
+            <span class="text-classic-bronze block font-cormorant italic mb-1">Stagione 2024</span>
+            <strong class="text-classic-ivory block font-normal mb-1">Masterclass di Armonia Funzionale</strong>
+            <span class="text-classic-muted">Sessione Intensiva Online</span>
           </div>
         </div>
       </div>
@@ -514,59 +481,60 @@
   </section>
 
   <!-- ========================================================= -->
-  <!-- 6. FAQ & DOMANDE FREQUENTI (Interfaccia a Griglia)        -->
+  <!-- 6. FAQ & DOMANDE FREQUENTI                                -->
   <!-- ========================================================= -->
-  <section id="faq" class="py-24 border-b border-retro-line bg-retro-surface/30">
+  <section id="faq" class="py-28 border-b border-classic-line">
     <div class="max-w-4xl mx-auto px-6">
       
       <div class="text-center mb-16">
-        <span class="font-mono text-xs text-retro-vermilion uppercase tracking-widest">[ 04 // PROTOCOLLI ]</span>
-        <h2 class="font-serif text-4xl sm:text-5xl font-light text-white mt-2">Domande Frequenti</h2>
+        <span class="font-cormorant italic text-sm text-classic-bronze tracking-[0.25em] block uppercase mb-2">Informazioni Pratiche</span>
+        <h2 class="font-bodoni text-3xl sm:text-4xl font-normal text-classic-ivory">Domande Frequenti</h2>
+        <div class="w-12 h-[1px] bg-classic-bronze mx-auto mt-4"></div>
       </div>
 
-      <div class="border border-retro-line divide-y divide-retro-line bg-retro-surface">
+      <div class="border border-classic-line divide-y divide-classic-line bg-classic-dark">
         
         <!-- FAQ 1 -->
         <div>
-          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-serif text-white hover:text-retro-vermilion transition-colors focus:outline-none">
+          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-bodoni text-classic-ivory hover:text-classic-bronze transition-colors focus:outline-none">
             <span>Come si svolgono le lezioni online?</span>
-            <span class="faq-icon font-mono text-xs text-retro-vermilion">[ + ]</span>
+            <span class="faq-icon font-cormorant italic text-classic-bronze text-xl">+</span>
           </button>
-          <div class="faq-panel px-6 pb-6 text-sm text-retro-muted font-light leading-relaxed">
-            Utilizziamo piattaforme dirette (come Google Meet) impostate rigorosamente con la modalità <em>Audio Musicale Alta Fedeltà</em>, che disattiva qualsiasi filtro di cancellazione eco. In questo modo le risonanze della cassa armonica, il tocco e i pedali vengono trasmessi esattamente come dal vivo. È richiesta una videocamera o smartphone posizionato in modo da inquadrare profilo e tastiera.
+          <div class="faq-panel px-6 pb-6 text-sm text-classic-muted font-light leading-relaxed">
+            Le lezioni avvengono su Google Meet configurato in <em>High Fidelity Music Mode</em>, per escludere qualsiasi soppressione automatica del segnale e riprodurre con purezza il decadimento del suono del pianoforte. È sufficiente un computer, tablet o smartphone posizionato in modo da inquadrare comodamente le mani e la tastiera.
           </div>
         </div>
 
         <!-- FAQ 2 -->
         <div>
-          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-serif text-white hover:text-retro-vermilion transition-colors focus:outline-none">
-            <span>Come prenoto i miei orari e le sessioni?</span>
-            <span class="faq-icon font-mono text-xs text-retro-vermilion">[ + ]</span>
+          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-bodoni text-classic-ivory hover:text-classic-bronze transition-colors focus:outline-none">
+            <span>Come si concordano e prenotano gli orari delle lezioni?</span>
+            <span class="faq-icon font-cormorant italic text-classic-bronze text-xl">+</span>
           </button>
-          <div class="faq-panel px-6 pb-6 text-sm text-retro-muted font-light leading-relaxed">
-            Riceverai l'accesso esclusivo al mio calendario su Google Calendar dedicato agli allievi. Potrai prenotare le tue lezioni in completa autonomia, selezionando la data e l'orario settimanale che preferisci in base alle disponibilità in tempo reale.
+          <div class="faq-panel px-6 pb-6 text-sm text-classic-muted font-light leading-relaxed">
+            All'attivazione del percorso riceverai l'accesso esclusivo al mio Google Calendar dedicato. Potrai prenotare in completa autonomia i giorni e gli orari desiderati, adattando lo studio ai tuoi impegni settimanali.
           </div>
         </div>
 
         <!-- FAQ 3 -->
         <div>
-          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-serif text-white hover:text-retro-vermilion transition-colors focus:outline-none">
-            <span>Cosa succede se devo riprogrammare una lezione?</span>
-            <span class="faq-icon font-mono text-xs text-retro-vermilion">[ + ]</span>
+          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-bodoni text-classic-ivory hover:text-classic-bronze transition-colors focus:outline-none">
+            <span>Cosa accade in caso di impedimento o necessità di riprogrammare?</span>
+            <span class="faq-icon font-cormorant italic text-classic-bronze text-xl">+</span>
           </button>
-          <div class="faq-panel px-6 pb-6 text-sm text-retro-muted font-light leading-relaxed">
-            È possibile spostare l'orario o il giorno in totale autonomia direttamente dall'invito di Google Calendar con un <strong>preavviso minimo di 24 ore</strong>, senza alcuna penale, riallocando la lezione all'interno dei 60 giorni di validità del pacchetto.
+          <div class="faq-panel px-6 pb-6 text-sm text-classic-muted font-light leading-relaxed">
+            È possibile modificare o cancellare l'orario della sessione in piena autonomia tramite Google Calendar fino a <strong>24 ore prima</strong> della lezione, senza alcuna perdita dello slot, che rimarrà fruibile entro i 60 giorni di validità del pacchetto.
           </div>
         </div>
 
         <!-- FAQ 4 -->
         <div>
-          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-serif text-white hover:text-retro-vermilion transition-colors focus:outline-none">
-            <span>Posso iniziare anche se non ho basi di armonia?</span>
-            <span class="faq-icon font-mono text-xs text-retro-vermilion">[ + ]</span>
+          <button class="faq-btn w-full p-6 text-left flex justify-between items-center text-base sm:text-lg font-bodoni text-classic-ivory hover:text-classic-bronze transition-colors focus:outline-none">
+            <span>È necessaria una formazione musicale pregressa?</span>
+            <span class="faq-icon font-cormorant italic text-classic-bronze text-xl">+</span>
           </button>
-          <div class="faq-panel px-6 pb-6 text-sm text-retro-muted font-light leading-relaxed">
-            Assolutamente sì. La didattica 1-a-1 è studiata su misura: costruiremo le basi teorico-pratiche fin dalla prima sessione, partendo esattamente dal tuo livello attuale per raggiungere i tuoi specifici traguardi musicali.
+          <div class="faq-panel px-6 pb-6 text-sm text-classic-muted font-light leading-relaxed">
+            Non necessariamente. La docenza individuale 1-a-1 è personalizzata: accolgo con cura principianti determinati che desiderano acquisire fin da subito una tecnica pianistica consapevole, così come musicisti già esperti desiderosi di perfezionare armonia funzionale, tocco o interpretazione.
           </div>
         </div>
 
@@ -578,31 +546,34 @@
   <!-- ========================================================= -->
   <!-- 7. SEZIONE CONTATTI & CALL TO ACTION                      -->
   <!-- ========================================================= -->
-  <section id="contatti" class="py-24 border-b border-retro-line">
+  <section id="contatti" class="py-28 border-b border-classic-line bg-classic-dark/30">
     <div class="max-w-4xl mx-auto px-6 text-center">
       
-      <div class="font-mono text-xs text-retro-vermilion uppercase tracking-widest mb-3">[ 05 // CONTATTO DIRETTO ]</div>
-      <h2 class="font-serif text-4xl sm:text-6xl font-light text-white mb-6">Iniziamo a Lavorare Insieme</h2>
-      <p class="text-retro-muted text-sm sm:text-base font-light max-w-xl mx-auto mb-10 leading-relaxed">
-        Prenota una prima chiamata conoscitiva di 15 minuti su Google Calendar per conoscerci e strutturare il percorso, oppure inviami un messaggio di posta elettronica.
+      <div class="w-10 h-10 border border-classic-bronze mx-auto flex items-center justify-center font-cormorant text-classic-bronze text-lg mb-6">
+        ❖
+      </div>
+
+      <h2 class="font-bodoni text-3xl sm:text-5xl font-normal text-classic-ivory mb-4">Iniziamo il Tuo Percorso</h2>
+      <p class="font-cormorant text-lg sm:text-xl text-classic-cream/80 max-w-xl mx-auto mb-10 leading-relaxed font-light">
+        Prenota una prima chiamata conoscitiva di 15 minuti su Google Calendar per definire i tuoi obiettivi didattici, oppure inviami un messaggio di posta elettronica.
       </p>
 
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10 font-mono text-xs uppercase tracking-widest">
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
         <!-- LINK GOOGLE CALENDAR QUI -->
         <a href="https://calendar.google.com/calendar/appointments/schedules/YOUR-LINK-HERE" 
            target="_blank" 
            rel="noopener noreferrer" 
-           class="w-full sm:w-auto px-8 py-4 bg-retro-vermilion hover:bg-retro-vermilionLight text-white transition-colors">
-          ● Fissa Chiamata Conoscitiva
+           class="w-full sm:w-auto px-8 py-4 bg-classic-bronze hover:bg-classic-bronzeHover text-classic-ebony text-xs uppercase tracking-[0.2em] font-semibold transition-all">
+          Prenota Chiamata Conoscitiva
         </a>
-        <a href="mailto:info@msartore.it" class="w-full sm:w-auto px-8 py-4 border border-retro-line bg-retro-surface hover:border-retro-vermilion text-retro-paper transition-colors">
-          Email: info@msartore.it
+        <a href="mailto:info@msartore.it" class="w-full sm:w-auto px-8 py-4 border border-classic-lineLight hover:border-classic-bronze text-classic-ivory text-xs uppercase tracking-[0.2em] transition-all">
+          Scrivi: info@msartore.it
         </a>
       </div>
 
-      <div class="font-mono text-[11px] text-retro-muted">
-        DISPONIBILITÀ ATTUALE: CORSI ATTIVI // RISPOSTA IN 24 ORE
-      </div>
+      <p class="font-cormorant italic text-xs text-classic-muted">
+        Risposta entro 24 ore lavorative via email dedicata.
+      </p>
 
     </div>
   </section>
@@ -610,25 +581,25 @@
   <!-- ========================================================= -->
   <!-- 8. FOOTER                                                 -->
   <!-- ========================================================= -->
-  <footer class="py-12 bg-retro-black">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 font-mono text-xs">
+  <footer class="py-12 bg-classic-ebony">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-classic-muted">
       
       <div class="flex items-center gap-3">
-        <span class="w-2 h-2 bg-retro-vermilion"></span>
-        <span class="text-white tracking-widest uppercase">Marco Sartore</span>
-        <span class="text-retro-muted">| msartore.it</span>
+        <span class="w-1.5 h-1.5 bg-classic-bronze rounded-full"></span>
+        <span class="font-bodoni text-sm text-classic-ivory tracking-widest uppercase">Marco Sartore</span>
+        <span>| msartore.it</span>
       </div>
 
-      <div class="flex items-center gap-8 text-retro-muted">
-        <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="hover:text-retro-vermilion transition-colors flex items-center gap-2">
-          <span>IG:</span> @m_sartore
+      <div class="flex items-center gap-8 font-sans uppercase tracking-[0.2em] text-[11px]">
+        <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="hover:text-classic-bronze transition-colors">
+          Instagram: @m_sartore
         </a>
-        <a href="mailto:info@msartore.it" class="hover:text-retro-vermilion transition-colors">
+        <a href="mailto:info@msartore.it" class="hover:text-classic-bronze transition-colors">
           info@msartore.it
         </a>
       </div>
 
-      <div class="text-retro-muted text-[11px]">
+      <div class="font-cormorant italic text-sm">
         &copy; <span id="current-year"></span> Marco Sartore. Tutti i diritti riservati.
       </div>
 
@@ -642,7 +613,7 @@
     // 1. Data Anno Footer
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // 2. Menu Mobile con Animazione ad Incrocio
+    // 2. Menu Mobile con Animazione Morbida
     const mobileBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
     const line1 = document.getElementById('line-1');
@@ -655,27 +626,27 @@
       menuOpen = !menuOpen;
       if (menuOpen) {
         mobileMenu.classList.add('open');
-        line1.classList.add('rotate-45', 'translate-y-1.5');
+        line1.classList.add('rotate-45', 'translate-y-2');
         line2.classList.add('opacity-0');
-        line3.classList.add('-rotate-45', '-translate-y-1.5');
+        line3.classList.add('-rotate-45', '-translate-y-2');
       } else {
         mobileMenu.classList.remove('open');
-        line1.classList.remove('rotate-45', 'translate-y-1.5');
+        line1.classList.remove('rotate-45', 'translate-y-2');
         line2.classList.remove('opacity-0');
-        line3.classList.remove('-rotate-45', '-translate-y-1.5');
+        line3.classList.remove('-rotate-45', '-translate-y-2');
       }
     }
 
     mobileBtn.addEventListener('click', toggleMobileMenu);
 
-    // Chiusura al click sui link
+    // Chiusura al tocco sui link
     document.querySelectorAll('.mobile-link').forEach(link => {
       link.addEventListener('click', () => {
         if (menuOpen) toggleMobileMenu();
       });
     });
 
-    // 3. Accordion FAQ Fluido
+    // 3. Accordion FAQ Classico
     const faqButtons = document.querySelectorAll('.faq-btn');
 
     faqButtons.forEach(btn => {
@@ -686,12 +657,12 @@
 
         // Chiude gli altri pannelli
         document.querySelectorAll('.faq-panel').forEach(p => p.classList.remove('open'));
-        document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '[ + ]');
+        document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
 
-        // Alterna il pannello selezionato
+        // Alterna il selezionato
         if (!isOpen) {
           panel.classList.add('open');
-          icon.textContent = '[ − ]';
+          icon.textContent = '−';
         }
       });
     });
