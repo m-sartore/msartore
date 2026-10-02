@@ -61,11 +61,6 @@
         .accordion-content.expanded {
             opacity: 1;
         }
-
-        /* Effetto tastiera visibile + sfondo superiore sfumato */
-        .hero-backdrop {
-            filter: brightness(1.22) contrast(1.18) saturate(1.1);
-        }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
@@ -131,48 +126,44 @@
 
     <main>
 
-        <!-- HERO SECTION (Tastiera ben illuminata e nitida, sfondo sfocato e testo perfettamente leggibile) -->
-        <section class="relative min-h-[96vh] flex items-center justify-center px-5 sm:px-8 pt-32 pb-44 overflow-hidden">
+        <!-- HERO SECTION: IMMAGINE NITIDA E LAYOUT ASIMMETRICO AD ALTA LEGGIBILITÀ -->
+        <section class="relative min-h-[94vh] flex items-center justify-start px-5 sm:px-12 lg:px-20 pt-28 pb-32 overflow-hidden">
             
-            <!-- LAYER 1: IMMAGINE DEL SETUP (Schiarita per valorizzare i tasti) -->
+            <!-- IMMAGINE NITIDA AL 100% (NESSUN BLUR, NESSUN GRADIENTE BIANCO) -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                <img src="setup-marco.jpg" 
-                     alt="Setup didattico studio Marco Sartore" 
-                     class="hero-backdrop w-full h-full object-cover object-bottom scale-105" />
+                <img src="https://i.ibb.co/VcB9T96G/setup-marco.jpg" 
+                     alt="Setup studio Marco Sartore" 
+                     class="w-full h-full object-cover object-bottom" />
 
-                <!-- LAYER 2: SFOCATURA SELETTIVA D'ATMOSFERA (Sfoca solo il centro/alto lasciando nitidi i tasti in basso) -->
-                <div class="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,black_0%,black_65%,transparent_92%)]"></div>
-
-                <!-- LAYER 3: LUCE DIRETTA SULLA TASTIERA (Evidenzia i tasti bianchi e neri) -->
-                <div class="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-slate-200/10 via-transparent to-transparent pointer-events-none"></div>
-
-                <!-- LAYER 4: SCUDO PER IL TESTO (Garantisce contrasto massimo per il titolo senza tappare i tasti) -->
-                <div class="absolute inset-0 bg-radial-at-c from-stage-base/85 via-stage-base/60 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-stage-base/90 via-transparent to-stage-base/40"></div>
+                <!-- Gradiente orizzontale morbido: crea il fondo scuro a sinistra per il testo senza coprire tablet, lampada e tastiera a destra -->
+                <div class="absolute inset-0 bg-gradient-to-r from-stage-base via-stage-base/80 to-transparent lg:w-3/5"></div>
+                
+                <!-- Dissolvenza leggera solo in alto verso l'header e in fondo verso la sezione successiva -->
+                <div class="absolute inset-0 bg-gradient-to-b from-stage-base/80 via-transparent to-stage-base/60"></div>
             </div>
 
-            <!-- CONTENUTO HERO (In primo piano e leggibile con precisione) -->
-            <div class="max-w-4xl mx-auto text-center relative z-10 reveal-element">
+            <!-- CONTENUTO DISPOSTO A SINISTRA (Evita completamente lo spartito chiaro del tablet) -->
+            <div class="max-w-2xl text-left relative z-10 reveal-element">
                 
                 <!-- Badge Setup -->
-                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300/30 bg-stage-base/90 backdrop-blur-md text-xs tracking-wider text-slate-100 mb-8 uppercase font-medium shadow-2xl">
+                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300/30 bg-stage-base/85 backdrop-blur-md text-xs tracking-wider text-slate-200 mb-6 uppercase font-medium shadow-xl">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                     <span>Studio Setup • Audio HD Diretto & Dual Cam</span>
                 </div>
 
-                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
                     L'armonia non si memorizza. <br />
-                    <span class="text-slate-100 font-light">Si ascolta, si comprende, si suona.</span>
+                    <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
                 </h1>
 
-                <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                <p class="text-base sm:text-lg text-slate-200 max-w-xl mb-8 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
                 </p>
 
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
+                <div class="flex flex-col sm:flex-row items-start gap-4 mb-4">
                     <!-- LINK GOOGLE CALENDAR QUI (Hero CTA) -->
                     <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-2xl hover:-translate-y-0.5">
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
                         <i data-lucide="calendar" class="w-4 h-4"></i>
                         <span>Prenota Chiamata Conoscitiva (15 min)</span>
                     </a>
@@ -184,7 +175,7 @@
                     </a>
                 </div>
 
-                <p class="text-xs text-slate-300 tracking-wide font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                <p class="text-xs text-slate-400 tracking-wide font-medium">
                     Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
                 </p>
 
