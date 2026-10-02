@@ -26,7 +26,7 @@
                             base: '#07090E',     
                             surface: '#0E131D',  
                             elevated: '#171F2C', 
-                            border: '#2A3549',   
+                            border: '#1F293D',   
                             silver: '#E2E8F0',   
                         }
                     }
@@ -65,8 +65,8 @@
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Fisso con altezza 80px) -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-stage-base/95 backdrop-blur-md border-b border-stage-border/80">
+    <!-- HEADER / NAVIGATION (Fisso 80px) -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-stage-base/95 backdrop-blur-md border-b border-stage-border/60">
         <div class="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
             <!-- Brand -->
             <a href="#" class="group flex items-center gap-3">
@@ -126,15 +126,15 @@
 
     <main>
 
-        <!-- HERO SECTION (Con Immagine Visibile & Calibrata) -->
-        <section class="relative min-h-[92vh] flex items-center justify-center px-5 sm:px-8 py-24 sm:py-32 overflow-hidden">
+        <!-- HERO SECTION (Senza card EbMaj7, più pulita e d'impatto) -->
+        <section class="relative min-h-[90vh] flex items-center justify-center px-5 sm:px-8 py-32 overflow-hidden">
             
-            <!-- Sfondo con Immagine CDN Garantita e Overlay Calibrato -->
+            <!-- SFONDO SETUP: quando hai la tua foto pronta, sostituisci l'URL di src qui sotto con il tuo percorso (es. "img/mio-setup.jpg") -->
             <div class="absolute inset-0 z-0 overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=1920&q=80" 
-                     alt="Tastiera pianoforte elegante in bianco e nero" 
+                     alt="Setup Pianoforte Marco Sartore" 
                      class="w-full h-full object-cover object-center" />
-                <!-- Gradiente trasparente che sfuma verso il basso mantenendo viva la tastiera -->
+                <!-- Gradiente morbido a tutto schermo -->
                 <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/75 to-stage-base/85"></div>
             </div>
 
@@ -165,7 +165,7 @@
 
                     <a href="#metodo" 
                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-base/70 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
-                        <span>Setup & Tariffe</span>
+                        <span>Setup & Metodo</span>
                         <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
                     </a>
                 </div>
@@ -174,31 +174,11 @@
                     Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
                 </p>
 
-                <!-- Box Monitor Accordi Live (Ispirato allo Short) -->
-                <div class="mt-14 p-2 rounded-xl bg-stage-surface/90 border border-stage-border shadow-2xl backdrop-blur-md max-w-xl mx-auto reveal-element">
-                    <div class="rounded-lg bg-black/95 border border-stage-border/80 p-5 text-left">
-                        <div class="flex items-center justify-between border-b border-stage-border/70 pb-3 mb-4">
-                            <span class="text-xs text-slate-300 tracking-wider uppercase font-semibold flex items-center gap-2">
-                                <span class="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></span>
-                                Top-Down Keyboard Monitor
-                            </span>
-                            <span class="text-xs text-slate-400 font-medium">Dual-Cam HD • 24-bit Hi-Fi</span>
-                        </div>
-                        <div class="flex items-baseline justify-between mb-2">
-                            <span class="font-classical text-2xl sm:text-3xl font-bold text-white tracking-wide">Ebmaj7 <span class="text-xs font-sans font-medium text-slate-300 ml-1">9 #11</span></span>
-                            <span class="text-xs text-slate-200 bg-stage-elevated px-2.5 py-1 rounded border border-stage-border font-medium">Wayne Shorter — Infant Eyes</span>
-                        </div>
-                        <div class="flex items-center gap-2 text-xs text-slate-300 pt-1">
-                            <span class="px-2.5 py-0.5 rounded bg-stage-elevated text-slate-200 border border-stage-border/60">Voicing: Eb | G - D - F - A</span>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </section>
 
-        <!-- SEZIONE LEZIONI & CORSI -->
-        <section id="lezioni" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
+        <!-- SEZIONE LEZIONI & CORSI (Senza riga superiore, passaggio fluido) -->
+        <section id="lezioni" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Didattica e Metodo</span>
                 <h2 class="font-classical text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">Percorsi di Studio Individuali</h2>
@@ -254,18 +234,18 @@
                 </div>
             </div>
 
-            <!-- ANCORAGGIO SETUP & METODO CORRETTO (scroll-mt-28 impedisce che la card venga tagliata) -->
+            <!-- SETUP & METODO (Prezzo rimosso, card visibile per intero con scroll-mt-28) -->
             <div id="metodo" class="scroll-mt-28 rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element shadow-2xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     
                     <div class="lg:col-span-7">
                         <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Continuità & Metodo</span>
-                        <h3 class="font-classical text-2xl sm:text-3xl text-white mt-2 mb-4 font-semibold">Pacchetto 4 Lezioni Individuali</h3>
+                        <h3 class="font-classical text-2xl sm:text-3xl text-white mt-2 mb-4 font-semibold">Come Si Svolge il Percorso</h3>
                         <p class="text-slate-200 text-sm sm:text-base leading-relaxed mb-6 font-normal">
-                            Ogni sessione è di 60 minuti effettivi one-to-one in diretta. Il setup a doppia camera e audio stereo di linea permette di seguire ogni dettaglio armonico ed esecutivo con totale chiarezza.
+                            Ogni sessione è di 60 minuti effettivi one-to-one in diretta. Il setup include audio stereo di linea e doppia inquadratura sincronizzata (frontale e sui tasti), per seguire ogni voicing con totale chiarezza.
                         </p>
 
-                        <!-- Condizioni chiare -->
+                        <!-- Punti Chiave -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-200 font-medium">
                             <div class="flex items-start gap-2.5 bg-stage-base p-3.5 rounded border border-stage-border">
                                 <i data-lucide="clock" class="w-4 h-4 text-slate-300 shrink-0 mt-0.5"></i>
@@ -273,7 +253,7 @@
                             </div>
                             <div class="flex items-start gap-2.5 bg-stage-base p-3.5 rounded border border-stage-border">
                                 <i data-lucide="calendar" class="w-4 h-4 text-slate-300 shrink-0 mt-0.5"></i>
-                                <span>Validità: da fruire entro 60 giorni</span>
+                                <span>Pacchetti flessibili a fruizione garantita</span>
                             </div>
                             <div class="flex items-start gap-2.5 bg-stage-base p-3.5 rounded border border-stage-border">
                                 <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-300 shrink-0 mt-0.5"></i>
@@ -286,29 +266,28 @@
                         </div>
                     </div>
 
-                    <!-- Scheda Prezzo -->
+                    <!-- Scheda Approfondimento & Colloquio (Senza Prezzo) -->
                     <div class="lg:col-span-5 bg-stage-base p-8 rounded border border-stage-border flex flex-col justify-center text-center">
-                        <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Quota Pacchetto</span>
-                        <div class="mt-4 mb-2 flex items-baseline justify-center gap-1.5">
-                            <span class="font-classical text-4xl sm:text-5xl font-bold text-white">150€</span>
-                            <span class="text-xs text-slate-300 font-medium">/ 4 lezioni</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-6 font-medium">(pari a 37,50€ per ora di lezione)</p>
+                        <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Percorso Personalizzato</span>
+                        <h4 class="font-classical text-2xl font-bold text-white mt-3 mb-2">Costruiamo il Tuo Piano</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed mb-6 font-normal">
+                            Valutiamo insieme il tuo punto di partenza, il repertorio su cui vuoi lavorare e la formula di lezioni più indicata per i tuoi obiettivi.
+                        </p>
 
-                        <!-- LINK GOOGLE CALENDAR QUI (Pacchetto) -->
+                        <!-- LINK GOOGLE CALENDAR QUI (Pacchetto/Colloquio) -->
                         <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
                            class="w-full py-3.5 px-6 rounded bg-white hover:bg-slate-200 text-stage-base text-xs uppercase tracking-wider font-bold transition-all duration-200 shadow-md">
-                            Fissa il Colloquio Conoscitivo
+                            Fissa la Chiamata Conoscitiva
                         </a>
-                        <span class="text-[11px] text-slate-400 mt-3 font-medium">Nessun costo per il primo incontro orientativo</span>
+                        <span class="text-[11px] text-slate-400 mt-3 font-medium">15 minuti conoscitivi gratuiti e senza impegno</span>
                     </div>
 
                 </div>
             </div>
         </section>
 
-        <!-- CHI SONO / BIOGRAFIA -->
-        <section id="chi-sono" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
+        <!-- CHI SONO / BIOGRAFIA (Senza riga divisoria) -->
+        <section id="chi-sono" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
                 <div class="lg:col-span-5 reveal-element">
@@ -355,8 +334,8 @@
             </div>
         </section>
 
-        <!-- SEZIONE CONCERTI -->
-        <section id="concerti" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
+        <!-- SEZIONE CONCERTI (Senza riga divisoria) -->
+        <section id="concerti" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 reveal-element">
                 <div>
                     <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Attività Artistica</span>
@@ -417,8 +396,8 @@
             </div>
         </section>
 
-        <!-- SEZIONE FAQ -->
-        <section id="faq" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-4xl mx-auto border-t border-stage-border">
+        <!-- SEZIONE FAQ (Senza riga divisoria) -->
+        <section id="faq" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-4xl mx-auto">
             <div class="text-center mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Domande Frequenti</span>
                 <h2 class="font-classical text-3xl sm:text-4xl font-semibold text-white mt-2 mb-3">Informazioni e Chiarimenti</h2>
@@ -448,7 +427,7 @@
                     </button>
                     <div class="accordion-content px-6 text-sm text-slate-200 leading-relaxed font-normal">
                         <div class="pb-5 pt-1 border-t border-stage-border/60">
-                            Dopo l'attivazione del pacchetto riceverai l'accesso al calendario Google dedicato. Potrai prenotare in completa autonomia le date e gli orari più comodi per la tua disponibilità settimanale, con piena flessibilità.
+                            Dopo l'attivazione del percorso riceverai l'accesso al calendario Google dedicato. Potrai prenotare in completa autonomia le date e gli orari più comodi per la tua disponibilità settimanale, con piena flessibilità.
                         </div>
                     </div>
                 </div>
@@ -461,7 +440,7 @@
                     </button>
                     <div class="accordion-content px-6 text-sm text-slate-200 leading-relaxed font-normal">
                         <div class="pb-5 pt-1 border-t border-stage-border/60">
-                            Puoi riprogrammare la lezione direttamente dal link del calendario con un preavviso minimo di 24 ore. Il pacchetto di 4 lezioni ha una durata di fruizione di 60 giorni dall'acquisto, permettendo di conciliare lo studio con gli impegni personali.
+                            Puoi riprogrammare la lezione direttamente dal link del calendario con un preavviso minimo di 24 ore, permettendo di conciliare al meglio lo studio con i tuoi impegni personali e professionali.
                         </div>
                     </div>
                 </div>
@@ -474,7 +453,7 @@
                     </button>
                     <div class="accordion-content px-6 text-sm text-slate-200 leading-relaxed font-normal">
                         <div class="pb-5 pt-1 border-t border-stage-border/60">
-                            Il percorso è personalizzato e si rivolge sia a chi proviene da una formazione accademica/classica e desidera padroneggiare l'armonia contemporanea, sia ad appassionati che vogliono sviluppare un tocco solido e capire a fondo le progressioni armoniche. Il colloquio preliminare gratuito di 15 minuti serve proprio a concordare il punto di partenza più adatto.
+                            Il percorso è personalizzato e si rivolge sia a chi proviene da una formazione classica/accademica e desidera padroneggiare l'armonia contemporanea, sia a chi vuole sviluppare un tocco solido e capire a fondo le progressioni armoniche. Il colloquio preliminare gratuito di 15 minuti serve proprio a concordare il punto di partenza più adatto.
                         </div>
                     </div>
                 </div>
@@ -483,7 +462,7 @@
         </section>
 
         <!-- FOOTER & CONTATTI -->
-        <footer id="contatti" class="border-t border-stage-border bg-stage-base py-16 px-5 sm:px-8">
+        <footer id="contatti" class="bg-stage-base/90 py-16 px-5 sm:px-8 border-t border-stage-border/40">
             <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
                 
                 <div>
