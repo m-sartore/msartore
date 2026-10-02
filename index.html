@@ -66,7 +66,7 @@
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
     <!-- HEADER / NAVIGATION (Fisso 80px) -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-stage-base/95 backdrop-blur-md border-b border-stage-border/60">
+    <header class="fixed top-0 left-0 w-full z-50 bg-stage-base/90 backdrop-blur-md border-b border-stage-border/60">
         <div class="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
             <!-- Brand -->
             <a href="#" class="group flex items-center gap-3">
@@ -126,58 +126,68 @@
 
     <main>
 
-        <!-- HERO SECTION (Senza card EbMaj7, più pulita e d'impatto) -->
-        <section class="relative min-h-[90vh] flex items-center justify-center px-5 sm:px-8 py-32 overflow-hidden">
+        <!-- HERO SECTION CON IMMAGINE DEL TUO SETUP BILANCIATA E BLURRATA -->
+        <section class="relative min-h-[92vh] flex items-center justify-center px-5 sm:px-8 py-32 overflow-hidden">
             
-            <!-- SFONDO SETUP: quando hai la tua foto pronta, sostituisci l'URL di src qui sotto con il tuo percorso (es. "img/mio-setup.jpg") -->
-            <div class="absolute inset-0 z-0 overflow-hidden">
-                <img src="modificata.png" 
-                     alt="Setup Pianoforte Marco Sartore" 
-                     class="w-full h-full object-cover object-center" />
-                <!-- Gradiente morbido a tutto schermo -->
-                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/75 to-stage-base/85"></div>
+            <!-- CONTENITORE IMMAGINE SETUP -->
+            <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <!-- 
+                    INSERISCI QUI LA TUA FOTO:
+                    Salva la foto del tuo setup nella stessa cartella con il nome 'setup-marco.jpg'
+                -->
+                <img src="setup-marco.jpg" 
+                     alt="Setup didattico studio Marco Sartore" 
+                     class="w-full h-full object-cover object-bottom filter blur-[4px] brightness-110 contrast-115 scale-105 transition-all duration-700" 
+                     onerror="this.src='https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=1920&q=80'" />
+                
+                <!-- Accento di luce blu/studio che valorizza la lampada della tua foto -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-stage-base/90 via-stage-base/60 to-blue-950/30"></div>
+                
+                <!-- Velatura sfumata verso il fondo pagina -->
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/70 to-stage-base/80"></div>
             </div>
 
+            <!-- CONTENUTO HERO (Massima Leggibilità e Contrasto) -->
             <div class="max-w-4xl mx-auto text-center relative z-10 reveal-element">
                 
                 <!-- Badge Setup -->
-                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300/30 bg-stage-base/80 backdrop-blur-md text-xs tracking-wider text-slate-200 mb-8 uppercase font-medium shadow-lg">
+                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300/30 bg-stage-base/85 backdrop-blur-md text-xs tracking-wider text-slate-200 mb-8 uppercase font-medium shadow-2xl">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    <span>Lezioni Online 1-a-1 • Audio HD Diretto</span>
+                    <span>Studio Setup • Audio HD Diretto & Dual Cam</span>
                 </div>
 
-                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-md">
+                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-2xl">
                     L'armonia non si memorizza. <br />
-                    <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
+                    <span class="text-slate-200 font-light">Si ascolta, si comprende, si suona.</span>
                 </h1>
 
-                <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow">
+                <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-md">
                     Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
                     <!-- LINK GOOGLE CALENDAR QUI (Hero CTA) -->
                     <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-2xl hover:-translate-y-0.5">
                         <i data-lucide="calendar" class="w-4 h-4"></i>
                         <span>Prenota Chiamata Conoscitiva (15 min)</span>
                     </a>
 
                     <a href="#metodo" 
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-base/70 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
                         <span>Setup & Metodo</span>
                         <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
                     </a>
                 </div>
 
-                <p class="text-xs text-slate-300 tracking-wide font-medium">
+                <p class="text-xs text-slate-300 tracking-wide font-medium drop-shadow">
                     Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
                 </p>
 
             </div>
         </section>
 
-        <!-- SEZIONE LEZIONI & CORSI (Senza riga superiore, passaggio fluido) -->
+        <!-- SEZIONE LEZIONI & CORSI -->
         <section id="lezioni" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Didattica e Metodo</span>
@@ -234,7 +244,7 @@
                 </div>
             </div>
 
-            <!-- SETUP & METODO (Prezzo rimosso, card visibile per intero con scroll-mt-28) -->
+            <!-- SETUP & METODO (scroll-mt-28 visibile per intero) -->
             <div id="metodo" class="scroll-mt-28 rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element shadow-2xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     
@@ -266,15 +276,15 @@
                         </div>
                     </div>
 
-                    <!-- Scheda Approfondimento & Colloquio (Senza Prezzo) -->
+                    <!-- Scheda Approfondimento & Colloquio -->
                     <div class="lg:col-span-5 bg-stage-base p-8 rounded border border-stage-border flex flex-col justify-center text-center">
                         <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Percorso Personalizzato</span>
                         <h4 class="font-classical text-2xl font-bold text-white mt-3 mb-2">Costruiamo il Tuo Piano</h4>
                         <p class="text-xs text-slate-300 leading-relaxed mb-6 font-normal">
-                            Valutiamo insieme il tuo punto di partenza, il repertorio su cui vuoi lavorare e la formula di lezioni più indicata per i tuoi obiettivi.
+                            Valutiamo insieme il tuo punto di partenza, il repertorio su cui vuoi lavorare e la formula di studio più adatta alle tue disponibilità.
                         </p>
 
-                        <!-- LINK GOOGLE CALENDAR QUI (Pacchetto/Colloquio) -->
+                        <!-- LINK GOOGLE CALENDAR QUI (Colloquio) -->
                         <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
                            class="w-full py-3.5 px-6 rounded bg-white hover:bg-slate-200 text-stage-base text-xs uppercase tracking-wider font-bold transition-all duration-200 shadow-md">
                             Fissa la Chiamata Conoscitiva
@@ -286,7 +296,7 @@
             </div>
         </section>
 
-        <!-- CHI SONO / BIOGRAFIA (Senza riga divisoria) -->
+        <!-- CHI SONO / BIOGRAFIA -->
         <section id="chi-sono" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
@@ -294,9 +304,9 @@
                     <div class="aspect-[4/5] rounded-xl bg-stage-surface border border-stage-border overflow-hidden relative shadow-2xl flex flex-col justify-end p-6">
                         <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/40 to-transparent z-10"></div>
                         
-                        <!-- Segnaposto Immagine Personale (sostituibile con <img src="...">) -->
+                        <!-- Segnaposto Immagine Personale -->
                         <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-xs font-medium">
-                            <img src="Tagliata.png">
+                            [ Immagine Marco Sartore ]
                         </div>
 
                         <div class="relative z-20">
@@ -334,7 +344,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE CONCERTI (Senza riga divisoria) -->
+        <!-- SEZIONE CONCERTI -->
         <section id="concerti" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 reveal-element">
                 <div>
@@ -396,7 +406,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE FAQ (Senza riga divisoria) -->
+        <!-- SEZIONE FAQ -->
         <section id="faq" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-4xl mx-auto">
             <div class="text-center mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Domande Frequenti</span>
