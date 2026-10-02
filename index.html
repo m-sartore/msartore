@@ -28,7 +28,6 @@
                             elevated: '#171F2C', // Rilievo/hover
                             border: '#2A3549',   // Cornici visibili e nitide
                             silver: '#E2E8F0',   // Argento chiaro
-                            ice: '#93C5FD',      // Accento delicato studio
                         }
                     }
                 }
@@ -127,31 +126,33 @@
 
     <main>
 
-        <!-- HERO SECTION CON SFONDO SCENOGRAFICO -->
+        <!-- HERO SECTION CON SFONDO SCENOGRAFICO BEN VISIBILE -->
         <section class="relative min-h-[92vh] flex items-center justify-center px-5 sm:px-8 py-24 sm:py-32 overflow-hidden">
-            <!-- Immagine di Sfondo Pianoforte d'Autore con Overlay Multiplo -->
+            
+            <!-- Immagine di Sfondo Pianoforte ad Alta Definizione con Gradiente Bilanciato -->
             <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1520523839898-50712825e617?auto=format&fit=crop&w=2000&q=80" 
-                     alt="Tastiera di pianoforte a coda in penombra" 
-                     class="w-full h-full object-cover object-center filter brightness-[0.25] contrast-[1.1] scale-105 transform animate-pulse duration-[10000ms]">
-                <div class="absolute inset-0 bg-gradient-to-b from-stage-base/90 via-stage-base/60 to-stage-base"></div>
-                <div class="absolute inset-0 bg-radial-at-c from-transparent via-stage-base/50 to-stage-base"></div>
+                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=2000&q=85" 
+                     alt="Pianoforte a coda da concerto" 
+                     class="w-full h-full object-cover object-center brightness-75 contrast-125" />
+                
+                <!-- Velatura Graduale: protegge la leggibilità del testo e sfuma delicatamente verso la sezione successiva -->
+                <div class="absolute inset-0 bg-gradient-to-b from-stage-base/90 via-stage-base/75 to-stage-base"></div>
             </div>
 
             <div class="max-w-4xl mx-auto text-center relative z-10 reveal-element">
                 
                 <!-- Badge Setup -->
-                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-400/30 bg-stage-surface/80 backdrop-blur-md text-xs tracking-wider text-slate-300 mb-8 uppercase font-medium">
-                    <span class="w-2 h-2 rounded-full bg-slate-300"></span>
-                    <span>Lezioni Online 1-a-1 • Audio HD di Linea Diretta</span>
+                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300/30 bg-stage-base/80 backdrop-blur-md text-xs tracking-wider text-slate-200 mb-8 uppercase font-medium shadow-lg">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Lezioni Online 1-a-1 • Audio HD Diretto</span>
                 </div>
 
-                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-md">
+                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-lg">
                     L'armonia non si memorizza. <br />
                     <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
                 </h1>
 
-                <p class="text-base sm:text-lg text-slate-200 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow">
+                <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow">
                     Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
                 </p>
 
@@ -164,7 +165,7 @@
                     </a>
 
                     <a href="#lezioni" 
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-surface/70 backdrop-blur-sm text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-base/70 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
                         <span>Esplora i Corsi</span>
                         <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
                     </a>
@@ -174,9 +175,9 @@
                     Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
                 </p>
 
-                <!-- Box Setup Ispirato allo Short -->
-                <div class="mt-14 p-2 rounded-xl bg-stage-surface/80 border border-stage-border shadow-2xl backdrop-blur-md max-w-xl mx-auto reveal-element">
-                    <div class="rounded-lg bg-black/90 border border-stage-border/80 p-5 text-left">
+                <!-- Box Setup Ispirato allo Short con visuale tasti -->
+                <div class="mt-14 p-2 rounded-xl bg-stage-surface/90 border border-stage-border shadow-2xl backdrop-blur-md max-w-xl mx-auto reveal-element">
+                    <div class="rounded-lg bg-black/95 border border-stage-border/80 p-5 text-left">
                         <div class="flex items-center justify-between border-b border-stage-border/70 pb-3 mb-4">
                             <span class="text-xs text-slate-300 tracking-wider uppercase font-semibold flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-slate-300 animate-pulse"></span>
