@@ -61,6 +61,11 @@
         .accordion-content.expanded {
             opacity: 1;
         }
+
+        /* Effetto tastiera visibile + sfondo superiore sfumato */
+        .hero-backdrop {
+            filter: brightness(1.22) contrast(1.18) saturate(1.1);
+        }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
@@ -126,38 +131,41 @@
 
     <main>
 
-        <!-- HERO SECTION: LA TUA FOTO SETUP CON SFOCATURA E ILLUMINAZIONE -->
-        <section class="relative min-h-[92vh] flex items-center justify-center px-5 sm:px-8 py-32 overflow-hidden">
+        <!-- HERO SECTION (Tastiera ben illuminata e nitida, sfondo sfocato e testo perfettamente leggibile) -->
+        <section class="relative min-h-[96vh] flex items-center justify-center px-5 sm:px-8 pt-32 pb-44 overflow-hidden">
             
-            <!-- CONTENITORE IMMAGINE SETUP -->
+            <!-- LAYER 1: IMMAGINE DEL SETUP (Schiarita per valorizzare i tasti) -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                <!-- Foto reale del tuo setup con blur cinematografico, contrasto e saturazione bilanciata -->
-                <img src="setup-marco.jpg" 
+                <img src="https://i.ibb.co/VcB9T96G/setup-marco.jpg" 
                      alt="Setup didattico studio Marco Sartore" 
-                     class="w-full h-full object-cover object-center filter blur-[4px] brightness-110 contrast-115 scale-105" />
-                
-                <!-- Alone di luce blu cobalto a destra per riprendere la lampada da studio -->
-                <div class="absolute inset-0 bg-radial-at-tr from-blue-900/40 via-transparent to-stage-base/90"></div>
-                
-                <!-- Dissolvenza graduata verso il basso per una fusione perfetta con le sezioni successive -->
-                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/75 to-stage-base/80"></div>
+                     class="hero-backdrop w-full h-full object-cover object-bottom scale-105" />
+
+                <!-- LAYER 2: SFOCATURA SELETTIVA D'ATMOSFERA (Sfoca solo il centro/alto lasciando nitidi i tasti in basso) -->
+                <div class="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,black_0%,black_65%,transparent_92%)]"></div>
+
+                <!-- LAYER 3: LUCE DIRETTA SULLA TASTIERA (Evidenzia i tasti bianchi e neri) -->
+                <div class="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-slate-200/10 via-transparent to-transparent pointer-events-none"></div>
+
+                <!-- LAYER 4: SCUDO PER IL TESTO (Garantisce contrasto massimo per il titolo senza tappare i tasti) -->
+                <div class="absolute inset-0 bg-radial-at-c from-stage-base/85 via-stage-base/60 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-stage-base/90 via-transparent to-stage-base/40"></div>
             </div>
 
-            <!-- CONTENUTO HERO (Testi nitidi e ad alto contrasto) -->
+            <!-- CONTENUTO HERO (In primo piano e leggibile con precisione) -->
             <div class="max-w-4xl mx-auto text-center relative z-10 reveal-element">
                 
                 <!-- Badge Setup -->
-                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300/30 bg-stage-base/85 backdrop-blur-md text-xs tracking-wider text-slate-200 mb-8 uppercase font-medium shadow-2xl">
+                <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300/30 bg-stage-base/90 backdrop-blur-md text-xs tracking-wider text-slate-100 mb-8 uppercase font-medium shadow-2xl">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                     <span>Studio Setup • Audio HD Diretto & Dual Cam</span>
                 </div>
 
-                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-2xl">
+                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
                     L'armonia non si memorizza. <br />
-                    <span class="text-slate-200 font-light">Si ascolta, si comprende, si suona.</span>
+                    <span class="text-slate-100 font-light">Si ascolta, si comprende, si suona.</span>
                 </h1>
 
-                <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-md">
+                <p class="text-base sm:text-lg text-slate-100 max-w-2xl mx-auto mb-10 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
                     Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
                 </p>
 
@@ -170,20 +178,20 @@
                     </a>
 
                     <a href="#metodo" 
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-base/85 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
                         <span>Setup & Metodo</span>
                         <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
                     </a>
                 </div>
 
-                <p class="text-xs text-slate-300 tracking-wide font-medium drop-shadow">
+                <p class="text-xs text-slate-300 tracking-wide font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
                 </p>
 
             </div>
         </section>
 
-        <!-- SEZIONE LEZIONI & CORSI (Senza righe di separazione) -->
+        <!-- SEZIONE LEZIONI & CORSI -->
         <section id="lezioni" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Didattica e Metodo</span>
@@ -272,7 +280,7 @@
                         </div>
                     </div>
 
-                    <!-- Scheda Approfondimento (Senza Prezzo) -->
+                    <!-- Scheda Approfondimento -->
                     <div class="lg:col-span-5 bg-stage-base p-8 rounded border border-stage-border flex flex-col justify-center text-center">
                         <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Percorso Personalizzato</span>
                         <h4 class="font-classical text-2xl font-bold text-white mt-3 mb-2">Costruiamo il Tuo Piano</h4>
