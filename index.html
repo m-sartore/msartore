@@ -6,7 +6,7 @@
     <title>Marco Sartore | Pianoforte & Armonia Funzionale</title>
     <meta name="description" content="Lezioni individuali online di Pianoforte e Armonia Funzionale con Marco Sartore. Suono, tocco e consapevolezza armonica con audio HD.">
 
-    <!-- Google Fonts: Cinzel (eleganza classica moderna) + Plus Jakarta Sans (massima leggibilità) -->
+    <!-- Google Fonts: Cinzel + Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,11 +23,11 @@
                     },
                     colors: {
                         stage: {
-                            base: '#07090E',     // Fondo grafite profondo
-                            surface: '#0E131D',  // Card e blocchi
-                            elevated: '#171F2C', // Rilievo/hover
-                            border: '#2A3549',   // Cornici visibili e nitide
-                            silver: '#E2E8F0',   // Argento chiaro
+                            base: '#07090E',     
+                            surface: '#0E131D',  
+                            elevated: '#171F2C', 
+                            border: '#2A3549',   
+                            silver: '#E2E8F0',   
                         }
                     }
                 }
@@ -65,8 +65,8 @@
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-stage-base/90 backdrop-blur-md border-b border-stage-border/80">
+    <!-- HEADER / NAVIGATION (Fisso con altezza 80px) -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-stage-base/95 backdrop-blur-md border-b border-stage-border/80">
         <div class="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
             <!-- Brand -->
             <a href="#" class="group flex items-center gap-3">
@@ -107,8 +107,8 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-stage-surface/98 backdrop-blur-xl border-b border-stage-border px-6 py-6 transition-all duration-300">
             <div class="flex flex-col gap-4 text-sm font-medium tracking-wide">
-                <a href="#lezioni" class="mobile-link py-2 text-slate-200 hover:text-white">Lezioni & Corsi</a>
-                <a href="#metodo" class="mobile-link py-2 text-slate-200 hover:text-white">Setup Audio & Video</a>
+                <a href="#lezioni" class="mobile-link py-2 text-slate-200 hover:text-white">Lezioni</a>
+                <a href="#metodo" class="mobile-link py-2 text-slate-200 hover:text-white">Setup & Metodo</a>
                 <a href="#chi-sono" class="mobile-link py-2 text-slate-200 hover:text-white">Chi Sono</a>
                 <a href="#concerti" class="mobile-link py-2 text-slate-200 hover:text-white">Date & Concerti</a>
                 <a href="#faq" class="mobile-link py-2 text-slate-200 hover:text-white">Domande Frequenti</a>
@@ -126,17 +126,16 @@
 
     <main>
 
-        <!-- HERO SECTION CON SFONDO SCENOGRAFICO BEN VISIBILE -->
+        <!-- HERO SECTION (Con Immagine Visibile & Calibrata) -->
         <section class="relative min-h-[92vh] flex items-center justify-center px-5 sm:px-8 py-24 sm:py-32 overflow-hidden">
             
-            <!-- Immagine di Sfondo Pianoforte ad Alta Definizione con Gradiente Bilanciato -->
-            <div class="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=2000&q=85" 
-                     alt="Pianoforte a coda da concerto" 
-                     class="w-full h-full object-cover object-center brightness-75 contrast-125" />
-                
-                <!-- Velatura Graduale: protegge la leggibilità del testo e sfuma delicatamente verso la sezione successiva -->
-                <div class="absolute inset-0 bg-gradient-to-b from-stage-base/90 via-stage-base/75 to-stage-base"></div>
+            <!-- Sfondo con Immagine CDN Garantita e Overlay Calibrato -->
+            <div class="absolute inset-0 z-0 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=1920&q=80" 
+                     alt="Tastiera pianoforte elegante in bianco e nero" 
+                     class="w-full h-full object-cover object-center" />
+                <!-- Gradiente trasparente che sfuma verso il basso mantenendo viva la tastiera -->
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/75 to-stage-base/85"></div>
             </div>
 
             <div class="max-w-4xl mx-auto text-center relative z-10 reveal-element">
@@ -147,7 +146,7 @@
                     <span>Lezioni Online 1-a-1 • Audio HD Diretto</span>
                 </div>
 
-                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-lg">
+                <h1 class="font-classical text-3xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight sm:leading-tight mb-6 tracking-wide drop-shadow-md">
                     L'armonia non si memorizza. <br />
                     <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
                 </h1>
@@ -164,9 +163,9 @@
                         <span>Prenota Chiamata Conoscitiva (15 min)</span>
                     </a>
 
-                    <a href="#lezioni" 
+                    <a href="#metodo" 
                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded border border-slate-300/40 hover:border-white bg-stage-base/70 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
-                        <span>Esplora i Corsi</span>
+                        <span>Setup & Tariffe</span>
                         <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
                     </a>
                 </div>
@@ -175,7 +174,7 @@
                     Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
                 </p>
 
-                <!-- Box Setup Ispirato allo Short con visuale tasti -->
+                <!-- Box Monitor Accordi Live (Ispirato allo Short) -->
                 <div class="mt-14 p-2 rounded-xl bg-stage-surface/90 border border-stage-border shadow-2xl backdrop-blur-md max-w-xl mx-auto reveal-element">
                     <div class="rounded-lg bg-black/95 border border-stage-border/80 p-5 text-left">
                         <div class="flex items-center justify-between border-b border-stage-border/70 pb-3 mb-4">
@@ -199,7 +198,7 @@
         </section>
 
         <!-- SEZIONE LEZIONI & CORSI -->
-        <section id="lezioni" class="py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
+        <section id="lezioni" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Didattica e Metodo</span>
                 <h2 class="font-classical text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">Percorsi di Studio Individuali</h2>
@@ -255,15 +254,15 @@
                 </div>
             </div>
 
-            <!-- Pacchetto e Trasparenza -->
-            <div id="metodo" class="rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element">
+            <!-- ANCORAGGIO SETUP & METODO CORRETTO (scroll-mt-28 impedisce che la card venga tagliata) -->
+            <div id="metodo" class="scroll-mt-28 rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element shadow-2xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     
                     <div class="lg:col-span-7">
-                        <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Formula Didattica</span>
+                        <span class="text-xs uppercase tracking-widest text-slate-400 font-semibold">Continuità & Metodo</span>
                         <h3 class="font-classical text-2xl sm:text-3xl text-white mt-2 mb-4 font-semibold">Pacchetto 4 Lezioni Individuali</h3>
                         <p class="text-slate-200 text-sm sm:text-base leading-relaxed mb-6 font-normal">
-                            Ogni sessione è di 60 minuti effettivi one-to-one. La formula a pacchetto garantisce la continuità necessaria per assimilare i concetti e trasformarli in abilità pratiche permanenti.
+                            Ogni sessione è di 60 minuti effettivi one-to-one in diretta. Il setup a doppia camera e audio stereo di linea permette di seguire ogni dettaglio armonico ed esecutivo con totale chiarezza.
                         </p>
 
                         <!-- Condizioni chiare -->
@@ -309,7 +308,7 @@
         </section>
 
         <!-- CHI SONO / BIOGRAFIA -->
-        <section id="chi-sono" class="py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
+        <section id="chi-sono" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
                 <div class="lg:col-span-5 reveal-element">
@@ -357,7 +356,7 @@
         </section>
 
         <!-- SEZIONE CONCERTI -->
-        <section id="concerti" class="py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
+        <section id="concerti" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-6xl mx-auto border-t border-stage-border">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 reveal-element">
                 <div>
                     <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Attività Artistica</span>
@@ -419,7 +418,7 @@
         </section>
 
         <!-- SEZIONE FAQ -->
-        <section id="faq" class="py-24 px-5 sm:px-8 max-w-4xl mx-auto border-t border-stage-border">
+        <section id="faq" class="scroll-mt-24 py-24 px-5 sm:px-8 max-w-4xl mx-auto border-t border-stage-border">
             <div class="text-center mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Domande Frequenti</span>
                 <h2 class="font-classical text-3xl sm:text-4xl font-semibold text-white mt-2 mb-3">Informazioni e Chiarimenti</h2>
