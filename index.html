@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Marco Sartore | Pianoforte & Armonia Funzionale</title>
-  <meta name="description" content="Lezioni online 1-a-1 di Pianoforte e Armonia Funzionale con Marco Sartore. Metodo pratico, audio HD ad alta fedeltà e supporto continuo." />
+  <meta name="description" content="Lezioni online 1-a-1 di Pianoforte e Armonia Funzionale con Marco Sartore. Metodo pratico, audio HD e testo di riferimento." />
 
-  <!-- Google Fonts: Outfit (Titoli moderni) & Plus Jakarta Sans (Testo pulito) -->
+  <!-- Google Fonts: Outfit (Titoli) & Plus Jakarta Sans (Corpo testo) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,35 +18,18 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              dark: '#14252E',      // Blu petrolio profondo
-              slate: '#1E3845',     // Tono medio scuro
-              teal: '#2E7778',      // Ottanio copertina
-              gold: '#E5AA40',      // Ocra / Senape
-              coral: '#DD6041',     // Terracotta / Corallo
-              cream: '#FAF8F5',     // Sfondo neutro luminoso
-              light: '#F2EDE4'      // Tonalità sabbia morbida
-            }
+            stripe: {
+              1: '#162832', // Riga 1: Blu Petrolio Profondo
+              2: '#2C7677', // Riga 2: Verde Petrolio / Ottanio
+              3: '#E5A93D', // Riga 3: Giallo Senape / Ocra
+              4: '#DD5F3F', // Riga 4: Terracotta / Corallo
+            },
+            canvas: '#FAF8F5',
+            surface: '#FFFFFF',
           },
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
             display: ['"Outfit"', 'sans-serif'],
-          },
-          animation: {
-            'wave-slow': 'waveMotion 16s ease-in-out infinite alternate',
-            'wave-reverse': 'waveMotionRev 20s ease-in-out infinite alternate',
-          },
-          keyframes: {
-            waveMotion: {
-              '0%': { transform: 'translateY(0px) rotate(0deg) scaleY(1)' },
-              '50%': { transform: 'translateY(-14px) rotate(-0.5deg) scaleY(1.04)' },
-              '100%': { transform: 'translateY(6px) rotate(0.8deg) scaleY(0.97)' },
-            },
-            waveMotionRev: {
-              '0%': { transform: 'translateY(0px) scaleX(1)' },
-              '50%': { transform: 'translateY(12px) scaleX(1.02)' },
-              '100%': { transform: 'translateY(-10px) scaleX(0.99)' },
-            }
           }
         }
       }
@@ -54,395 +37,349 @@
   </script>
 
   <style>
-    /* Rifiniture tipografiche ed estetiche */
     body {
       background-color: #FAF8F5;
-      color: #14252E;
+      color: #162832;
       overflow-x: hidden;
     }
-    .selection-brand::selection {
-      background-color: #DD6041;
-      color: #FFFFFF;
+
+    /* Transizione fluida e morbida dell'arcobaleno vettoriale */
+    .rainbow-ribbon {
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+      will-change: transform;
     }
-    /* Classe per onda interattiva gestita da JS */
-    .reactive-wave {
-      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    .stripe-path {
+      transition: stroke-width 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 0.6s ease, 
+                  filter 0.6s ease;
     }
-    .nav-wave-active {
-      filter: drop-shadow(0 0 12px rgba(221, 96, 65, 0.4));
-      transform: scaleY(1.15) !important;
+
+    /* Evidenziazione della linea attiva corrispondente alla sezione */
+    .stripe-focused {
+      stroke-width: 32px !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 10px rgba(0,0,0,0.18));
     }
+    .stripe-dormant {
+      stroke-width: 18px;
+      opacity: 0.65;
+    }
+
+    /* Stile per i link di navigazione con barretta coordinata */
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .nav-link.active-blue::after { width: 100%; background-color: #162832; }
+    .nav-link.active-green::after { width: 100%; background-color: #2C7677; }
+    .nav-link.active-gold::after { width: 100%; background-color: #E5A93D; }
+    .nav-link.active-coral::after { width: 100%; background-color: #DD5F3F; }
   </style>
 </head>
-<body class="selection-brand font-sans antialiased relative">
+<body class="font-sans antialiased relative">
 
-  <!-- ========================================== -->
-  <!-- ONDE INTERATTIVE DINAMICHE DI SFONDO (CSS/SVG) -->
-  <!-- ========================================== -->
-  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 sm:opacity-40">
-    <svg id="interactive-wave-svg" class="reactive-wave absolute w-[140vw] -left-[20vw] top-[5%] md:top-[12%] h-[680px] md:h-[850px]" viewBox="0 0 1440 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- 4 Fasce con i colori esatti della copertina del libro -->
-      <path id="wave-dark" class="animate-wave-slow origin-center" d="M -80 320 C 320 460 760 120 1520 280 L 1520 325 C 760 165 320 505 -80 365 Z" fill="#1E3845" />
-      <path id="wave-teal" class="animate-wave-reverse origin-center" d="M -80 365 C 320 505 760 165 1520 325 L 1520 365 C 760 205 320 545 -80 405 Z" fill="#2E7778" />
-      <path id="wave-gold" class="animate-wave-slow origin-center" d="M -80 405 C 320 545 760 205 1520 365 L 1520 405 C 760 245 320 585 -80 445 Z" fill="#E5AA40" />
-      <path id="wave-coral" class="animate-wave-reverse origin-center" d="M -80 445 C 320 585 760 245 1520 405 L 1520 445 C 760 285 320 625 -80 485 Z" fill="#DD6041" />
+  <!-- ================================================================= -->
+  <!-- MOTORE GRAFICO: ARCOBALENO VETTORIALE GUIDATO DAL MENU / SCROLL   -->
+  <!-- ================================================================= -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <svg id="master-rainbow" class="rainbow-ribbon absolute w-[160vw] -left-[30vw] top-[5%] h-[800px] md:h-[950px]" 
+         viewBox="0 0 1600 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+      
+      <!-- Definizioni e filtri ombra -->
+      <defs>
+        <filter id="subtle-shadow" x="-5%" y="-5%" width="110%" height="110%">
+          <feDropShadow dx="0" dy="8" stdDeviation="6" flood-opacity="0.10"/>
+        </filter>
+      </defs>
 
-      <!-- Glifi Musicali stilizzati posizionati lungo la curvatura -->
-      <g opacity="0.85" fill="#FAF8F5" class="transition-transform duration-700">
-        <!-- Chiave di violino e semiminime stilizzate -->
-        <circle cx="360" cy="385" r="14" />
-        <line x1="374" y1="385" x2="374" y2="330" stroke="#FAF8F5" stroke-width="4.5" />
-        <circle cx="580" cy="300" r="14" />
-        <line x1="594" y1="300" x2="594" y2="245" stroke="#FAF8F5" stroke-width="4.5" />
-        <!-- Diesis / Bequadro geometrico -->
-        <path d="M780 230 L780 280 M795 220 L795 270 M770 245 L805 240 M770 265 L805 260" stroke="#FAF8F5" stroke-width="4" stroke-linecap="round"/>
-        <circle cx="1060" cy="305" r="14" />
-        <line x1="1074" y1="305" x2="1074" y2="250" stroke="#FAF8F5" stroke-width="4.5" />
+      <g filter="url(#subtle-shadow)">
+        <!-- RIGA 1: BLU PETROLIO (Sezione Lezioni & Corsi) -->
+        <path id="stripe-1" class="stripe-path stripe-dormant" 
+              d="M -100 240 C 350 420, 800 100, 1700 320" 
+              stroke="#162832" stroke-linecap="round" />
+
+        <!-- RIGA 2: VERDE PETROLIO / OTTANIO (Sezione Il Manuale) -->
+        <path id="stripe-2" class="stripe-path stripe-dormant" 
+              d="M -100 280 C 350 460, 800 140, 1700 360" 
+              stroke="#2C7677" stroke-linecap="round" />
+
+        <!-- RIGA 3: GIALLO SENAPE / OCRA (Sezione Chi Sono) -->
+        <path id="stripe-3" class="stripe-path stripe-dormant" 
+              d="M -100 320 C 350 500, 800 180, 1700 400" 
+              stroke="#E5A93D" stroke-linecap="round" />
+
+        <!-- RIGA 4: TERRACOTTA / CORALLO (Sezione Concerti & FAQ) -->
+        <path id="stripe-4" class="stripe-path stripe-dormant" 
+              d="M -100 360 C 350 540, 800 220, 1700 440" 
+              stroke="#DD5F3F" stroke-linecap="round" />
+      </g>
+
+      <!-- Simboli musicali che seguono la sinusoide come nel libro -->
+      <g id="musical-glyphs" class="transition-opacity duration-700 opacity-90">
+        <!-- Chiave stilizzata e note musicali -->
+        <circle cx="430" cy="425" r="13" fill="#FAF8F5" stroke="#162832" stroke-width="4"/>
+        <line x1="443" y1="425" x2="443" y2="370" stroke="#162832" stroke-width="4.5" stroke-linecap="round"/>
+        
+        <circle cx="680" cy="270" r="13" fill="#FAF8F5" stroke="#2C7677" stroke-width="4"/>
+        <line x1="693" y1="270" x2="693" y2="215" stroke="#2C7677" stroke-width="4.5" stroke-linecap="round"/>
+
+        <!-- Bequadro / Diesis geometrico -->
+        <path d="M920 220 L920 270 M935 210 L935 260 M910 235 L945 230 M910 255 L945 250" stroke="#E5A93D" stroke-width="4" stroke-linecap="round"/>
+        
+        <circle cx="1200" cy="360" r="13" fill="#FAF8F5" stroke="#DD5F3F" stroke-width="4"/>
+        <line x1="1213" y1="360" x2="1213" y2="305" stroke="#DD5F3F" stroke-width="4.5" stroke-linecap="round"/>
       </g>
     </svg>
   </div>
 
-  <!-- ========================================== -->
-  <!-- HEADER / BARRA DI NAVIGAZIONE             -->
-  <!-- ========================================== -->
-  <header class="sticky top-0 z-50 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-brand-dark/10 transition-all duration-300">
+  <!-- ================================================================= -->
+  <!-- BARRA DI NAVIGAZIONE CON CODICI COLORE (LE 4 RIGHE)                -->
+  <!-- ================================================================= -->
+  <header class="sticky top-0 z-50 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-stripe-1/10 transition-all">
     <div class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
-      <!-- Logo Brand -->
-      <a href="#" class="group flex flex-col focus:outline-none">
-        <span class="font-display font-extrabold text-2xl tracking-tight text-brand-dark group-hover:text-brand-coral transition-colors">
-          MARCO <span class="text-brand-coral">SARTORE</span>
+      
+      <!-- Brand & Titolo -->
+      <a href="#hero" class="group flex flex-col focus:outline-none">
+        <span class="font-display font-extrabold text-2xl tracking-tight text-stripe-1">
+          MARCO <span class="text-stripe-4">SARTORE</span>
         </span>
-        <span class="text-[10px] tracking-[0.22em] uppercase font-bold text-brand-teal">
+        <span class="text-[10px] tracking-[0.22em] uppercase font-bold text-stripe-2">
           Pianoforte & Armonia
         </span>
       </a>
 
-      <!-- Menu Desktop -->
-      <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-brand-dark">
-        <a href="#lezioni" class="nav-item hover:text-brand-coral transition-colors duration-200">Lezioni & Corsi</a>
-        <a href="#libro" class="nav-item hover:text-brand-gold transition-colors duration-200">Il Manuale</a>
-        <a href="#chi-sono" class="nav-item hover:text-brand-teal transition-colors duration-200">Chi Sono</a>
-        <a href="#concerti" class="nav-item hover:text-brand-coral transition-colors duration-200">Concerti</a>
-        <a href="#faq" class="nav-item hover:text-brand-slate transition-colors duration-200">FAQ & Contatti</a>
+      <!-- Menu Desktop con le 4 righe abbinate -->
+      <nav class="hidden md:flex items-center space-x-7 text-sm font-semibold text-stripe-1">
+        
+        <!-- Riga 1: Blu -->
+        <a href="#lezioni" id="nav-lezioni" class="nav-link flex items-center gap-1.5 hover:text-stripe-1 transition-colors">
+          <span class="w-2.5 h-2.5 rounded-full bg-stripe-1 inline-block"></span>
+          <span>Lezioni & Corsi</span>
+        </a>
+
+        <!-- Riga 2: Verde Petrolio -->
+        <a href="#manuale" id="nav-manuale" class="nav-link flex items-center gap-1.5 hover:text-stripe-2 transition-colors">
+          <span class="w-2.5 h-2.5 rounded-full bg-stripe-2 inline-block"></span>
+          <span>Il Manuale</span>
+        </a>
+
+        <!-- Riga 3: Giallo Senape -->
+        <a href="#chi-sono" id="nav-chi-sono" class="nav-link flex items-center gap-1.5 hover:text-stripe-3 transition-colors">
+          <span class="w-2.5 h-2.5 rounded-full bg-stripe-3 inline-block"></span>
+          <span>Chi Sono</span>
+        </a>
+
+        <!-- Riga 4: Terracotta / Corallo -->
+        <a href="#concerti-faq" id="nav-concerti" class="nav-link flex items-center gap-1.5 hover:text-stripe-4 transition-colors">
+          <span class="w-2.5 h-2.5 rounded-full bg-stripe-4 inline-block"></span>
+          <span>Concerti & FAQ</span>
+        </a>
       </nav>
 
-      <!-- CTA Principale Navbar -->
+      <!-- CTA Prenotazione -->
       <div class="hidden sm:flex items-center">
-        <!-- LINK GOOGLE CALENDAR QUI: Sostituisci il link "#prenota-chiamata" con il tuo link diretto di Google Calendar Appointments -->
-        <a href="#prenota-chiamata" class="relative inline-flex items-center justify-center px-6 py-2.5 rounded-full font-display font-bold text-sm text-white bg-brand-coral hover:bg-brand-coral/90 shadow-lg shadow-brand-coral/25 hover:shadow-brand-coral/40 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0">
-          <span>Prenota Chiamata (15 min)</span>
+        <!-- LINK GOOGLE CALENDAR QUI: Inserisci il tuo link per la chiamata conoscitiva -->
+        <a href="#prenota-chiamata" class="px-5 py-2.5 rounded-full font-display font-bold text-xs uppercase tracking-wider text-white bg-stripe-4 hover:bg-stripe-4/90 shadow-md shadow-stripe-4/20 transition-all hover:-translate-y-0.5">
+          Prenota Chiamata (15 min)
         </a>
       </div>
 
-      <!-- Hamburger Mobile -->
-      <div class="md:hidden flex items-center">
-        <button id="mobile-menu-btn" class="p-2 text-brand-dark focus:outline-none" aria-label="Apri menu">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path id="burger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-        </button>
-      </div>
+      <!-- Hamburger per Mobile -->
+      <button id="mobile-btn" class="md:hidden p-2 text-stripe-1 focus:outline-none" aria-label="Menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
     </div>
 
-    <!-- Mobile Dropdown -->
-    <div id="mobile-menu" class="hidden md:hidden bg-brand-cream border-b border-brand-dark/10 px-6 py-6 shadow-xl">
-      <div class="flex flex-col space-y-4 font-semibold text-brand-dark text-base">
-        <a href="#lezioni" class="mobile-nav-link hover:text-brand-coral">Lezioni & Corsi</a>
-        <a href="#libro" class="mobile-nav-link hover:text-brand-gold">Il Manuale</a>
-        <a href="#chi-sono" class="mobile-nav-link hover:text-brand-teal">Chi Sono</a>
-        <a href="#concerti" class="mobile-nav-link hover:text-brand-coral">Concerti</a>
-        <a href="#faq" class="mobile-nav-link hover:text-brand-slate">FAQ & Contatti</a>
-        <div class="pt-3">
-          <!-- LINK GOOGLE CALENDAR QUI -->
-          <a href="#prenota-chiamata" class="block text-center w-full px-5 py-3 rounded-full font-display font-bold text-white bg-brand-coral shadow-md">
-            Prenota Chiamata (15 min)
-          </a>
-        </div>
-      </div>
+    <!-- Dropdown Mobile -->
+    <div id="mobile-menu" class="hidden md:hidden bg-canvas border-b border-stripe-1/10 px-6 py-5 space-y-3 font-semibold text-stripe-1 text-sm">
+      <a href="#lezioni" class="block py-2 flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-stripe-1"></span> Lezioni & Corsi (Riga 1 - Blu)
+      </a>
+      <a href="#manuale" class="block py-2 flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-stripe-2"></span> Il Manuale (Riga 2 - Verde)
+      </a>
+      <a href="#chi-sono" class="block py-2 flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-stripe-3"></span> Chi Sono (Riga 3 - Giallo)
+      </a>
+      <a href="#concerti-faq" class="block py-2 flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-stripe-4"></span> Concerti & FAQ (Riga 4 - Corallo)
+      </a>
     </div>
   </header>
 
-  <!-- ========================================== -->
-  <!-- HERO SECTION                               -->
-  <!-- ========================================== -->
-  <section class="relative z-10 pt-16 pb-24 md:pt-24 md:pb-32 overflow-hidden">
+  <!-- ================================================================= -->
+  <!-- HERO (Stato Neutro: Visione d'insieme dell'Arcobaleno)            -->
+  <!-- ================================================================= -->
+  <section id="hero" class="relative z-10 pt-16 pb-28 md:pt-24 md:pb-36">
     <div class="max-w-7xl mx-auto px-5 sm:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+      <div class="max-w-3xl space-y-8">
         
-        <!-- Testo Hero (7 Col) -->
-        <div class="lg:col-span-7 space-y-8">
-          <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-brand-teal/10 border border-brand-teal/20 text-brand-teal text-xs sm:text-sm font-bold tracking-wide">
-            <span class="w-2 h-2 rounded-full bg-brand-teal animate-pulse"></span>
-            Didattica 1-a-1 & Attività Concertistica
-          </div>
-
-          <h1 class="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-brand-dark tracking-tight leading-[1.12]">
-            L'Armonia non è un divieto.<br>
-            È un sistema di <span class="text-brand-teal">tensioni</span> e <span class="text-brand-coral">risoluzioni</span>.
-          </h1>
-
-          <p class="text-lg sm:text-xl text-brand-dark/80 max-w-2xl font-normal leading-relaxed">
-            Lezioni individuali online di <strong>Pianoforte</strong> e <strong>Armonia Funzionale</strong>. Un approccio pratico, logico e strutturato per capire a fondo la musica che suoni e liberare la tua espressività alla tastiera.
-          </p>
-
-          <!-- Blocco CTA e Rassicurazioni -->
-          <div class="space-y-4 pt-2">
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-              <!-- LINK GOOGLE CALENDAR QUI: Sostituisci #prenota-chiamata -->
-              <a id="prenota-chiamata" href="https://calendar.google.com/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center px-8 py-4 rounded-xl font-display font-bold text-base sm:text-lg text-white bg-brand-coral hover:bg-brand-coral/95 shadow-xl shadow-brand-coral/30 hover:shadow-brand-coral/45 transition-all duration-200 hover:-translate-y-0.5">
-                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                Prenota Chiamata Conoscitiva (15 min)
-              </a>
-
-              <a href="#lezioni" class="inline-flex items-center justify-center px-6 py-4 rounded-xl font-display font-semibold text-brand-dark bg-white border border-brand-dark/15 hover:border-brand-dark/30 hover:bg-brand-light/60 transition-all duration-200">
-                Scopri il Metodo
-              </a>
-            </div>
-
-            <!-- Micro-copy rassicurante -->
-            <p class="flex items-center text-xs sm:text-sm text-brand-dark/65 font-medium">
-              <svg class="w-4 h-4 mr-2 text-brand-teal" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-              </svg>
-              Gratuita e senza impegno • Valutiamo insieme il tuo livello e i tuoi obiettivi
-            </p>
-          </div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 border border-stripe-1/15 backdrop-blur-sm text-stripe-1 text-xs font-bold tracking-wide">
+          <span class="w-2 h-2 rounded-full bg-stripe-4"></span>
+          Docente 1-a-1 & Musicista Professionista
         </div>
 
-        <!-- Box Visual Identitario (5 Col) -->
-        <div class="lg:col-span-5 relative">
-          <div class="relative mx-auto max-w-md bg-white rounded-3xl p-8 sm:p-9 shadow-2xl border border-brand-dark/10 overflow-hidden transform transition hover:shadow-brand-teal/20">
-            <!-- Dettaglio stile copertina -->
-            <div class="absolute -top-12 -right-12 w-44 h-44 rounded-full bg-brand-gold/15 blur-2xl pointer-events-none"></div>
-            <div class="border-b border-brand-dark/10 pb-6 mb-6">
-              <span class="text-xs font-bold uppercase tracking-widest text-brand-coral">Docente & Concertista</span>
-              <h2 class="text-2xl font-display font-bold text-brand-dark mt-1">Marco Sartore</h2>
-              <p class="text-sm text-brand-teal font-semibold">msartore.it • @m_sartore</p>
-            </div>
+        <h1 class="font-display font-extrabold text-4xl sm:text-6xl text-stripe-1 tracking-tight leading-[1.1]">
+          Padroneggia il Pianoforte.<br>
+          Comprendi la <span class="text-stripe-2">struttura</span> oltre le note.
+        </h1>
 
-            <ul class="space-y-4 text-sm text-brand-dark/85">
-              <li class="flex items-start">
-                <span class="inline-block p-1 bg-brand-teal/15 rounded text-brand-teal mr-3 mt-0.5">✓</span>
-                <span><strong>Audio HD professionale</strong>: setup stereo multicanale tarato per pianoforte acustico e digitale.</span>
-              </li>
-              <li class="flex items-start">
-                <span class="inline-block p-1 bg-brand-gold/20 rounded text-brand-gold mr-3 mt-0.5">✓</span>
-                <span><strong>Metodo Funzionale Diretto</strong>: zero nozionismo sterile, massima applicazione sulla tastiera.</span>
-              </li>
-              <li class="flex items-start">
-                <span class="inline-block p-1 bg-brand-coral/15 rounded text-brand-coral mr-3 mt-0.5">✓</span>
-                <span><strong>Autore del manuale</strong> didattico <em>"L'Armonia Funzionale"</em>.</span>
-              </li>
-            </ul>
-
-            <div class="mt-8 pt-6 border-t border-brand-dark/10 flex items-center justify-between">
-              <div>
-                <span class="text-xs text-brand-dark/60 block">Tariffa oraria 1-a-1</span>
-                <span class="font-display font-extrabold text-2xl text-brand-dark">35€ - 40€ <span class="text-xs font-normal text-brand-dark/60">/ ora</span></span>
-              </div>
-              <span class="px-3.5 py-1.5 rounded-full bg-brand-slate text-white text-xs font-semibold">Online HD</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SEZIONE LEZIONI & CORSI (Struttura Trasparente) -->
-  <!-- ========================================== -->
-  <section id="lezioni" class="py-24 bg-white relative z-10 border-y border-brand-dark/10">
-    <div class="max-w-7xl mx-auto px-5 sm:px-8">
-      
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-teal">Offerta Formativa</span>
-        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-dark mt-2">
-          Percorsi Individuali ad Alto Livello
-        </h2>
-        <p class="text-brand-dark/75 mt-4 text-base sm:text-lg">
-          Dalla corretta impostazione tecnica all'improvvisazione e analisi armonica avanzata.
+        <p class="text-lg sm:text-xl text-stripe-1/80 leading-relaxed font-normal">
+          Lezioni individuali online ad alta fedeltà audio. Un metodo logico, geometrico e privo di nozionismi aridi per suonare e capire davvero cosa avviene sotto le tue dita.
         </p>
-      </div>
 
-      <!-- I Due Corsi Principali -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-        
-        <!-- Corso Pianoforte -->
-        <div class="bg-brand-cream rounded-2xl p-8 border border-brand-dark/10 relative flex flex-col justify-between hover:border-brand-teal transition-all">
-          <div class="space-y-4">
-            <div class="w-12 h-12 rounded-xl bg-brand-teal/15 flex items-center justify-center text-brand-teal font-display font-bold text-xl">
-              🎹
-            </div>
-            <h3 class="font-display font-bold text-2xl text-brand-dark">Pianoforte Moderno & Classico</h3>
-            <p class="text-brand-dark/80 text-sm leading-relaxed">
-              Dedicato sia a chi desidera costruire basi solide senza contratture o difetti di postura, sia a chi affronta repertorio, interpretazione e dinamica del tocco.
-            </p>
-            <ul class="space-y-2.5 text-sm text-brand-dark/85 pt-2">
-              <li class="flex items-center"><span class="text-brand-teal mr-2 font-bold">•</span> Tecnica di base, articolazione e scioltezza</li>
-              <li class="flex items-center"><span class="text-brand-teal mr-2 font-bold">•</span> Lettura a prima vista e condotta polifonica</li>
-              <li class="flex items-center"><span class="text-brand-teal mr-2 font-bold">•</span> Sviluppo del repertorio personalizzato</li>
-            </ul>
-          </div>
-          <div class="mt-8 pt-4 border-t border-brand-dark/10">
-            <span class="text-xs font-bold text-brand-teal uppercase tracking-wider">60 Minuti • 1-a-1 Google Meet</span>
-          </div>
+        <!-- CTA Hero -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+          <!-- LINK GOOGLE CALENDAR QUI -->
+          <a id="prenota-chiamata" href="https://calendar.google.com/" target="_blank" rel="noopener noreferrer" 
+             class="inline-flex items-center justify-center px-7 py-4 rounded-xl font-display font-bold text-base text-white bg-stripe-4 hover:bg-stripe-4/90 shadow-xl shadow-stripe-4/25 hover:-translate-y-0.5 transition-all">
+            Prenota Chiamata Gratuita (15 min)
+          </a>
+
+          <a href="#lezioni" class="inline-flex items-center justify-center px-6 py-4 rounded-xl font-display font-semibold text-stripe-1 bg-white border border-stripe-1/15 hover:bg-stripe-1/5 transition-all">
+            Guarda i Corsi
+          </a>
         </div>
 
-        <!-- Corso Armonia -->
-        <div class="bg-brand-cream rounded-2xl p-8 border border-brand-dark/10 relative flex flex-col justify-between hover:border-brand-coral transition-all">
-          <div class="space-y-4">
-            <div class="w-12 h-12 rounded-xl bg-brand-coral/15 flex items-center justify-center text-brand-coral font-display font-bold text-xl">
-              🎼
-            </div>
-            <h3 class="font-display font-bold text-2xl text-brand-dark">Armonia Funzionale & Jazz</h3>
-            <p class="text-brand-dark/80 text-sm leading-relaxed">
-              Supera la pura teoria mnemonica. Impara a decodificare le strutture armoniche, comprendere i centri tonali e applicare le sostituzioni direttamente sul tuo strumento.
-            </p>
-            <ul class="space-y-2.5 text-sm text-brand-dark/85 pt-2">
-              <li class="flex items-center"><span class="text-brand-coral mr-2 font-bold">•</span> Funzioni di Tonica, Dominante e Sottodominante</li>
-              <li class="flex items-center"><span class="text-brand-coral mr-2 font-bold">•</span> Tensioni, estensioni (9e, 11e, 13e) e accordi alterati</li>
-              <li class="flex items-center"><span class="text-brand-coral mr-2 font-bold">•</span> Arrangiamento, voicings e modulazione logica</li>
-            </ul>
-          </div>
-          <div class="mt-8 pt-4 border-t border-brand-dark/10">
-            <span class="text-xs font-bold text-brand-coral uppercase tracking-wider">Metodo dal mio libro • Analisi Applicata</span>
-          </div>
-        </div>
+        <p class="text-xs text-stripe-1/65 font-medium flex items-center">
+          <svg class="w-4 h-4 mr-1.5 text-stripe-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+          Senza impegno • Valutiamo insieme il tuo punto di partenza
+        </p>
 
       </div>
+    </div>
+  </section>
 
-      <!-- Struttura Pacchetto & Trasparenza Organizzativa -->
-      <div class="bg-brand-slate text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden shadow-2xl">
-        <!-- Fascia decorativa colorata interna -->
-        <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-brand-teal via-brand-gold to-brand-coral"></div>
+  <!-- ================================================================= -->
+  <!-- SEZIONE 1: LEZIONI & CORSI (RIGA 1 - BLU SCURO)                  -->
+  <!-- ================================================================= -->
+  <section id="lezioni" class="py-28 relative z-10 border-t border-stripe-1/10 bg-white/70 backdrop-blur-sm transition-all duration-700">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
+      
+      <!-- Etichetta di sezione coordinata con la Riga 1 -->
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-1.5 rounded-full bg-stripe-1"></span>
+        <span class="text-xs font-bold uppercase tracking-widest text-stripe-1">Riga 1: Area Didattica</span>
+      </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div class="lg:col-span-7 space-y-4">
-            <span class="px-3 py-1 rounded-full bg-white/10 text-brand-gold text-xs font-bold uppercase tracking-wider">
-              Formula Consigliata
-            </span>
-            <h3 class="font-display font-extrabold text-3xl sm:text-4xl text-white">
-              Pacchetto Continuativo: 4 Lezioni Individuali
-            </h3>
-            <p class="text-white/80 text-sm sm:text-base leading-relaxed">
-              La didattica musicale necessita di continuità e metabolizzazione. Il pacchetto da 4 sessioni è studiato per creare una progressione chiara e misurabile senza dispersioni.
-            </p>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 text-xs sm:text-sm text-white/90">
-              <div class="flex items-start">
-                <span class="text-brand-gold font-bold mr-2 text-base">◷</span>
-                <span><strong>Validità 60 giorni</strong> dall'acquisto per garantire ritmo didattico costante.</span>
-              </div>
-              <div class="flex items-start">
-                <span class="text-brand-gold font-bold mr-2 text-base">📅</span>
-                <span><strong>Gestione autonoma</strong> via Google Calendar con link privato dedicato.</span>
-              </div>
-              <div class="flex items-start">
-                <span class="text-brand-coral font-bold mr-2 text-base">↺</span>
-                <span><strong>Flessibilità 24h</strong>: puoi spostare la lezione senza penali con preavviso minimo.</span>
-              </div>
-              <div class="flex items-start">
-                <span class="text-brand-teal font-bold mr-2 text-base">✉</span>
-                <span><strong>Materiale via e-mail</strong>: spartiti, schemi e appunti riassuntivi inclusi.</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="lg:col-span-5 flex flex-col items-center lg:items-end justify-center">
-            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/15 w-full max-w-sm text-center">
-              <span class="text-xs uppercase text-white/70 font-semibold tracking-wider">Tariffa Trasparente</span>
-              <div class="text-3xl sm:text-4xl font-display font-extrabold text-white mt-1 mb-2">
-                140€ – 160€
-              </div>
-              <p class="text-xs text-white/70 mb-6">Equivalente a 35-40€ per 60 minuti individuali in Audio HD</p>
-              
-              <!-- LINK GOOGLE CALENDAR QUI: Sostituisci il link per prenotare la prima chiamata conoscitiva -->
-              <a href="#prenota-chiamata" class="w-full inline-block py-3 px-6 rounded-xl font-display font-bold text-sm text-brand-dark bg-brand-gold hover:bg-yellow-400 transition-colors shadow-md">
-                Inizia con la Chiamata (15 min)
-              </a>
-            </div>
-          </div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-16">
+        <div class="lg:col-span-7">
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-stripe-1 leading-tight">
+            Lezioni 1-a-1: Pianoforte & Armonia
+          </h2>
+          <p class="text-stripe-1/80 mt-3 text-base sm:text-lg">
+            Sessioni personalizzate da 60 minuti trasmesse con setup microfonico e audio stereo multicanale HD, senza compressioni degradanti.
+          </p>
         </div>
 
+        <div class="lg:col-span-5 bg-stripe-1 text-white p-6 sm:p-7 rounded-2xl shadow-xl">
+          <div class="text-xs font-bold text-stripe-3 uppercase tracking-wider mb-1">Formula Consigliata</div>
+          <h3 class="font-display font-bold text-xl text-white">Pacchetto di 4 Lezioni Individuali</h3>
+          <p class="text-xs text-white/80 mt-2 leading-relaxed">
+            • Validità: 60 giorni per preservare la continuità didattica.<br>
+            • Gestione orari autonoma via Google Calendar.<br>
+            • Flessibilità: spostamenti consentiti con preavviso minimo di 24h.
+          </p>
+          <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
+            <span class="font-display font-bold text-2xl text-white">35€ – 40€ <span class="text-xs font-normal text-white/60">/ ora</span></span>
+            <!-- LINK GOOGLE CALENDAR QUI -->
+            <a href="#prenota-chiamata" class="text-xs font-bold px-4 py-2 rounded-lg bg-white text-stripe-1 hover:bg-stripe-3 transition-colors">
+              Prenota Chiamata
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dettaglio delle due materie -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-canvas p-8 rounded-2xl border border-stripe-1/15 space-y-3">
+          <div class="text-xs font-bold text-stripe-1 uppercase tracking-wider">Materia 01</div>
+          <h4 class="font-display font-bold text-2xl text-stripe-1">Pianoforte Moderno & Classico</h4>
+          <p class="text-sm text-stripe-1/75 leading-relaxed">
+            Correzione della postura, libertà articolare delle dita, dinamica del tocco, lettura dello spartito e interpretazione polifonica applicata al repertorio scelto.
+          </p>
+        </div>
+
+        <div class="bg-canvas p-8 rounded-2xl border border-stripe-1/15 space-y-3">
+          <div class="text-xs font-bold text-stripe-1 uppercase tracking-wider">Materia 02</div>
+          <h4 class="font-display font-bold text-2xl text-stripe-1">Armonia Applicata & Jazz</h4>
+          <p class="text-sm text-stripe-1/75 leading-relaxed">
+            Analisi del movimento delle voci, riconoscimento istantaneo delle funzioni di tonica/dominante, accordi di settima, tensioni (9, 11, 13) e sostituzioni al pianoforte.
+          </p>
+        </div>
       </div>
 
     </div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- SEZIONE IL LIBRO: L'ARMONIA FUNZIONALE     -->
-  <!-- ========================================== -->
-  <section id="libro" class="py-24 relative z-10 overflow-hidden">
+  <!-- ================================================================= -->
+  <!-- SEZIONE 2: IL MANUALE (RIGA 2 - VERDE PETROLIO)                   -->
+  <!-- ================================================================= -->
+  <section id="manuale" class="py-28 relative z-10 border-t border-stripe-2/20 bg-white/40 backdrop-blur-sm transition-all duration-700">
     <div class="max-w-7xl mx-auto px-5 sm:px-8">
       
+      <!-- Etichetta coordinata con Riga 2 -->
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-1.5 rounded-full bg-stripe-2"></span>
+        <span class="text-xs font-bold uppercase tracking-widest text-stripe-2">Riga 2: La Pubblicazione</span>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
-        <!-- Replica Grafica Copertina Libro (5 Col) -->
-        <div class="lg:col-span-5 order-2 lg:order-1">
-          <div class="relative bg-white rounded-2xl shadow-2xl p-6 sm:p-8 border border-brand-dark/15 overflow-hidden">
-            <!-- Nastro grafico che riprende esattamente la copertina fornita -->
-            <div class="absolute -right-8 -bottom-10 w-72 h-72 pointer-events-none opacity-90">
-              <svg viewBox="0 0 200 200" fill="none">
-                <path d="M0 160 C 80 180 120 80 200 120" stroke="#1E3845" stroke-width="16" />
-                <path d="M0 175 C 80 195 120 95 200 135" stroke="#2E7778" stroke-width="14" />
-                <path d="M0 190 C 80 210 120 110 200 150" stroke="#E5AA40" stroke-width="14" />
-                <path d="M0 205 C 80 225 120 125 200 165" stroke="#DD6041" stroke-width="14" />
-              </svg>
-            </div>
+        <!-- Contenuto descrittivo -->
+        <div class="lg:col-span-7 space-y-6">
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-stripe-1">
+            L'Armonia Funzionale:<br>
+            <span class="text-stripe-2">Un approccio pratico e strutturato</span>
+          </h2>
+          
+          <p class="text-base sm:text-lg text-stripe-1/80 leading-relaxed">
+            Nato dalla mia esperienza sul palco e in aula, questo manuale elimina le ambiguità e i divieti dogmatici della teoria tradizionale. L'armonia viene trattata per quello che è realmente: un sistema coerente di forze, tensioni e risoluzioni.
+          </p>
 
-            <div class="space-y-4 relative z-10">
-              <div>
-                <span class="text-sm font-display font-bold text-brand-dark">Marco <span class="text-brand-coral">Sartore</span></span>
-                <h3 class="text-2xl sm:text-3xl font-display font-extrabold tracking-tight text-brand-dark leading-tight mt-1">
-                  L'ARMONIA<br><span class="text-brand-dark">FUNZIONA</span><span class="text-brand-gold">LE</span>
-                </h3>
-                <p class="text-xs font-semibold text-brand-teal mt-1">
-                  Un approccio pratico e strutturato per capire come funziona l'armonia
-                </p>
-              </div>
-
-              <!-- Estratto testuale fedele al retro/compendio della foto -->
-              <div class="bg-brand-cream/80 rounded-xl p-4 border border-brand-dark/10 text-[13px] text-brand-dark/85 leading-relaxed space-y-2">
-                <p class="italic text-brand-slate font-medium">
-                  "L'armonia non è un insieme di divieti, ma un sistema di tensioni e risoluzioni. Ogni concetto è schematico, ridotto alla sua essenza e strutturato per essere applicato immediatamente."
-                </p>
-                <div class="pt-2 border-t border-brand-dark/10 space-y-1 text-xs">
-                  <div class="font-bold text-brand-dark">Contenuti chiave del metodo:</div>
-                  <div>• Catalogazione degli intervalli e delle triadi</div>
-                  <div>• Funzioni di Tonica, Dominante e Sottodominante</div>
-                  <div>• Concatenamento accordi e corretta condotta delle voci</div>
-                  <div>• Settime, accordi alterati e Napoletana</div>
-                  <div>• Schemi riassuntivi per la modulazione su ogni grado</div>
-                </div>
-              </div>
-
-              <div class="pt-1">
-                <span class="inline-block text-[11px] font-bold text-brand-slate uppercase tracking-wider bg-brand-light px-3 py-1 rounded">
-                  Testo di Riferimento per gli Allievi
-                </span>
-              </div>
+          <!-- Estratto testuale fedele al compendio fotografato -->
+          <div class="bg-white p-6 rounded-2xl border-l-4 border-stripe-2 shadow-sm space-y-2 text-sm text-stripe-1/85">
+            <p class="font-medium italic">
+              "L'armonia non è un insieme di divieti, ma un sistema di tensioni e risoluzioni. Ogni concetto è schematico, ridotto alla sua essenza e strutturato per essere applicato immediatamente."
+            </p>
+            <div class="pt-2 text-xs space-y-1 font-semibold text-stripe-2">
+              • Catalogazione degli intervalli e delle triadi<br>
+              • Gestione Tonica, Dominante e Sottodominante<br>
+              • Concatenamento accordi e corretta condotta delle voci<br>
+              • Uso avanzato delle settime, accordi alterati e Napoletana<br>
+              • Schemi riassuntivi per la modulazione a ogni grado
             </div>
           </div>
         </div>
 
-        <!-- Descrizione del Metodo (7 Col) -->
-        <div class="lg:col-span-7 order-1 lg:order-2 space-y-6">
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-coral">Il Metodo Didattico</span>
-          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-dark">
-            Nessuna formula a memoria.<br>
-            Solo architettura sonora e orecchio.
-          </h2>
-          <p class="text-base sm:text-lg text-brand-dark/80 leading-relaxed">
-            Spesso l'insegnamento tradizionale riduce l'armonia a un elenco di regole aride e divieti secolari. Il mio lavoro – condensato nel testo <em>"L'Armonia Funzionale"</em> – restituisce alla musica la sua natura viva: capire <strong>perché</strong> un accordo genera tensione emotiva, come risolverlo e come trasportare qualsiasi concetto su tutti i gradi della scala.
-          </p>
-          <div class="p-5 rounded-2xl bg-white border-l-4 border-brand-teal shadow-sm space-y-2">
-            <h4 class="font-display font-bold text-brand-dark text-base">Dalla pagina alla tastiera</h4>
-            <p class="text-sm text-brand-dark/75">
-              Ogni concetto analitico affrontato a lezione viene contestualizzato direttamente sul pianoforte con esempi dal repertorio classico, jazz e pop/soundtrack contemporaneo.
+        <!-- Scheda copertina grafica fedele -->
+        <div class="lg:col-span-5">
+          <div class="bg-white p-8 rounded-3xl border border-stripe-2/20 shadow-xl relative overflow-hidden">
+            <span class="text-xs font-bold text-stripe-1">Marco <span class="text-stripe-4">Sartore</span></span>
+            <div class="font-display font-black text-3xl tracking-tight text-stripe-1 mt-1 leading-none">
+              L'ARMONIA<br><span class="text-stripe-1">FUNZIONA</span><span class="text-stripe-3">LE</span>
+            </div>
+            <p class="text-xs font-bold text-stripe-2 mt-2">
+              Un approccio pratico e strutturato per capire come funziona l'armonia
             </p>
+            <div class="mt-6 pt-6 border-t border-stripe-1/10 flex items-center justify-between text-xs text-stripe-1/70">
+              <span>Formato denso & schematico</span>
+              <span class="px-3 py-1 rounded bg-stripe-2/10 text-stripe-2 font-bold">Manuale Ufficiale</span>
+            </div>
           </div>
         </div>
 
@@ -451,238 +388,152 @@
     </div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- SEZIONE CHI SONO (Autorevolezza & Bio)     -->
-  <!-- ========================================== -->
-  <section id="chi-sono" class="py-24 bg-brand-light/50 relative z-10 border-t border-brand-dark/10">
+  <!-- ================================================================= -->
+  <!-- SEZIONE 3: CHI SONO (RIGA 3 - GIALLO SENAPE / OCRA)              -->
+  <!-- ================================================================= -->
+  <section id="chi-sono" class="py-28 relative z-10 border-t border-stripe-3/20 bg-white/70 backdrop-blur-sm transition-all duration-700">
     <div class="max-w-7xl mx-auto px-5 sm:px-8">
       
+      <!-- Etichetta coordinata con Riga 3 -->
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-1.5 rounded-full bg-stripe-3"></span>
+        <span class="text-xs font-bold uppercase tracking-widest text-stripe-3">Riga 3: Il Docente</span>
+      </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         
         <div class="lg:col-span-7 space-y-6">
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-teal">Biografia & Visione</span>
-          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-dark">
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-stripe-1">
             Marco Sartore
           </h2>
-          <div class="space-y-4 text-brand-dark/80 text-base leading-relaxed">
-            <p>
-              Sono un pianista, compositore e didatta attivo tra palchi dal vivo, produzioni musicali e insegnamento avanzato. La mia duplice identità – musicista concertista da una parte e studioso di logica armonica dall'altra – mi permette di offrire agli allievi una prospettiva sia rigorosa che costantemente legata all'atto pratico del suonare.
-            </p>
-            <p>
-              Attraverso il mio canale didattico e il profilo Instagram <a href="https://instagram.com/m_sartore" target="_blank" class="text-brand-coral font-semibold underline underline-offset-4">@m_sartore</a> condivido analisi, pillole di armonia e spunti interpretativi per oltrepassare i blocchi tecnici e creativi tipici dei musicisti.
-            </p>
-          </div>
-
-          <!-- Riquadro Citazione Filosofica -->
-          <blockquote class="bg-white p-6 rounded-2xl border border-brand-dark/10 shadow-sm relative">
-            <p class="font-display font-medium text-brand-dark text-lg italic leading-snug">
-              "L'allievo non deve diventare una copia del maestro, ma acquisire gli strumenti analitici e tecnici per diventare autonomo, critico e artisticamente libero."
-            </p>
-            <cite class="block text-xs font-bold tracking-wider uppercase text-brand-teal mt-3 not-italic">
-              — Marco Sartore
-            </cite>
-          </blockquote>
-        </div>
-
-        <div class="lg:col-span-5">
-          <div class="bg-brand-dark text-white rounded-3xl p-8 sm:p-10 shadow-xl space-y-6">
-            <h3 class="font-display font-bold text-2xl text-white">Caratteristiche delle mie lezioni</h3>
-            
-            <div class="space-y-4 text-sm text-white/80">
-              <div class="border-b border-white/10 pb-4">
-                <span class="text-brand-gold font-bold block mb-1">Flessibilità & Rigore</span>
-                Orari concordati e gestiti comodamente, ma con un piano di studio su misura e verifiche regolari dei progressi.
-              </div>
-              <div class="border-b border-white/10 pb-4">
-                <span class="text-brand-coral font-bold block mb-1">Qualità di Ascolto HD</span>
-                Interfaccia audio dedicata con microfonazione ad alta sensibilità per cogliere ogni sfumatura di tocco, dinamica e pedale.
-              </div>
-              <div>
-                <span class="text-brand-teal font-bold block mb-1">Supporto Continuo</span>
-                Comunicazioni e chiarimenti via mail dedicata tra una lezione e l'altra su compiti e spartiti.
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ========================================== -->
-  <!-- SEZIONE CONCERTI & ATTIVITÀ DAL VIVO       -->
-  <!-- ========================================== -->
-  <section id="concerti" class="py-24 bg-white relative z-10 border-t border-brand-dark/10">
-    <div class="max-w-7xl mx-auto px-5 sm:px-8">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-14">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-widest text-brand-coral">Attività Artistica</span>
-          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-dark mt-2">
-            Concerti & Date dal Vivo
-          </h2>
-          <p class="text-brand-dark/70 mt-2 text-base">
-            Appuntamenti concertistici, esibizioni solistiche e collaborazioni live.
+          <p class="text-base sm:text-lg text-stripe-1/80 leading-relaxed">
+            Musicista e formatore. La mia attività unisce l'attività concertistica dal vivo, la composizione e un metodo d'insegnamento progettato per rendere l'allievo del tutto autonomo al pianoforte.
+          </p>
+          <p class="text-sm text-stripe-1/75 leading-relaxed">
+            Sul mio profilo Instagram <a href="https://instagram.com/m_sartore" target="_blank" class="font-bold text-stripe-3 underline underline-offset-4">@m_sartore</a> condivido analisi, spunti tecnici ed esempi armonici quotidiani per pianisti e studenti.
           </p>
         </div>
-        <div class="mt-4 md:mt-0">
-          <span class="inline-flex items-center text-xs font-semibold text-brand-slate bg-brand-light px-3.5 py-1.5 rounded-full">
-            Stagione Concertistica Attiva
+
+        <div class="lg:col-span-5 bg-canvas p-8 rounded-3xl border border-stripe-3/30 shadow-sm space-y-4">
+          <div class="w-10 h-10 rounded-full bg-stripe-3/20 flex items-center justify-center text-stripe-3 font-bold text-lg">
+            “
+          </div>
+          <blockquote class="font-display font-medium text-lg text-stripe-1 italic leading-snug">
+            "Capire l'armonia non significa applicare un calcolo matematico, ma imparare ad ascoltare il peso e la direzione di ogni singola nota all'interno dell'accordo."
+          </blockquote>
+          <span class="block text-xs font-bold uppercase tracking-wider text-stripe-3 not-italic">
+            — Filosofia Didattica
           </span>
         </div>
-      </div>
 
-      <!-- Schede Date -->
-      <div class="space-y-4">
-        
-        <!-- Live Item 1 -->
-        <div class="p-6 rounded-2xl bg-brand-cream border border-brand-dark/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-brand-teal transition-all">
-          <div class="flex items-start sm:items-center gap-5">
-            <div class="bg-brand-teal text-white text-center rounded-xl p-3 min-w-[70px]">
-              <span class="block text-xs uppercase font-bold tracking-wider">MAG</span>
-              <span class="block text-2xl font-display font-extrabold">24</span>
-            </div>
-            <div>
-              <h4 class="font-display font-bold text-lg text-brand-dark">Recital Pianistico: Tra Contrappunto e Armonia Moderna</h4>
-              <p class="text-sm text-brand-dark/70">Auditorium Comunale • Milano, IT</p>
-            </div>
-          </div>
-          <div>
-            <a href="mailto:info@msartore.it?subject=Info%20Concerto%20Milano" class="inline-block px-5 py-2 rounded-lg text-xs font-bold text-brand-slate bg-white border border-brand-dark/15 hover:border-brand-teal transition-colors">
-              Info & Accredito
-            </a>
-          </div>
-        </div>
-
-        <!-- Live Item 2 -->
-        <div class="p-6 rounded-2xl bg-brand-cream border border-brand-dark/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-brand-gold transition-all">
-          <div class="flex items-start sm:items-center gap-5">
-            <div class="bg-brand-gold text-brand-dark text-center rounded-xl p-3 min-w-[70px]">
-              <span class="block text-xs uppercase font-bold tracking-wider">GIU</span>
-              <span class="block text-2xl font-display font-extrabold">12</span>
-            </div>
-            <div>
-              <h4 class="font-display font-bold text-lg text-brand-dark">Piano Solo & Live Improvisation</h4>
-              <p class="text-sm text-brand-dark/70">Rassegna Summer Music Nights • Torino, IT</p>
-            </div>
-          </div>
-          <div>
-            <a href="mailto:info@msartore.it?subject=Info%20Concerto%20Torino" class="inline-block px-5 py-2 rounded-lg text-xs font-bold text-brand-slate bg-white border border-brand-dark/15 hover:border-brand-gold transition-colors">
-              Info & Accredito
-            </a>
-          </div>
-        </div>
-
-        <!-- Live Item 3 -->
-        <div class="p-6 rounded-2xl bg-brand-cream border border-brand-dark/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-brand-coral transition-all">
-          <div class="flex items-start sm:items-center gap-5">
-            <div class="bg-brand-coral text-white text-center rounded-xl p-3 min-w-[70px]">
-              <span class="block text-xs uppercase font-bold tracking-wider">LUG</span>
-              <span class="block text-2xl font-display font-extrabold">05</span>
-            </div>
-            <div>
-              <h4 class="font-display font-bold text-lg text-brand-dark">Masterclass & Concerto Didattico</h4>
-              <p class="text-sm text-brand-dark/70">Festival delle Arti • Bologna, IT</p>
-            </div>
-          </div>
-          <div>
-            <a href="mailto:info@msartore.it?subject=Info%20Masterclass%20Bologna" class="inline-block px-5 py-2 rounded-lg text-xs font-bold text-brand-slate bg-white border border-brand-dark/15 hover:border-brand-coral transition-colors">
-              Info & Accredito
-            </a>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Nota Archivio -->
-      <div class="mt-8 text-center sm:text-left">
-        <p class="text-xs text-brand-dark/60 font-medium">
-          Per booking, proposte concertistiche o collaborazioni artistiche: <a href="mailto:info@msartore.it" class="text-brand-coral underline">info@msartore.it</a>
-        </p>
       </div>
 
     </div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- SEZIONE FAQ & CONTATTI                     -->
-  <!-- ========================================== -->
-  <section id="faq" class="py-24 bg-brand-cream relative z-10 border-t border-brand-dark/10">
-    <div class="max-w-5xl mx-auto px-5 sm:px-8">
+  <!-- ================================================================= -->
+  <!-- SEZIONE 4: CONCERTI & FAQ (RIGA 4 - TERRACOTTA / CORALLO)        -->
+  <!-- ================================================================= -->
+  <section id="concerti-faq" class="py-28 relative z-10 border-t border-stripe-4/20 bg-white/80 backdrop-blur-sm transition-all duration-700">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8">
       
-      <div class="text-center max-w-2xl mx-auto mb-16">
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-teal">Domande Frequenti</span>
-        <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-brand-dark mt-2">
-          Tutto Quello che C'è da Sapere
-        </h2>
-        <p class="text-brand-dark/75 mt-3 text-base">
-          Trasparenza su orari, tecnologia online e gestione delle lezioni.
-        </p>
+      <!-- Etichetta coordinata con Riga 4 -->
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-8 h-1.5 rounded-full bg-stripe-4"></span>
+        <span class="text-xs font-bold uppercase tracking-widest text-stripe-4">Riga 4: Live & Domande Frequenti</span>
       </div>
 
-      <!-- Accordion FAQ -->
-      <div class="space-y-4 mb-16">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
         
-        <!-- Domanda 1 -->
-        <div class="bg-white rounded-2xl border border-brand-dark/10 overflow-hidden">
-          <button class="faq-toggle w-full px-6 py-5 text-left font-display font-bold text-lg text-brand-dark flex justify-between items-center focus:outline-none">
-            <span>Come si svolgono le lezioni online e di cosa ho bisogno?</span>
-            <span class="faq-icon text-brand-teal text-xl transform transition-transform duration-200">+</span>
-          </button>
-          <div class="faq-content hidden px-6 pb-5 text-sm text-brand-dark/80 leading-relaxed border-t border-brand-dark/5 pt-3">
-            Le lezioni avvengono tramite Google Meet con trasmissione audio ottimizzata ad alta definizione (modalità audio per musicisti). Ti basta un computer o tablet con webcam posizionata per mostrare le mani e la tastiera, una connessione stabile e cuffie/auricolari per sentire chiaramente ogni sfumatura armonica e timbrica.
+        <!-- Live Concerts (6 Col) -->
+        <div class="lg:col-span-6 space-y-6">
+          <h2 class="font-display font-extrabold text-3xl text-stripe-1">
+            Date dal Vivo & Concerti
+          </h2>
+          <p class="text-sm text-stripe-1/70">
+            Attività concertistica, rassegne e masterclass pianistiche aperte al pubblico.
+          </p>
+
+          <div class="space-y-3 pt-2">
+            <div class="p-4 rounded-xl bg-canvas border border-stripe-1/10 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-stripe-4 block">Maggio 2026</span>
+                <span class="font-display font-bold text-base text-stripe-1">Recital Pianistico: Armonia & Improvvisazione</span>
+                <span class="text-xs text-stripe-1/60 block">Milano • Info e dettagli via mail</span>
+              </div>
+              <a href="mailto:info@msartore.it" class="text-xs font-bold px-3 py-1.5 rounded bg-white border border-stripe-1/15 text-stripe-1 hover:border-stripe-4 transition-colors">
+                Info
+              </a>
+            </div>
+
+            <div class="p-4 rounded-xl bg-canvas border border-stripe-1/10 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-stripe-4 block">Luglio 2026</span>
+                <span class="font-display font-bold text-base text-stripe-1">Piano Solo Live: Rassegna Contemporanea</span>
+                <span class="text-xs text-stripe-1/60 block">Torino • Sala Concerti</span>
+              </div>
+              <a href="mailto:info@msartore.it" class="text-xs font-bold px-3 py-1.5 rounded bg-white border border-stripe-1/15 text-stripe-1 hover:border-stripe-4 transition-colors">
+                Info
+              </a>
+            </div>
           </div>
         </div>
 
-        <!-- Domanda 2 -->
-        <div class="bg-white rounded-2xl border border-brand-dark/10 overflow-hidden">
-          <button class="faq-toggle w-full px-6 py-5 text-left font-display font-bold text-lg text-brand-dark flex justify-between items-center focus:outline-none">
-            <span>Come prenoto i miei orari settimanali?</span>
-            <span class="faq-icon text-brand-teal text-xl transform transition-transform duration-200">+</span>
-          </button>
-          <div class="faq-content hidden px-6 pb-5 text-sm text-brand-dark/80 leading-relaxed border-t border-brand-dark/5 pt-3">
-            Dopo la chiamata conoscitiva o l'acquisto del pacchetto, riceverai un link personale a Google Calendar. Potrai visualizzare in tempo reale tutti gli slot disponibili e scegliere giorno e ora in piena autonomia, senza scambi infiniti di messaggi.
-          </div>
-        </div>
+        <!-- FAQ Accordion (6 Col) -->
+        <div class="lg:col-span-6 space-y-4">
+          <h2 class="font-display font-extrabold text-3xl text-stripe-1">
+            FAQ Rapide
+          </h2>
+          
+          <div class="space-y-3">
+            <div class="bg-canvas rounded-xl border border-stripe-1/10 overflow-hidden">
+              <button class="faq-toggle w-full px-5 py-4 text-left font-display font-bold text-sm text-stripe-1 flex justify-between items-center">
+                <span>Come funziona l'audio delle lezioni online?</span>
+                <span class="text-stripe-4 text-lg font-bold">+</span>
+              </button>
+              <div class="faq-content hidden px-5 pb-4 text-xs text-stripe-1/80 leading-relaxed border-t border-stripe-1/5 pt-2">
+                Utilizziamo Google Meet configurato in modalità stereo ad alta fedeltà senza soppressione dei transienti del pianoforte acustico/digitale.
+              </div>
+            </div>
 
-        <!-- Domanda 3 -->
-        <div class="bg-white rounded-2xl border border-brand-dark/10 overflow-hidden">
-          <button class="faq-toggle w-full px-6 py-5 text-left font-display font-bold text-lg text-brand-dark flex justify-between items-center focus:outline-none">
-            <span>Cosa succede se ho un imprevisto e devo spostare la lezione?</span>
-            <span class="faq-icon text-brand-teal text-xl transform transition-transform duration-200">+</span>
-          </button>
-          <div class="faq-content hidden px-6 pb-5 text-sm text-brand-dark/80 leading-relaxed border-t border-brand-dark/5 pt-3">
-            Massima flessibilità: puoi cancellare o spostare la tua lezione direttamente dal link del calendario fino a <strong>24 ore prima</strong> dell'orario stabilito, senza perdere la sessione. Per disdette effettuate con meno di 24 ore di preavviso la lezione viene conteggiata.
-          </div>
-        </div>
+            <div class="bg-canvas rounded-xl border border-stripe-1/10 overflow-hidden">
+              <button class="faq-toggle w-full px-5 py-4 text-left font-display font-bold text-sm text-stripe-1 flex justify-between items-center">
+                <span>Come gestisco gli orari e gli appuntamenti?</span>
+                <span class="text-stripe-4 text-lg font-bold">+</span>
+              </button>
+              <div class="faq-content hidden px-5 pb-4 text-xs text-stripe-1/80 leading-relaxed border-t border-stripe-1/5 pt-2">
+                Riceverai il link privato a Google Calendar per prenotare i tuoi orari settimanali in piena autonomia secondo le tue disponibilità.
+              </div>
+            </div>
 
-        <!-- Domanda 4 -->
-        <div class="bg-white rounded-2xl border border-brand-dark/10 overflow-hidden">
-          <button class="faq-toggle w-full px-6 py-5 text-left font-display font-bold text-lg text-brand-dark flex justify-between items-center focus:outline-none">
-            <span>Che livello serve per accedere al corso di Armonia Funzionale?</span>
-            <span class="faq-icon text-brand-teal text-xl transform transition-transform duration-200">+</span>
-          </button>
-          <div class="faq-content hidden px-6 pb-5 text-sm text-brand-dark/80 leading-relaxed border-t border-brand-dark/5 pt-3">
-            Il corso è personalizzato: accolgo sia musicisti che partono dalle nozioni base di lettura e accordi elementari, sia pianisti e compositori avanzati che vogliono approfondire il linguaggio jazzistico, le modulazioni complesse o l'arrangiamento moderno.
+            <div class="bg-canvas rounded-xl border border-stripe-1/10 overflow-hidden">
+              <button class="faq-toggle w-full px-5 py-4 text-left font-display font-bold text-sm text-stripe-1 flex justify-between items-center">
+                <span>Se devo cancellare o spostare una lezione?</span>
+                <span class="faq-icon text-stripe-4 text-lg font-bold">+</span>
+              </button>
+              <div class="faq-content hidden px-5 pb-4 text-xs text-stripe-1/80 leading-relaxed border-t border-stripe-1/5 pt-2">
+                Puoi spostare la lezione autonomamente fino a 24 ore prima dell'orario stabilito senza perdere il credito.
+              </div>
+            </div>
           </div>
+
         </div>
 
       </div>
 
-      <!-- Box Contatti Finale -->
-      <div class="bg-brand-dark text-white rounded-3xl p-8 sm:p-10 text-center relative overflow-hidden">
-        <h3 class="font-display font-extrabold text-2xl sm:text-3xl">Hai una richiesta specifica o dubbi didattici?</h3>
-        <p class="text-white/80 max-w-xl mx-auto mt-3 text-sm sm:text-base">
-          Scrivimi direttamente via e-mail per informazioni su lezioni, masterclass o consulenze armoniche.
-        </p>
-
-        <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="mailto:info@msartore.it" class="px-8 py-3.5 rounded-full font-display font-bold text-brand-dark bg-white hover:bg-brand-cream transition-colors text-sm shadow-md">
-            ✉ info@msartore.it
+      <!-- Box Contatto Diretto -->
+      <div class="mt-16 p-8 rounded-3xl bg-stripe-1 text-white text-center sm:text-left sm:flex items-center justify-between gap-6 shadow-xl">
+        <div>
+          <h3 class="font-display font-bold text-xl text-white">Vuoi iniziare o hai domande particolari?</h3>
+          <p class="text-xs text-white/70 mt-1">Scrivi direttamente a info@msartore.it o prenota i 15 minuti conoscitivi.</p>
+        </div>
+        <div class="mt-4 sm:mt-0 flex gap-3 justify-center">
+          <a href="mailto:info@msartore.it" class="px-5 py-2.5 rounded-full text-xs font-bold bg-white text-stripe-1 hover:bg-canvas transition-colors">
+            info@msartore.it
           </a>
-          <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="px-8 py-3.5 rounded-full font-display font-bold text-white bg-brand-coral hover:bg-brand-coral/90 transition-colors text-sm shadow-md">
-            Instagram: @m_sartore
+          <!-- LINK GOOGLE CALENDAR QUI -->
+          <a href="#prenota-chiamata" class="px-5 py-2.5 rounded-full text-xs font-bold bg-stripe-4 text-white hover:bg-stripe-4/90 transition-colors">
+            Prenota Chiamata
           </a>
         </div>
       </div>
@@ -690,126 +541,157 @@
     </div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- FOOTER                                     -->
-  <!-- ========================================== -->
-  <footer class="bg-brand-dark text-white/70 py-12 border-t border-white/10 relative z-10 text-sm">
-    <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-      
+  <!-- ================================================================= -->
+  <!-- FOOTER                                                            -->
+  <!-- ================================================================= -->
+  <footer class="bg-stripe-1 text-white/60 py-10 border-t border-white/10 relative z-10 text-xs">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
-        <span class="font-display font-bold text-white text-lg">MARCO SARTORE</span>
-        <p class="text-xs text-white/50 mt-1">
-          Pianista, Didatta & Autore di "L'Armonia Funzionale" • msartore.it
-        </p>
+        <span class="font-display font-bold text-white text-sm">MARCO SARTORE</span> • msartore.it
       </div>
-
-      <div class="flex items-center space-x-6 text-xs text-white/80 font-medium">
-        <a href="#lezioni" class="hover:text-white transition-colors">Lezioni</a>
-        <a href="#libro" class="hover:text-white transition-colors">Libro</a>
-        <a href="#concerti" class="hover:text-white transition-colors">Concerti</a>
-        <a href="mailto:info@msartore.it" class="hover:text-white transition-colors">Contatto Mail</a>
+      <div>
+        Instagram: <a href="https://instagram.com/m_sartore" target="_blank" class="text-white hover:underline">@m_sartore</a>
       </div>
-
-      <div class="text-xs text-white/50">
-        © <span id="current-year"></span> Marco Sartore. Tutti i diritti riservati.
+      <div>
+        © <span id="current-year"></span> Tutti i diritti riservati.
       </div>
-
     </div>
   </footer>
 
-  <!-- ========================================== -->
-  <!-- VANILLA JAVASCRIPT LOGIC                   -->
-  <!-- ========================================== -->
+  <!-- ================================================================= -->
+  <!-- SCRIPT DI CONTROLLO: MOVIMENTO DELL'ONDA SEZIONE PER SEZIONE       -->
+  <!-- ================================================================= -->
   <script>
-    // 1. Anno corrente dinamico nel footer
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // 2. Gestione Menu Mobile
-    const mobileBtn = document.getElementById('mobile-menu-btn');
+    // Menu Mobile
+    const mobileBtn = document.getElementById('mobile-btn');
     const mobileMenu = document.getElementById('mobile-menu');
-    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+    mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-    mobileBtn.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.classList.add('hidden');
+    // FAQ Accordion
+    document.querySelectorAll('.faq-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        content.classList.toggle('hidden');
+        btn.querySelector('span:last-child').textContent = content.classList.contains('hidden') ? '+' : '−';
       });
     });
 
-    // 3. Accordion FAQ
-    const faqToggles = document.querySelectorAll('.faq-toggle');
-    faqToggles.forEach(toggle => {
-      toggle.addEventListener('click', () => {
-        const content = toggle.nextElementSibling;
-        const icon = toggle.querySelector('.faq-icon');
-        const isOpen = !content.classList.contains('hidden');
+    // ELEMENTI DEL SISTEMA ARCOBALENO
+    const rainbowSvg = document.getElementById('master-rainbow');
+    const stripes = [
+      document.getElementById('stripe-1'), // Blu
+      document.getElementById('stripe-2'), // Verde
+      document.getElementById('stripe-3'), // Giallo
+      document.getElementById('stripe-4')  // Corallo
+    ];
 
-        // Chiude gli altri accordion
-        document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
-        document.querySelectorAll('.faq-icon').forEach(i => {
-          i.textContent = '+';
-          i.classList.remove('rotate-45');
-        });
+    const navLinks = {
+      'lezioni': document.getElementById('nav-lezioni'),
+      'manuale': document.getElementById('nav-manuale'),
+      'chi-sono': document.getElementById('nav-chi-sono'),
+      'concerti-faq': document.getElementById('nav-concerti'),
+    };
 
-        // Apre o chiude l'attuale
-        if (!isOpen) {
-          content.classList.remove('hidden');
-          icon.textContent = '×';
-          icon.classList.add('rotate-45');
+    // Configurazioni geometriche dell'arcobaleno per ogni sezione
+    // L'arcobaleno intero si sposta fisicamente e fa emergere la riga selezionata!
+    const sectionConfigs = {
+      'hero': {
+        transform: 'translateY(0px) rotate(0deg) scale(1)',
+        activeStripeIndex: -1 // Tutte bilanciate
+      },
+      'lezioni': {
+        // Riga 1 (Blu): L'arcobaleno sale leggermente e curva in discesa, evidenziando il Blu
+        transform: 'translateY(-60px) rotate(-1.5deg) scale(1.03)',
+        activeStripeIndex: 0,
+        activeClass: 'active-blue'
+      },
+      'manuale': {
+        // Riga 2 (Verde): L'onda si sposta centralmente inarcandosi per il libro
+        transform: 'translateY(40px) rotate(1.8deg) scale(1.06)',
+        activeStripeIndex: 1,
+        activeClass: 'active-green'
+      },
+      'chi-sono': {
+        // Riga 3 (Giallo): L'onda scende e si distende
+        transform: 'translateY(120px) rotate(-1deg) scale(1.02)',
+        activeStripeIndex: 2,
+        activeClass: 'active-gold'
+      },
+      'concerti-faq': {
+        // Riga 4 (Corallo): L'arcobaleno scende verso il fondo pagina evidenziando il corallo
+        transform: 'translateY(180px) rotate(2.2deg) scale(1.08)',
+        activeStripeIndex: 3,
+        activeClass: 'active-coral'
+      }
+    };
+
+    function applyRainbowState(sectionId) {
+      const config = sectionConfigs[sectionId];
+      if (!config) return;
+
+      // 1. Sposta l'arcobaleno complessivo nello spazio
+      rainbowSvg.style.transform = config.transform;
+
+      // 2. Modifica spessore ed enfasi delle 4 righe
+      stripes.forEach((stripe, idx) => {
+        if (config.activeStripeIndex === -1) {
+          // Stato neutrale hero
+          stripe.classList.remove('stripe-focused');
+          stripe.classList.add('stripe-dormant');
+        } else if (idx === config.activeStripeIndex) {
+          // Riga attiva della sezione: si ingrandisce e risalta
+          stripe.classList.remove('stripe-dormant');
+          stripe.classList.add('stripe-focused');
+        } else {
+          // Le altre righe dell'arcobaleno restano presenti ma più sottili
+          stripe.classList.remove('stripe-focused');
+          stripe.classList.add('stripe-dormant');
         }
       });
+
+      // 3. Aggiorna indicatore nel menu
+      Object.keys(navLinks).forEach(id => {
+        const link = navLinks[id];
+        if (!link) return;
+        link.classList.remove('active-blue', 'active-green', 'active-gold', 'active-coral');
+        if (id === sectionId && config.activeClass) {
+          link.classList.add(config.activeClass);
+        }
+      });
+    }
+
+    // INTERSECTION OBSERVER: Rileva la sezione attualmente visibile mentre l'utente scorre
+    const observerOptions = {
+      root: null,
+      rootMargin: '-30% 0px -40% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          applyRainbowState(entry.target.id);
+        }
+      });
+    }, observerOptions);
+
+    ['hero', 'lezioni', 'manuale', 'chi-sono', 'concerti-faq'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
     });
 
-    // 4. ANIMAZIONE INTERATTIVA DELLE ONDE CON LO SCROLL E I PUNTI DEL MENU
-    const waveSvg = document.getElementById('interactive-wave-svg');
-    const navItems = document.querySelectorAll('.nav-item');
-
-    // Reattività con lo scorrere della pagina (Parallasse & Flessione dell'Onda)
-    let lastScrollY = window.scrollY;
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollProgress = scrollY / (docHeight || 1);
-
-      // Spostamento fluido calcolato sullo scroll
-      const translateY = scrollProgress * 120; // Abbassamento controllato
-      const scaleVariation = 1 + Math.sin(scrollProgress * Math.PI) * 0.12; // Respiro dell'onda
-      const skewAngle = (scrollProgress - 0.5) * 4; // Leggera torsione armonica
-
-      if (waveSvg) {
-        waveSvg.style.transform = `translateY(${translateY}px) scaleY(${scaleVariation}) skewY(${skewAngle}deg)`;
+    // Se l'utente clicca un punto del menu, l'onda reagisce immediatamente
+    Object.keys(navLinks).forEach(id => {
+      const link = navLinks[id];
+      if (link) {
+        link.addEventListener('click', () => {
+          applyRainbowState(id);
+        });
       }
-      lastScrollY = scrollY;
-    }, { passive: true });
-
-    // Reattività al passaggio / click sui punti del Menu
-    navItems.forEach((item, index) => {
-      // Effetto hover: onda accentua la curvatura in base al punto del menu
-      item.addEventListener('mouseenter', () => {
-        if (!waveSvg) return;
-        const shifts = [-18, 12, -8, 16, -14];
-        const shift = shifts[index % shifts.length];
-        waveSvg.style.transform = `translateY(${shift}px) scaleY(1.08)`;
-        waveSvg.classList.add('nav-wave-active');
-      });
-
-      item.addEventListener('mouseleave', () => {
-        if (!waveSvg) return;
-        waveSvg.classList.remove('nav-wave-active');
-      });
-
-      // Effetto click: rimbalzo armonico temporaneo
-      item.addEventListener('click', () => {
-        if (!waveSvg) return;
-        waveSvg.style.transform = 'scaleY(1.22) translateY(-10px)';
-        setTimeout(() => {
-          waveSvg.style.transform = 'scaleY(1) translateY(0px)';
-        }, 500);
-      });
     });
   </script>
+
 </body>
 </html>
