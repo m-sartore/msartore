@@ -153,9 +153,9 @@
   <!-- HEADER / BARRA DI NAVIGAZIONE -->
   <!-- ========================================== -->
   <header class="sticky top-0 z-50 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-petrol/5 transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between relative">
       
-      <!-- Logo Brand: Marco diventa verde e Sartore diventa giallo al passaggio del mouse -->
+      <!-- Logo Brand: Marco diventa verde e Sartore diventa giallo all'hover -->
       <a href="#hero" class="group flex items-center gap-1.5 text-2xl font-bold tracking-tight">
         <span class="text-petrol transition-colors duration-300 group-hover:text-tealBand">Marco</span>
         <span class="text-coralBand transition-colors duration-300 group-hover:text-ochreBand">Sartore</span>
@@ -169,7 +169,7 @@
         <a href="#contatti" class="hover:text-coralBand transition-colors py-1">FAQ & Info</a>
       </nav>
 
-      <!-- CTA Header -->
+      <!-- CTA Header Desktop -->
       <div class="hidden sm:flex items-center gap-4">
         <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" rel="noopener noreferrer" 
            class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold rounded-full text-white bg-petrol hover:bg-tealBand shadow-sm hover:shadow-md transition-all duration-200">
@@ -177,22 +177,22 @@
         </a>
       </div>
 
-      <!-- Hamburger Button (Mobile) -->
-      <button id="mobile-menu-btn" class="md:hidden p-2 text-petrol focus:outline-none" aria-label="Apri Menu">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+      <!-- Hamburger Button (Mobile) con animazione fluida in "X" -->
+      <button id="mobile-menu-btn" class="md:hidden p-2.5 text-petrol focus:outline-none flex flex-col justify-center items-center gap-1.5 w-10 h-10 relative z-50 rounded-xl hover:bg-petrol/5 transition-colors" aria-label="Menu" aria-expanded="false">
+        <span id="bar-top" class="w-5 h-0.5 bg-petrol rounded-full transition-all duration-300 ease-out origin-center"></span>
+        <span id="bar-mid" class="w-5 h-0.5 bg-petrol rounded-full transition-all duration-200 ease-out"></span>
+        <span id="bar-bot" class="w-5 h-0.5 bg-petrol rounded-full transition-all duration-300 ease-out origin-center"></span>
       </button>
 
     </div>
 
-    <!-- Mobile Drawer Dropdown -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white/95 border-b border-petrol/10 px-6 py-6 transition-all duration-300 shadow-xl backdrop-blur-lg">
+    <!-- Mobile Drawer: Tendina fluida con transizione slide-down e fade-in -->
+    <div id="mobile-menu" class="md:hidden absolute top-full left-0 w-full bg-white/95 border-b border-petrol/10 px-6 py-6 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out origin-top opacity-0 -translate-y-4 pointer-events-none invisible">
       <div class="flex flex-col gap-4 text-base font-semibold text-petrol">
-        <a href="#lezioni" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-tealBand">Lezioni & Corsi</a>
-        <a href="#chi-sono" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-ochreBand">Chi Sono & Metodo</a>
-        <a href="#concerti" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-peachBand">Concerti & Live</a>
-        <a href="#contatti" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-coralBand">Domande Frequenti</a>
+        <a href="#lezioni" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-tealBand transition-colors">Lezioni & Corsi</a>
+        <a href="#chi-sono" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-ochreBand transition-colors">Chi Sono & Metodo</a>
+        <a href="#concerti" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-peachBand transition-colors">Concerti & Live</a>
+        <a href="#contatti" class="mobile-nav-link py-2 border-b border-petrol/5 hover:text-coralBand transition-colors">Domande Frequenti</a>
         <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" rel="noopener noreferrer" 
            class="mt-3 w-full text-center py-3 rounded-xl bg-petrol text-white font-medium hover:bg-tealBand transition-colors shadow">
           Prenota Chiamata (15 min)
@@ -312,7 +312,7 @@
           </p>
         </div>
 
-        <!-- Griglia Corsi (Senza icone, tipografia pulita ed essenziale) -->
+        <!-- Griglia Corsi (Tipografia editoriale, senza icone) -->
         <div class="grid md:grid-cols-2 gap-8 mb-12">
           
           <!-- Corso Pianoforte -->
@@ -415,7 +415,7 @@
               </div>
             </div>
 
-            <!-- Box Info & Prenotazione (Zero prezzi menzionati) -->
+            <!-- Box Info & Prenotazione -->
             <div class="bg-ivory/80 border border-petrol/10 p-6 sm:p-8 rounded-2xl flex flex-col items-center justify-center text-center lg:min-w-[280px]">
               <span class="text-xs font-mono uppercase tracking-wider text-ochreBand font-bold">Percorso Dedicato</span>
               <div class="text-2xl sm:text-3xl font-extrabold text-petrol my-2">
@@ -812,23 +812,69 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- JAVASCRIPT: SUPER-ZOOM & ACCORDION ANIMATO -->
+  <!-- JAVASCRIPT: MENU ANIMATO, SUPER-ZOOM & FAQ -->
   <!-- ========================================== -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Mobile Menu
+      // 1. Mobile Menu con Animazione Fluida & Trasformazione Hamburger in "X"
       const mobileBtn = document.getElementById('mobile-menu-btn');
       const mobileMenu = document.getElementById('mobile-menu');
       const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+      const barTop = document.getElementById('bar-top');
+      const barMid = document.getElementById('bar-mid');
+      const barBot = document.getElementById('bar-bot');
 
-      mobileBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
+      let isMenuOpen = false;
+
+      const openMobileMenu = () => {
+        isMenuOpen = true;
+        mobileBtn.setAttribute('aria-expanded', 'true');
+        
+        // Animazione icona in "X"
+        barTop.classList.add('translate-y-2', 'rotate-45');
+        barMid.classList.add('opacity-0', 'scale-x-0');
+        barBot.classList.add('-translate-y-2', '-rotate-45');
+
+        // Animazione tendina slide-down + fade-in
+        mobileMenu.classList.remove('opacity-0', '-translate-y-4', 'pointer-events-none', 'invisible');
+        mobileMenu.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto', 'visible');
+      };
+
+      const closeMobileMenu = () => {
+        isMenuOpen = false;
+        mobileBtn.setAttribute('aria-expanded', 'false');
+
+        // Ripristino barre in Hamburger
+        barTop.classList.remove('translate-y-2', 'rotate-45');
+        barMid.classList.remove('opacity-0', 'scale-x-0');
+        barBot.classList.remove('-translate-y-2', '-rotate-45');
+
+        // Animazione tendina slide-up + fade-out
+        mobileMenu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto', 'visible');
+        mobileMenu.classList.add('opacity-0', '-translate-y-4', 'pointer-events-none', 'invisible');
+      };
+
+      mobileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isMenuOpen) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
       });
 
+      // Chiudi cliccando su un link
       mobileLinks.forEach(link => {
         link.addEventListener('click', () => {
-          mobileMenu.classList.add('hidden');
+          closeMobileMenu();
         });
+      });
+
+      // Chiudi cliccando fuori dal menu
+      document.addEventListener('click', (e) => {
+        if (isMenuOpen && !mobileMenu.contains(e.target) && !mobileBtn.contains(e.target)) {
+          closeMobileMenu();
+        }
       });
 
       // 2. Accordion FAQ con Animazione Morbida
@@ -841,14 +887,14 @@
         toggle.addEventListener('click', () => {
           const isOpen = collapse.classList.contains('open');
 
-          // Chiudi tutti gli altri
+          // Chiudi gli altri
           faqItems.forEach(otherItem => {
             otherItem.querySelector('.faq-collapse').classList.remove('open');
             otherItem.querySelector('.faq-icon').classList.remove('rotate-180');
             otherItem.classList.remove('shadow-xl', 'bg-white');
           });
 
-          // Se era chiuso, aprilo con animazione
+          // Apri quello cliccato se era chiuso
           if (!isOpen) {
             collapse.classList.add('open');
             icon.classList.add('rotate-180');
