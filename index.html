@@ -42,7 +42,7 @@
         /* Smooth Scroll Reveal */
         .reveal-element {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(22px);
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
@@ -67,13 +67,13 @@
 
     <!-- HEADER / NAVIGATION (Fisso 80px) -->
     <header class="fixed top-0 left-0 w-full z-50 bg-stage-base/90 backdrop-blur-md border-b border-stage-border/60">
-        <div class="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+        <div class="w-full px-5 sm:px-10 lg:px-16 h-20 flex items-center justify-between">
             <!-- Brand -->
             <a href="#" class="group flex items-center gap-3">
                 <span class="w-1.5 h-6 bg-slate-300 group-hover:bg-white transition-colors duration-300"></span>
                 <div class="flex flex-col">
                     <span class="font-classical text-lg sm:text-xl font-bold tracking-widest text-white uppercase group-hover:text-slate-300 transition-colors">
-                        Marco Sartoru
+                        Marco Sartorz
                     </span>
                     <span class="text-[11px] font-medium tracking-wider text-slate-400">Pianoforte & Armonia</span>
                 </div>
@@ -127,85 +127,67 @@
     <main>
 
         <!-- 
-            HERO SECTION: RESPONSIVE DEDICATO MULTI-DEVICE
-            - Desktop: Composizione fluida orizzontale
-            - Tablet/iPad: Glass card satinata senza coprire il tablet luminoso
-            - Mobile: Testo prioritario in alto + foto setup panoramica intera in basso (Zero sovrapposizione bianco su bianco)
+            HERO SECTION: FOTO COME SFONDO SU TUTTI I DISPOSITIVI
+            - Testo ancorato saldamente a SINISTRA su PC e iPad
+            - Su smartphone: foto intera come sfondo, testo in alto con leggera velatura sfumata, spartito e tastiera liberi sotto
         -->
-        <section class="relative pt-24 lg:pt-0 overflow-hidden min-h-[90vh] lg:min-h-screen flex items-center">
+        <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-28 sm:pt-24 pb-16 overflow-hidden">
             
-            <!-- SFONDO PER DESKTOP & TABLET -->
-            <div class="hidden md:block absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <!-- SFONDO CON FOTO SETUP COMPLETA -->
+            <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                 <img src="Modificata2.jpg" 
                      alt="Setup didattico studio Marco Sartore" 
-                     class="w-full h-full object-cover object-center" />
+                     class="w-full h-full object-cover object-bottom sm:object-center" />
 
-                <!-- Gradiente asimmetrico protettivo: sfuma solo la metà dove c'è il testo (destra o sinistra) senza appiattire la foto -->
-                <div class="absolute inset-0 bg-gradient-to-r from-stage-base/90 via-stage-base/70 md:via-stage-base/40 to-transparent"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-stage-base/60 via-transparent to-stage-base/80"></div>
+                <!-- Gradiente protettivo per PC e iPad: mantiene scura la colonna a sinistra per il testo e lascia pura e luminosa la destra -->
+                <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base via-stage-base/70 to-transparent w-full md:w-3/5"></div>
+                
+                <!-- Dissolvenza graduata per mobile: protegge la parte alta dove sta il testo senza coprire la tastiera in basso -->
+                <div class="sm:hidden absolute inset-0 bg-gradient-to-b from-stage-base via-stage-base/80 to-transparent"></div>
+                
+                <!-- Dissolvenza inferiore verso le sezioni successive -->
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent sm:h-32 bottom-0"></div>
             </div>
 
-            <!-- CONTENUTO PRINCIPALE HERO -->
-            <div class="max-w-6xl mx-auto px-5 sm:px-8 lg:px-12 w-full relative z-10 py-12 md:py-24">
+            <!-- BLOCCO TESTO: ANCORATO A SINISTRA SU PC E IPAD -->
+            <div class="w-full max-w-xl lg:max-w-2xl text-left relative z-10 reveal-element">
                 
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <!-- Card morbida su mobile per non impattare sullo sfondo; trasparente su desktop e tablet -->
+                <div class="p-4 sm:p-0 rounded-2xl bg-stage-base/60 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none border border-stage-border/40 sm:border-none">
                     
-                    <!-- BLOCCO TESTO (Puro, leggibile e privo di collisioni visive) -->
-                    <div class="md:col-span-8 lg:col-span-7 reveal-element">
-                        
-                        <!-- Card protettiva per iPad/Tablet (trasparente su desktop e mobile) -->
-                        <div class="md:bg-stage-base/80 md:backdrop-blur-md md:p-8 md:rounded-2xl md:border md:border-stage-border/60 lg:bg-transparent lg:backdrop-blur-none lg:p-0 lg:border-none">
-                            
-                            <!-- Badge Setup -->
-                            <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-slate-300/30 bg-stage-surface/80 backdrop-blur-md text-[11px] tracking-wider text-slate-200 mb-6 uppercase font-medium shadow-lg">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                <span>Studio Setup • Audio HD Diretto & Dual Cam</span>
-                            </div>
-
-                            <h1 class="font-classical text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight sm:leading-tight mb-5 tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
-                                L'armonia non si memorizza. <br />
-                                <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
-                            </h1>
-
-                            <p class="text-sm sm:text-base text-slate-200 max-w-xl mb-8 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                                Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
-                            </p>
-
-                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-4">
-                                <!-- LINK GOOGLE CALENDAR QUI (Hero CTA) -->
-                                <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                                   class="inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
-                                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                                    <span>Prenota Chiamata Conoscitiva (15 min)</span>
-                                </a>
-
-                                <a href="#metodo" 
-                                   class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
-                                    <span>Setup & Metodo</span>
-                                    <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
-                                </a>
-                            </div>
-
-                            <p class="text-xs text-slate-400 tracking-wide font-medium">
-                                Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
-                            </p>
-
-                        </div>
-
+                    <!-- Badge Setup -->
+                    <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-slate-300/30 bg-stage-surface/85 backdrop-blur-md text-[11px] tracking-wider text-slate-200 mb-5 uppercase font-medium shadow-xl">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span>Studio Setup • Audio HD Diretto & Dual Cam</span>
                     </div>
 
-                    <!-- FOTO DEDICATA PER SMARTPHONE: Mostrata per intero in basso senza tagli né scritte sopra -->
-                    <div class="md:hidden col-span-1 mt-4 reveal-element">
-                        <div class="rounded-xl overflow-hidden border border-stage-border/80 shadow-2xl relative aspect-[11/6]">
-                            <img src="Modificata2.jpg" 
-                                 alt="Setup studio Marco Sartore con tastiera, microfoni e tablet" 
-                                 class="w-full h-full object-cover object-center" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-stage-base/40 via-transparent to-transparent"></div>
-                        </div>
-                        <span class="block text-center text-[11px] font-mono text-slate-400 mt-2 tracking-wider uppercase">
-                            Postazione reale di lezione in diretta
-                        </span>
+                    <h1 class="font-classical text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight sm:leading-tight mb-4 tracking-wide drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+                        L'armonia non si memorizza. <br />
+                        <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
+                    </h1>
+
+                    <p class="text-sm sm:text-base text-slate-200 max-w-lg mb-7 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                        Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mb-4">
+                        <!-- LINK GOOGLE CALENDAR QUI (Hero CTA) -->
+                        <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
+                           class="inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                            <span>Prenota Chiamata Conoscitiva (15 min)</span>
+                        </a>
+
+                        <a href="#metodo" 
+                           class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
+                            <span>Setup & Metodo</span>
+                            <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+                        </a>
                     </div>
+
+                    <p class="text-[11px] sm:text-xs text-slate-400 tracking-wide font-medium">
+                        Incontro preliminare gratuito • Valutiamo insieme livello e obiettivi
+                    </p>
 
                 </div>
 
