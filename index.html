@@ -62,41 +62,49 @@
             opacity: 1;
         }
 
-        /* Effetto Liquid Glass sui link del menu */
-        .nav-glass-link {
+        /* Effetto Quadrato con Lente Ottica Illuminata */
+        .lens-nav-item {
             position: relative;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0.6rem 1.1rem;
+            border-radius: 4px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid transparent;
-        }
-        .nav-glass-link:hover {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-color: rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
-            color: #ffffff;
-            transform: translateY(-1px);
+            overflow: hidden;
         }
 
-        /* Stato dell'header durante lo scroll: satinato e pulito senza righe rigide */
-        header.scrolled {
-            background: rgba(7, 9, 14, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+        .lens-nav-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 70%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .lens-nav-item:hover {
+            transform: scale(1.04);
+            border-color: rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7), inset 0 0 12px rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .lens-nav-item:hover::before {
+            opacity: 1;
         }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Senza alcuna riga inferiore, transizione fluida allo scroll) -->
-    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-b from-stage-base/90 via-stage-base/40 to-transparent">
-        <div class="w-full px-5 sm:px-10 lg:px-16 h-20 flex items-center justify-between">
+    <!-- HEADER / NAVIGATION (Costante, fisso, 80px di altezza stabile senza ridimensionamenti) -->
+    <header class="fixed top-0 left-0 w-full z-50 h-20 bg-stage-base/90 backdrop-blur-md">
+        <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
             <!-- Brand -->
-            <a href="#" class="group flex items-center gap-3">
+            <a href="#" class="group flex items-center gap-3 shrink-0">
                 <span class="w-1.5 h-6 bg-slate-300 group-hover:bg-white transition-colors duration-300"></span>
                 <div class="flex flex-col">
                     <span class="font-classical text-lg sm:text-xl font-bold tracking-widest text-white uppercase group-hover:text-slate-300 transition-colors">
@@ -106,20 +114,20 @@
                 </div>
             </a>
 
-            <!-- Nav Desktop con Effetto Liquid Glass Capsule -->
-            <nav class="hidden md:flex items-center gap-2 p-1.5 rounded-full bg-stage-base/20 backdrop-blur-[6px] border border-white/5">
-                <a href="#lezioni" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Lezioni</a>
-                <a href="#metodo" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Setup & Metodo</a>
-                <a href="#chi-sono" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Profilo</a>
-                <a href="#concerti" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Concerti</a>
-                <a href="#faq" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">FAQ</a>
+            <!-- Nav Desktop con Quadrato Lente Luminosa -->
+            <nav class="hidden md:flex items-center gap-1.5">
+                <a href="#lezioni" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">Lezioni</a>
+                <a href="#metodo" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">Setup & Metodo</a>
+                <a href="#chi-sono" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">Profilo</a>
+                <a href="#concerti" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">Concerti</a>
+                <a href="#faq" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">FAQ</a>
             </nav>
 
-            <!-- CTA Desktop in Vetro Satinato Lucido -->
-            <div class="hidden md:flex items-center">
+            <!-- CTA Desktop Quadrata / Lineare Coerente -->
+            <div class="hidden md:flex items-center shrink-0">
                 <!-- LINK GOOGLE CALENDAR QUI (Header) -->
                 <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-white/20 bg-white/10 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase backdrop-blur-md transition-all duration-300 shadow-lg hover:shadow-white/10">
+                   class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-sm border border-slate-300/40 bg-stage-surface/80 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-md">
                     <i data-lucide="calendar" class="w-4 h-4"></i>
                     <span>Prenota Chiamata (15 min)</span>
                 </a>
@@ -142,7 +150,7 @@
                 <div class="pt-4 border-t border-stage-border">
                     <!-- LINK GOOGLE CALENDAR QUI (Mobile) -->
                     <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                       class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded bg-white text-stage-base text-xs uppercase tracking-wider font-bold shadow-lg">
+                       class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-sm bg-white text-stage-base text-xs uppercase tracking-wider font-bold shadow-lg">
                         <i data-lucide="calendar" class="w-4 h-4"></i>
                         <span>Prenota Chiamata (15 min)</span>
                     </a>
@@ -153,7 +161,7 @@
 
     <main>
 
-        <!-- HERO SECTION (Senza alcuna linea di separazione) -->
+        <!-- HERO SECTION -->
         <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-28 sm:pt-24 pb-20 overflow-hidden">
             
             <!-- SFONDO SETUP INTEGRALE -->
@@ -168,7 +176,7 @@
                 <!-- Dissolvenza mobile superiore -->
                 <div class="sm:hidden absolute inset-0 bg-gradient-to-b from-stage-base/95 via-stage-base/75 to-transparent"></div>
                 
-                <!-- Dissolvenza inferiore continua verso le sezioni seguenti (NESSUNA RIGA DURA) -->
+                <!-- Dissolvenza inferiore continua verso le sezioni seguenti -->
                 <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/50 to-transparent h-40 bottom-0"></div>
             </div>
 
@@ -195,13 +203,13 @@
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mb-4">
                         <!-- LINK GOOGLE CALENDAR QUI (Hero CTA) -->
                         <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                           class="inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
+                           class="inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded-sm bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
                             <i data-lucide="calendar" class="w-4 h-4"></i>
                             <span>Prenota Chiamata Conoscitiva (15 min)</span>
                         </a>
 
                         <a href="#metodo" 
-                           class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
+                           class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-sm border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
                             <span>Setup & Metodo</span>
                             <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
                         </a>
@@ -216,7 +224,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE LEZIONI & CORSI (Senza alcuna riga né bordo sopra) -->
+        <!-- SEZIONE LEZIONI & CORSI -->
         <section id="lezioni" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Didattica e Metodo</span>
@@ -315,7 +323,7 @@
 
                         <!-- LINK GOOGLE CALENDAR QUI (Colloquio) -->
                         <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                           class="w-full py-3.5 px-6 rounded bg-white hover:bg-slate-200 text-stage-base text-xs uppercase tracking-wider font-bold transition-all duration-200 shadow-md">
+                           class="w-full py-3.5 px-6 rounded-sm bg-white hover:bg-slate-200 text-stage-base text-xs uppercase tracking-wider font-bold transition-all duration-200 shadow-md">
                             Fissa la Chiamata Conoscitiva
                         </a>
                         <span class="text-[11px] text-slate-400 mt-3 font-medium">15 minuti conoscitivi gratuiti e senza impegno</span>
@@ -325,7 +333,7 @@
             </div>
         </section>
 
-        <!-- CHI SONO / BIOGRAFIA (Nessuna riga superiore) -->
+        <!-- CHI SONO / BIOGRAFIA -->
         <section id="chi-sono" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
@@ -373,7 +381,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE CONCERTI (Nessuna riga superiore) -->
+        <!-- SEZIONE CONCERTI -->
         <section id="concerti" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 reveal-element">
                 <div>
@@ -435,7 +443,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE FAQ (Nessuna riga superiore) -->
+        <!-- SEZIONE FAQ -->
         <section id="faq" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-4xl mx-auto">
             <div class="text-center mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Domande Frequenti</span>
@@ -539,16 +547,6 @@
 
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Gestione Header Dinamico allo Scroll
-        const mainHeader = document.getElementById('main-header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 30) {
-                mainHeader.classList.add('scrolled');
-            } else {
-                mainHeader.classList.remove('scrolled');
-            }
-        });
 
         // Gestione Menu Mobile
         const menuBtn = document.getElementById('menu-btn');
