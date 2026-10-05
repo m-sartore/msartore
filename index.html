@@ -67,7 +67,7 @@
             position: relative;
             padding: 0.45rem 0.85rem;
             border-radius: 4px;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid transparent;
             overflow: hidden;
         }
@@ -76,16 +76,16 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 70%, transparent 100%);
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 70%, transparent 100%);
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: opacity 0.25s ease;
             pointer-events: none;
         }
 
         .lens-nav-item:hover {
             transform: scale(1.03);
-            border-color: rgba(255, 255, 255, 0.22);
-            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.7);
@@ -96,19 +96,27 @@
             opacity: 1;
         }
 
-        /* BARRA FISSA IDENTICA AL 100% IN QUALSIASI MOMENTO: 56px esatti, scura, con bordo netto */
+        /* BARRA UNICA: 60px precisi sempre.
+           All'apertura c'è solo il gradiente sfumato verso il basso.
+           Allo scroll il gradiente si trasforma in nero compatto. */
         #main-header {
-            height: 56px;
-            background-color: rgba(7, 9, 14, 0.96);
+            height: 60px;
+            background: linear-gradient(to bottom, rgba(7, 9, 14, 0.92) 0%, rgba(7, 9, 14, 0.5) 65%, transparent 100%);
+            border-bottom: 1px solid transparent;
+            transition: background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+        }
+
+        #main-header.scrolled {
+            background: rgba(7, 9, 14, 0.97);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(31, 41, 61, 0.8);
+            border-bottom: 1px solid rgba(31, 41, 61, 0.75);
         }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Sempre identico: 56px compatto, solido, con bordo inferiore) -->
+    <!-- HEADER / NAVIGATION (UNICO ELEMENTO: 60px fisso, gradiente all'apertura, scuro compatto allo scroll) -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
@@ -136,7 +144,7 @@
             <div class="hidden md:flex items-center shrink-0">
                 <!-- LINK GOOGLE CALENDAR QUI (Header) -->
                 <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-300/40 bg-stage-surface hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm">
+                   class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-300/40 bg-stage-surface/80 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm">
                     <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                     <span>Prenota Chiamata (15 min)</span>
                 </a>
@@ -170,8 +178,8 @@
 
     <main>
 
-        <!-- HERO SECTION: Inizia subito a 56px sotto l'header, senza buchi neri artificiali -->
-        <section class="relative min-h-[92vh] flex items-start justify-start px-5 sm:px-10 lg:px-16 pt-[76px] pb-16 overflow-hidden">
+        <!-- HERO SECTION: Inizia a filo sotto l'header senza doppi gradienti -->
+        <section class="relative min-h-[96vh] lg:min-h-screen flex items-center justify-start px-5 sm:px-10 lg:px-16 pt-20 pb-16 overflow-hidden">
             
             <!-- SFONDO FOTO A FILO -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -183,16 +191,16 @@
                 <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/95 via-stage-base/60 to-transparent w-full md:w-3/5"></div>
                 
                 <!-- Dissolvenza inferiore verso la sezione successiva -->
-                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-24 bottom-0"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-28 bottom-0"></div>
             </div>
 
-            <!-- BLOCCO TESTO: Parte subito in alto a soli 20px sotto la barra di 56px -->
-            <div class="w-full max-w-xl lg:max-w-2xl text-left relative z-10 reveal-element mt-5 sm:mt-8">
+            <!-- BLOCCO TESTO (Ancorato a sinistra con contrasto naturale) -->
+            <div class="w-full max-w-xl lg:max-w-2xl text-left relative z-10 reveal-element">
                 
                 <div class="p-4 sm:p-0 rounded-2xl bg-stage-base/60 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none border border-stage-border/40 sm:border-none">
                     
                     <!-- Badge Setup -->
-                    <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full border border-slate-300/30 bg-stage-surface/90 backdrop-blur-md text-[11px] tracking-wider text-slate-200 mb-4 uppercase font-medium shadow-xl">
+                    <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full border border-slate-300/30 bg-stage-surface/85 backdrop-blur-md text-[11px] tracking-wider text-slate-200 mb-5 uppercase font-medium shadow-xl">
                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                         <span>Studio Setup • Audio HD Diretto & Dual Cam</span>
                     </div>
@@ -202,7 +210,7 @@
                         <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
                     </h1>
 
-                    <p class="text-sm sm:text-base text-slate-200 max-w-lg mb-6 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                    <p class="text-sm sm:text-base text-slate-200 max-w-lg mb-7 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                         Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
                     </p>
 
@@ -553,6 +561,16 @@
 
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Gestione Scurimento della Barra allo Scroll (60px sempre)
+        const mainHeader = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                mainHeader.classList.add('scrolled');
+            } else {
+                mainHeader.classList.remove('scrolled');
+            }
+        });
 
         // Gestione Menu Mobile
         const menuBtn = document.getElementById('menu-btn');
