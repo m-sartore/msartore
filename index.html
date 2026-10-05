@@ -82,13 +82,13 @@
       will-change: transform;
     }
 
-    /* Schede editoriali protette ad altissimo contrasto (WCAG AAA) */
+    /* Schede editoriali protette ad altissimo contrasto con ombra profonda */
     .editorial-card {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      box-shadow: 0 20px 40px -15px rgba(22, 52, 63, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 22px 45px -12px rgba(22, 52, 63, 0.18), 0 4px 12px -2px rgba(22, 52, 63, 0.06);
     }
   </style>
 </head>
@@ -96,7 +96,6 @@
 
   <!-- ========================================== -->
   <!-- BACKGROUND ANIMATO: PENTAGRAMMA ARCOBALENO -->
-  <!-- CON SPAZIO BIANCO TRA LE STRISCE E SENZA NOTE -->
   <!-- ========================================== -->
   <div id="wave-canvas-container">
     <svg id="rainbow-svg" class="w-full h-full" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -123,7 +122,7 @@
   <!-- ========================================== -->
   <!-- NAVIGATORE LATERALE AD ACCORDI (DOTS) -->
   <!-- ========================================== -->
-  <aside class="fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-3.5 bg-white/80 backdrop-blur-md px-3 py-5 rounded-full border border-petrol/10 shadow-lg">
+  <aside class="fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-3.5 bg-white/85 backdrop-blur-md px-3 py-5 rounded-full border border-petrol/10 shadow-lg">
     <a href="#hero" class="nav-indicator-dot w-3 h-3 rounded-full transition-all duration-300 bg-petrol scale-125" title="Panoramica" data-section="hero"></a>
     <a href="#lezioni" class="nav-indicator-dot w-3 h-3 rounded-full transition-all duration-300 bg-petrol/20 hover:bg-tealBand" title="Lezioni & Corsi" data-section="lezioni"></a>
     <a href="#chi-sono" class="nav-indicator-dot w-3 h-3 rounded-full transition-all duration-300 bg-petrol/20 hover:bg-ochreBand" title="Chi Sono & Metodo" data-section="chi-sono"></a>
@@ -192,12 +191,13 @@
 
     <!-- ========================================== -->
     <!-- 1. HERO SECTION: L'ARMONIA IN LONTANANZA -->
+    <!-- (BORDO SUPERIORE IN VERDE TEAL: COLORE SUCCESSIVO) -->
     <!-- ========================================== -->
     <section id="hero" class="min-h-[90vh] flex items-center justify-center pt-6 pb-20 px-6" data-zoom="overview">
       <div class="max-w-5xl mx-auto w-full">
         
-        <!-- CARD EDITORIALE HERO (Protegge il testo ed evita sovrapposizioni) -->
-        <div class="editorial-card p-8 sm:p-12 md:p-14 rounded-3xl max-w-3xl border-t-4 border-t-petrol mb-12">
+        <!-- CARD EDITORIALE HERO (Bordo superiore in TEAL) -->
+        <div class="editorial-card p-8 sm:p-12 md:p-14 rounded-3xl max-w-3xl border-t-8 border-t-tealBand mb-12">
           
           <!-- Tag / Badge -->
           <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-ivory border border-petrol/10 text-xs font-semibold tracking-wider text-petrol uppercase mb-6 shadow-sm">
@@ -243,25 +243,25 @@
 
         </div>
 
-        <!-- Banner Formato in 4 Punti -->
+        <!-- Banner Formato in 4 Punti (Con sequenza ciclica dei 4 colori) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-petrol">
-            <div class="text-xs font-mono uppercase text-petrol/50 mb-1">Formato</div>
+          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-tealBand">
+            <div class="text-xs font-mono uppercase text-tealBand font-bold mb-1">Formato</div>
             <div class="font-bold text-petrol text-base sm:text-lg">Online 1-a-1</div>
             <div class="text-xs text-petrol/70 mt-0.5">Google Meet + HQ Audio</div>
           </div>
-          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-tealBand">
-            <div class="text-xs font-mono uppercase text-tealBand/80 mb-1">Frequenza</div>
+          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-ochreBand">
+            <div class="text-xs font-mono uppercase text-ochreBand font-bold mb-1">Frequenza</div>
             <div class="font-bold text-petrol text-base sm:text-lg">Flessibile</div>
             <div class="text-xs text-petrol/70 mt-0.5">Prenotazione autonoma</div>
           </div>
-          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-ochreBand">
-            <div class="text-xs font-mono uppercase text-ochreBand/90 mb-1">Durata</div>
+          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-coralBand">
+            <div class="text-xs font-mono uppercase text-coralBand font-bold mb-1">Durata</div>
             <div class="font-bold text-petrol text-base sm:text-lg">60 Minuti</div>
             <div class="text-xs text-petrol/70 mt-0.5">Focus totale personalizzato</div>
           </div>
-          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-coralBand">
-            <div class="text-xs font-mono uppercase text-coralBand mb-1">Livello</div>
+          <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-petrol">
+            <div class="text-xs font-mono uppercase text-petrol font-bold mb-1">Livello</div>
             <div class="font-bold text-petrol text-base sm:text-lg">Tutti i Livelli</div>
             <div class="text-xs text-petrol/70 mt-0.5">Dal principiante al pro</div>
           </div>
@@ -272,15 +272,16 @@
 
 
     <!-- ========================================== -->
-    <!-- 2. SEZIONE LEZIONI (SUPER-ZOOM: VERDE TEAL) -->
+    <!-- 2. SEZIONE LEZIONI (SFONDO: TEAL) -->
+    <!-- (BORDO LATERALE IN OCHRE: COLORE SUCCESSIVO) -->
     <!-- ========================================== -->
     <section id="lezioni" class="py-28 px-6 scroll-mt-16" data-zoom="teal">
       <div class="max-w-6xl mx-auto">
         
-        <!-- Header Sezione protetto in card smerigliata -->
-        <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-12 border-l-8 border-l-tealBand">
-          <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-tealBand uppercase mb-3">
-            <span class="w-2.5 h-1 bg-tealBand rounded-full"></span>
+        <!-- Header Sezione: Bordo laterale in OCRA (Colore Successivo) -->
+        <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-12 border-l-8 border-l-ochreBand">
+          <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-ochreBand uppercase mb-3">
+            <span class="w-2.5 h-1 bg-ochreBand rounded-full"></span>
             Capitolo 01 // Percorsi Didattici
           </div>
           <h2 class="text-3xl sm:text-5xl font-extrabold text-petrol tracking-tight">
@@ -295,13 +296,13 @@
         <!-- Griglia Corsi (Pianoforte & Armonia) -->
         <div class="grid md:grid-cols-2 gap-8 mb-12">
           
-          <!-- Corso Pianoforte -->
-          <div class="editorial-card rounded-3xl p-8 sm:p-10 relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
-            <div class="w-12 h-12 rounded-2xl bg-tealBand text-white flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
+          <!-- Corso Pianoforte (Bordo laterale in Ocra) -->
+          <div class="editorial-card rounded-3xl p-8 sm:p-10 border-l-4 border-l-ochreBand relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
+            <div class="w-12 h-12 rounded-2xl bg-ochreBand text-white flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
               🎹
             </div>
 
-            <span class="text-xs font-mono font-bold tracking-wider text-tealBand uppercase">Corso Pratico</span>
+            <span class="text-xs font-mono font-bold tracking-wider text-ochreBand uppercase">Corso Pratico</span>
             <h3 class="text-2xl sm:text-3xl font-bold text-petrol mt-1 mb-4">Pianoforte Moderno & Classico</h3>
             <p class="text-petrol/80 text-sm sm:text-base leading-relaxed mb-6">
               Sviluppo della tecnica fisiologica, postura rilassata, indipendenza delle mani, interpretazione del repertorio classico, jazzistico o pop-contemporaneo.
@@ -309,34 +310,34 @@
 
             <ul class="space-y-3 text-sm text-petrol/85 mb-8">
               <li class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-tealBand"></span>
+                <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
                 <span>Postura, tocco e gestione del peso del braccio</span>
               </li>
               <li class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-tealBand"></span>
+                <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
                 <span>Studio guidato del repertorio a scelta dello studente</span>
               </li>
               <li class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-tealBand"></span>
+                <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
                 <span>Comping jazz/pop, voicing moderni e accompagnamento</span>
               </li>
             </ul>
 
             <div class="pt-6 border-t border-petrol/10 flex items-center justify-between">
               <span class="text-xs font-mono text-petrol/60">Sessioni 60 min</span>
-              <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" class="text-sm font-bold text-tealBand hover:text-petrol inline-flex items-center gap-1.5">
+              <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" class="text-sm font-bold text-ochreBand hover:text-petrol inline-flex items-center gap-1.5">
                 Prenota prova <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </div>
 
-          <!-- Corso Armonia Funzionale -->
-          <div class="editorial-card rounded-3xl p-8 sm:p-10 relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
+          <!-- Corso Armonia Funzionale (Bordo laterale in Ocra) -->
+          <div class="editorial-card rounded-3xl p-8 sm:p-10 border-l-4 border-l-ochreBand relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
             <div class="w-12 h-12 rounded-2xl bg-petrol text-white flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
               🎼
             </div>
 
-            <span class="text-xs font-mono font-bold tracking-wider text-tealBand uppercase">Teoria & Analisi</span>
+            <span class="text-xs font-mono font-bold tracking-wider text-ochreBand uppercase">Teoria & Analisi</span>
             <h3 class="text-2xl sm:text-3xl font-bold text-petrol mt-1 mb-4">Armonia Funzionale & Jazz</h3>
             <p class="text-petrol/80 text-sm sm:text-base leading-relaxed mb-6">
               L'armonia vissuta come sistema fluido di tensioni e risoluzioni. Dalle triadi essenziali alle sostituzioni avanzate, accordi alterati e modulazioni.
@@ -344,22 +345,22 @@
 
             <ul class="space-y-3 text-sm text-petrol/85 mb-8">
               <li class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-tealBand"></span>
+                <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
                 <span>Funzioni tonali (Tonica, Sottodominante, Dominante)</span>
               </li>
               <li class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-tealBand"></span>
+                <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
                 <span>Condotta delle voci, accordi di settima e tensioni (9, 11, 13)</span>
               </li>
               <li class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-tealBand"></span>
+                <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
                 <span>Accordi alterati, Napoletana, dominanti secondarie e modulazioni</span>
               </li>
             </ul>
 
             <div class="pt-6 border-t border-petrol/10 flex items-center justify-between">
               <span class="text-xs font-mono text-petrol/60">Ideale per compositori & strumentisti</span>
-              <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" class="text-sm font-bold text-tealBand hover:text-petrol inline-flex items-center gap-1.5">
+              <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" class="text-sm font-bold text-ochreBand hover:text-petrol inline-flex items-center gap-1.5">
                 Prenota prova <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
@@ -367,12 +368,12 @@
 
         </div>
 
-        <!-- Scheda Pacchetto Lezioni & Trasparenza Organizzativa -->
-        <div class="editorial-card rounded-3xl p-8 sm:p-12 border-2 border-tealBand/30 shadow-xl">
+        <!-- Scheda Pacchetto Lezioni (Rifiniture in Ocra) -->
+        <div class="editorial-card rounded-3xl p-8 sm:p-12 border-l-8 border-l-ochreBand border-t-2 border-r-2 border-b-2 border-ochreBand/25 shadow-xl">
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             
             <div class="max-w-2xl">
-              <div class="inline-block px-3 py-1 bg-tealBand/10 text-tealBand text-xs font-bold rounded-md uppercase tracking-wider mb-3">
+              <div class="inline-block px-3 py-1 bg-ochreBand/15 text-ochreBand-dark font-bold text-xs rounded-md uppercase tracking-wider mb-3">
                 Struttura Pacchetto Didattico
               </div>
               <h3 class="text-2xl sm:text-3xl font-extrabold text-petrol mb-3">
@@ -385,19 +386,19 @@
               <!-- Elenco condizioni e trasparenza -->
               <div class="grid sm:grid-cols-2 gap-4 text-xs sm:text-sm text-petrol/85">
                 <div class="flex items-start gap-2.5">
-                  <span class="text-tealBand font-bold">✓</span>
+                  <span class="text-ochreBand font-bold">✓</span>
                   <span><strong>Validità 60 giorni:</strong> ampia flessibilità garantendo la giusta cadenza didattica.</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <span class="text-tealBand font-bold">✓</span>
+                  <span class="text-ochreBand font-bold">✓</span>
                   <span><strong>Prenotazione Autonoma:</strong> scegli giorni e orari direttamente via Google Calendar.</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <span class="text-tealBand font-bold">✓</span>
+                  <span class="text-ochreBand font-bold">✓</span>
                   <span><strong>Spostamenti liberi:</strong> modifichi la tua sessione fino a 24 ore prima senza penali.</span>
                 </div>
                 <div class="flex items-start gap-2.5">
-                  <span class="text-tealBand font-bold">✓</span>
+                  <span class="text-ochreBand font-bold">✓</span>
                   <span><strong>Materiali via Email:</strong> spartiti PDF, registrazioni e schemi di sintesi post-lezione.</span>
                 </div>
               </div>
@@ -412,7 +413,7 @@
               <span class="text-xs text-petrol/70 mb-5">Pacchetto da 4 lezioni (150€)</span>
               
               <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" rel="noopener noreferrer"
-                 class="w-full py-3.5 px-6 rounded-xl bg-tealBand text-white font-bold text-sm hover:bg-tealBand-dark shadow transition-all duration-200 text-center">
+                 class="w-full py-3.5 px-6 rounded-xl bg-petrol text-white font-bold text-sm hover:bg-ochreBand shadow transition-all duration-200 text-center">
                 Prenota Chiamata (15 min)
               </a>
               <span class="text-[11px] text-petrol/50 mt-2.5">Nessun pagamento anticipato richiesto per la call</span>
@@ -426,18 +427,19 @@
 
 
     <!-- ========================================== -->
-    <!-- 3. SEZIONE CHI SONO (SUPER-ZOOM: OCRA/ORO) -->
+    <!-- 3. SEZIONE CHI SONO (SFONDO: OCRA) -->
+    <!-- (BORDO LATERALE/SUPERIORE IN CORALLO: COLORE SUCCESSIVO) -->
     <!-- ========================================== -->
     <section id="chi-sono" class="py-28 px-6 scroll-mt-16" data-zoom="ochre">
       <div class="max-w-6xl mx-auto">
         
         <div class="grid lg:grid-cols-12 gap-8 items-stretch">
           
-          <!-- Colonna Sinistra: Profilo & Metodo dentro Card Protetta -->
-          <div class="lg:col-span-7 editorial-card p-8 sm:p-12 rounded-3xl border-l-8 border-l-ochreBand flex flex-col justify-between">
+          <!-- Colonna Sinistra: Bordo laterale in CORALLO (Colore Successivo) -->
+          <div class="lg:col-span-7 editorial-card p-8 sm:p-12 rounded-3xl border-l-8 border-l-coralBand flex flex-col justify-between">
             <div>
-              <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-ochreBand uppercase mb-3">
-                <span class="w-2.5 h-1 bg-ochreBand rounded-full"></span>
+              <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-coralBand uppercase mb-3">
+                <span class="w-2.5 h-1 bg-coralBand rounded-full"></span>
                 Capitolo 02 // Profilo & Visione
               </div>
               
@@ -458,7 +460,7 @@
             <!-- Indicatori Autorevolezza -->
             <div class="grid grid-cols-3 gap-4 mt-8 pt-6 border-t border-petrol/10">
               <div>
-                <div class="text-3xl font-extrabold text-ochreBand">10+</div>
+                <div class="text-3xl font-extrabold text-coralBand">10+</div>
                 <div class="text-xs text-petrol/70 font-medium mt-1">Anni di insegnamento</div>
               </div>
               <div>
@@ -473,10 +475,10 @@
 
           </div>
 
-          <!-- Colonna Destra: Citazione Filosofica in Stile Editoriale -->
-          <div class="lg:col-span-5 editorial-card p-8 sm:p-12 rounded-3xl border-t-8 border-t-ochreBand flex flex-col justify-between">
+          <!-- Colonna Destra: Bordo superiore in CORALLO (Colore Successivo) -->
+          <div class="lg:col-span-5 editorial-card p-8 sm:p-12 rounded-3xl border-t-8 border-t-coralBand flex flex-col justify-between">
             <div>
-              <div class="text-5xl text-ochreBand/40 font-serif leading-none select-none">“</div>
+              <div class="text-5xl text-coralBand/40 font-serif leading-none select-none">“</div>
               <blockquote class="text-petrol font-medium text-lg sm:text-xl leading-relaxed -mt-3 mb-6">
                 Ogni concetto armonico deve essere schematico, ridotto alla sua essenza e strutturato per essere applicato immediatamente allo strumento o consultato rapidamente al bisogno.
               </blockquote>
@@ -484,7 +486,7 @@
 
             <div>
               <div class="flex items-center gap-4 pt-6 border-t border-petrol/10">
-                <div class="w-12 h-12 rounded-full bg-ochreBand/20 flex items-center justify-center font-bold text-ochreBand text-lg">
+                <div class="w-12 h-12 rounded-full bg-coralBand/20 flex items-center justify-center font-bold text-coralBand text-lg">
                   MS
                 </div>
                 <div>
@@ -494,7 +496,7 @@
               </div>
 
               <!-- Badge Ricerca Didattica -->
-              <div class="mt-6 p-4 rounded-xl bg-ivory border border-ochreBand/20 text-xs text-petrol/80">
+              <div class="mt-6 p-4 rounded-xl bg-ivory border border-coralBand/20 text-xs text-petrol/80">
                 💡 <strong>Metodo condensato:</strong> dispense, schemi di sintesi e mappe armoniche proprietarie fornite direttamente durante le lezioni individuali.
               </div>
             </div>
@@ -507,16 +509,17 @@
 
 
     <!-- ========================================== -->
-    <!-- 4. SEZIONE CONCERTI (SUPER-ZOOM: CORALLO) -->
+    <!-- 4. SEZIONE CONCERTI (SFONDO: CORALLO) -->
+    <!-- (BORDO LATERALE IN BLU PETROLIO: COLORE SUCCESSIVO) -->
     <!-- ========================================== -->
     <section id="concerti" class="py-28 px-6 scroll-mt-16" data-zoom="coral">
       <div class="max-w-6xl mx-auto">
         
-        <!-- Header Concerti protetto in card smerigliata -->
-        <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-8 border-l-8 border-l-coralBand flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <!-- Header Concerti: Bordo laterale in BLU PETROLIO (Colore Successivo) -->
+        <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-8 border-l-8 border-l-petrol flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-coralBand uppercase mb-3">
-              <span class="w-2.5 h-1 bg-coralBand rounded-full"></span>
+            <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-petrol uppercase mb-3">
+              <span class="w-2.5 h-1 bg-petrol rounded-full"></span>
               Capitolo 03 // Attività Artistica
             </div>
             <h2 class="text-3xl sm:text-5xl font-extrabold text-petrol tracking-tight">
@@ -529,7 +532,7 @@
 
           <!-- Switcher Prossimi / Archivio -->
           <div class="inline-flex p-1.5 rounded-2xl bg-white border border-petrol/10 shadow-sm self-start">
-            <button id="tab-upcoming" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-coralBand text-white transition-all shadow-sm">
+            <button id="tab-upcoming" class="px-5 py-2.5 rounded-xl text-xs font-bold bg-petrol text-white transition-all shadow-sm">
               Prossime Date
             </button>
             <button id="tab-archive" class="px-5 py-2.5 rounded-xl text-xs font-bold text-petrol/60 hover:text-petrol transition-all">
@@ -538,67 +541,67 @@
           </div>
         </div>
 
-        <!-- LISTA DATE: PROSSIME DATE (DEFAULT ATTIVE) -->
+        <!-- LISTA DATE: PROSSIME DATE (Bordi laterali in Petrolio per massimo stacco) -->
         <div id="concerts-upcoming" class="space-y-4">
           
           <!-- Data 1 -->
-          <div class="editorial-card rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-l-4 border-l-coralBand hover:shadow-xl transition-all">
+          <div class="editorial-card rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-l-8 border-l-petrol hover:shadow-xl transition-all">
             <div class="flex items-start sm:items-center gap-5">
-              <div class="w-16 h-16 rounded-2xl bg-coralBand/15 border border-coralBand/30 flex flex-col items-center justify-center shrink-0">
-                <span class="text-xs font-mono font-bold uppercase text-coralBand">NOV</span>
+              <div class="w-16 h-16 rounded-2xl bg-petrol/10 border border-petrol/20 flex flex-col items-center justify-center shrink-0">
+                <span class="text-xs font-mono font-bold uppercase text-petrol">NOV</span>
                 <span class="text-2xl font-black text-petrol">14</span>
               </div>
               <div>
-                <span class="text-xs font-mono text-coralBand font-bold uppercase tracking-wider">Piano Solo & Armonia Viva</span>
+                <span class="text-xs font-mono text-petrol font-bold uppercase tracking-wider">Piano Solo & Armonia Viva</span>
                 <h3 class="text-xl font-bold text-petrol mt-0.5">Jazz Club Torino</h3>
                 <p class="text-xs sm:text-sm text-petrol/60 mt-1">Torino (TO) • Ore 21:30</p>
               </div>
             </div>
             <div class="flex items-center gap-4 sm:self-center">
               <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Biglietti Disponibili</span>
-              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-petrol text-white text-xs font-semibold hover:bg-coralBand transition-colors">
+              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-petrol text-white text-xs font-semibold hover:bg-tealBand transition-colors">
                 Info & Dettagli
               </a>
             </div>
           </div>
 
           <!-- Data 2 -->
-          <div class="editorial-card rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-l-4 border-l-coralBand hover:shadow-xl transition-all">
+          <div class="editorial-card rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-l-8 border-l-petrol hover:shadow-xl transition-all">
             <div class="flex items-start sm:items-center gap-5">
-              <div class="w-16 h-16 rounded-2xl bg-coralBand/15 border border-coralBand/30 flex flex-col items-center justify-center shrink-0">
-                <span class="text-xs font-mono font-bold uppercase text-coralBand">NOV</span>
+              <div class="w-16 h-16 rounded-2xl bg-petrol/10 border border-petrol/20 flex flex-col items-center justify-center shrink-0">
+                <span class="text-xs font-mono font-bold uppercase text-petrol">NOV</span>
                 <span class="text-2xl font-black text-petrol">28</span>
               </div>
               <div>
-                <span class="text-xs font-mono text-coralBand font-bold uppercase tracking-wider">Trio Project (Piano, Contrabbasso, Batteria)</span>
+                <span class="text-xs font-mono text-petrol font-bold uppercase tracking-wider">Trio Project (Piano, Contrabbasso, Batteria)</span>
                 <h3 class="text-xl font-bold text-petrol mt-0.5">Auditorium San Filippo Neri</h3>
                 <p class="text-xs sm:text-sm text-petrol/60 mt-1">Bologna (BO) • Ore 21:00</p>
               </div>
             </div>
             <div class="flex items-center gap-4 sm:self-center">
               <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Ingresso Libero</span>
-              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-petrol text-white text-xs font-semibold hover:bg-coralBand transition-colors">
+              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-petrol text-white text-xs font-semibold hover:bg-tealBand transition-colors">
                 Info & Dettagli
               </a>
             </div>
           </div>
 
           <!-- Data 3 -->
-          <div class="editorial-card rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-l-4 border-l-coralBand hover:shadow-xl transition-all">
+          <div class="editorial-card rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-l-8 border-l-petrol hover:shadow-xl transition-all">
             <div class="flex items-start sm:items-center gap-5">
-              <div class="w-16 h-16 rounded-2xl bg-coralBand/15 border border-coralBand/30 flex flex-col items-center justify-center shrink-0">
-                <span class="text-xs font-mono font-bold uppercase text-coralBand">DIC</span>
+              <div class="w-16 h-16 rounded-2xl bg-petrol/10 border border-petrol/20 flex flex-col items-center justify-center shrink-0">
+                <span class="text-xs font-mono font-bold uppercase text-petrol">DIC</span>
                 <span class="text-2xl font-black text-petrol">12</span>
               </div>
               <div>
-                <span class="text-xs font-mono text-coralBand font-bold uppercase tracking-wider">Special Showcase • Residenza Artistica</span>
+                <span class="text-xs font-mono text-petrol font-bold uppercase tracking-wider">Special Showcase • Residenza Artistica</span>
                 <h3 class="text-xl font-bold text-petrol mt-0.5">Spazio Teatro 89</h3>
                 <p class="text-xs sm:text-sm text-petrol/60 mt-1">Milano (MI) • Ore 21:30</p>
               </div>
             </div>
             <div class="flex items-center gap-4 sm:self-center">
               <span class="text-xs font-medium text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Ultimi Posti</span>
-              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-petrol text-white text-xs font-semibold hover:bg-coralBand transition-colors">
+              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-petrol text-white text-xs font-semibold hover:bg-tealBand transition-colors">
                 Info & Dettagli
               </a>
             </div>
@@ -628,8 +631,8 @@
         </div>
 
         <!-- Booking & Contatto Concerti -->
-        <div class="mt-8 text-center text-xs text-petrol/70 bg-white/80 backdrop-blur-md py-3 px-6 rounded-full inline-block mx-auto border border-petrol/10">
-          Per ingaggi concertistici, rassegne o collaborazioni artistiche: <a href="mailto:info@msartore.it" class="font-bold text-coralBand hover:underline">info@msartore.it</a>
+        <div class="mt-8 text-center text-xs text-petrol/70 bg-white/85 backdrop-blur-md py-3 px-6 rounded-full inline-block mx-auto border border-petrol/10">
+          Per ingaggi concertistici, rassegne o collaborazioni artistiche: <a href="mailto:info@msartore.it" class="font-bold text-petrol hover:underline">info@msartore.it</a>
         </div>
 
       </div>
@@ -637,15 +640,16 @@
 
 
     <!-- ========================================== -->
-    <!-- 5. SEZIONE FAQ & PRENOTAZIONE (SUPER-ZOOM: PETROLIO) -->
+    <!-- 5. SEZIONE FAQ & PRENOTAZIONE (SFONDO: PETROLIO) -->
+    <!-- (BORDO LATERALE IN VERDE TEAL: COLORE SUCCESSIVO) -->
     <!-- ========================================== -->
     <section id="contatti" class="py-28 px-6 scroll-mt-16" data-zoom="petrol">
       <div class="max-w-4xl mx-auto">
         
-        <!-- Header FAQ in Card Smerigliata -->
-        <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-12 border-l-8 border-l-petrol text-center sm:text-left">
-          <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-petrol uppercase mb-3">
-            <span class="w-2.5 h-1 bg-petrol rounded-full"></span>
+        <!-- Header FAQ: Bordo laterale in VERDE TEAL (Colore Successivo) -->
+        <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-12 border-l-8 border-l-tealBand text-center sm:text-left">
+          <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-tealBand uppercase mb-3">
+            <span class="w-2.5 h-1 bg-tealBand rounded-full"></span>
             Capitolo 04 // Domande & Risposte
           </div>
           <h2 class="text-3xl sm:text-5xl font-extrabold text-petrol tracking-tight">
@@ -660,7 +664,7 @@
         <div class="space-y-4 mb-16">
           
           <!-- Domanda 1 -->
-          <div class="editorial-card rounded-2xl overflow-hidden">
+          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-tealBand">
             <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
               <span>Come si svolgono le lezioni online e cosa serve per la qualità audio?</span>
               <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -673,7 +677,7 @@
           </div>
 
           <!-- Domanda 2 -->
-          <div class="editorial-card rounded-2xl overflow-hidden">
+          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-tealBand">
             <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
               <span>Come prenoto i miei orari e gestisco il calendario?</span>
               <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -686,7 +690,7 @@
           </div>
 
           <!-- Domanda 3 -->
-          <div class="editorial-card rounded-2xl overflow-hidden">
+          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-tealBand">
             <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
               <span>Cosa succede se ho un imprevisto e devo spostare una lezione?</span>
               <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -699,7 +703,7 @@
           </div>
 
           <!-- Domanda 4 -->
-          <div class="editorial-card rounded-2xl overflow-hidden">
+          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-tealBand">
             <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
               <span>Il corso è adatto anche se parto da zero o suono solo a orecchio?</span>
               <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -713,10 +717,10 @@
 
         </div>
 
-        <!-- BOX CTA FINALE (PRENOTAZIONE CALL) -->
-        <div class="editorial-card rounded-3xl p-8 sm:p-14 text-center border-2 border-petrol/15 relative overflow-hidden shadow-2xl">
+        <!-- BOX CTA FINALE (Bordi e accenti in Teal) -->
+        <div class="editorial-card rounded-3xl p-8 sm:p-14 text-center border-2 border-tealBand/40 relative overflow-hidden shadow-2xl">
           <div class="max-w-xl mx-auto">
-            <span class="text-xs font-mono font-bold tracking-widest text-coralBand uppercase">Inizia Oggi</span>
+            <span class="text-xs font-mono font-bold tracking-widest text-tealBand uppercase">Inizia Oggi</span>
             <h3 class="text-3xl sm:text-4xl font-extrabold text-petrol mt-2 mb-4">
               Facciamo due chiacchiere sulla tua musica.
             </h3>
@@ -734,7 +738,7 @@
                 <span>✉</span> info@msartore.it
               </a>
               <span class="hidden sm:inline">•</span>
-              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="hover:text-coralBand flex items-center gap-1.5 font-medium">
+              <a href="https://instagram.com/m_sartore" target="_blank" rel="noopener noreferrer" class="hover:text-tealBand flex items-center gap-1.5 font-medium">
                 <span>📷</span> Instagram: @m_sartore
               </a>
             </div>
@@ -823,9 +827,9 @@
       const listArchive = document.getElementById('concerts-archive');
 
       tabUpcoming.addEventListener('click', () => {
-        tabUpcoming.classList.add('bg-coralBand', 'text-white', 'shadow-sm');
+        tabUpcoming.classList.add('bg-petrol', 'text-white', 'shadow-sm');
         tabUpcoming.classList.remove('text-petrol/60');
-        tabArchive.classList.remove('bg-coralBand', 'text-white', 'shadow-sm');
+        tabArchive.classList.remove('bg-petrol', 'text-white', 'shadow-sm');
         tabArchive.classList.add('text-petrol/60');
 
         listUpcoming.classList.remove('hidden');
@@ -833,9 +837,9 @@
       });
 
       tabArchive.addEventListener('click', () => {
-        tabArchive.classList.add('bg-coralBand', 'text-white', 'shadow-sm');
+        tabArchive.classList.add('bg-petrol', 'text-white', 'shadow-sm');
         tabArchive.classList.remove('text-petrol/60');
-        tabUpcoming.classList.remove('bg-coralBand', 'text-white', 'shadow-sm');
+        tabUpcoming.classList.remove('bg-petrol', 'text-white', 'shadow-sm');
         tabUpcoming.classList.add('text-petrol/60');
 
         listArchive.classList.remove('hidden');
@@ -843,8 +847,6 @@
       });
 
       // 4. SUPER-ZOOM DINAMICO ARCOBALENO
-      // Zoom 9.5x che riempie ~85% dell'altezza dello schermo con il colore selezionato,
-      // lasciando visibile una sottile fessura bianca e un tocco del colore contiguo
       const staveWaves = document.getElementById('stave-waves');
       const sections = document.querySelectorAll('section[data-zoom]');
       const navDots = document.querySelectorAll('.nav-indicator-dot');
