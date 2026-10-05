@@ -42,7 +42,7 @@
         /* Smooth Scroll Reveal */
         .reveal-element {
             opacity: 0;
-            transform: translateY(22px);
+            transform: translateY(20px);
             transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: opacity, transform;
         }
@@ -67,7 +67,7 @@
             position: relative;
             padding: 0.45rem 0.85rem;
             border-radius: 4px;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid transparent;
             overflow: hidden;
         }
@@ -78,7 +78,7 @@
             inset: 0;
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 70%, transparent 100%);
             opacity: 0;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.2s ease;
             pointer-events: none;
         }
 
@@ -96,26 +96,19 @@
             opacity: 1;
         }
 
-        /* BARRA SEMPRE BASSA E IDENTICA: 56px esatti */
+        /* BARRA FISSA IDENTICA AL 100% IN QUALSIASI MOMENTO: 56px esatti, scura, con bordo netto */
         #main-header {
             height: 56px;
-            background-color: transparent;
-            border-bottom: 1px solid transparent;
-            transition: background-color 0.25s ease, backdrop-filter 0.25s ease, border-color 0.25s ease;
-        }
-
-        /* Stato attivo allo scroll (uguale al tuo secondo screenshot) */
-        #main-header.scrolled {
             background-color: rgba(7, 9, 14, 0.96);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(31, 41, 61, 0.75);
+            border-bottom: 1px solid rgba(31, 41, 61, 0.8);
         }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Sempre compatto a 56px: trasparente in cima, scuro allo scroll) -->
+    <!-- HEADER / NAVIGATION (Sempre identico: 56px compatto, solido, con bordo inferiore) -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
@@ -143,7 +136,7 @@
             <div class="hidden md:flex items-center shrink-0">
                 <!-- LINK GOOGLE CALENDAR QUI (Header) -->
                 <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-300/40 bg-stage-surface/80 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm">
+                   class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-300/40 bg-stage-surface hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm">
                     <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                     <span>Prenota Chiamata (15 min)</span>
                 </a>
@@ -177,29 +170,29 @@
 
     <main>
 
-        <!-- HERO SECTION (Foto a filo zero assoluto dall'alto, nessun finto gradiente) -->
-        <section class="relative min-h-screen flex items-center justify-start px-5 sm:px-10 lg:px-16 pt-16 pb-12 overflow-hidden">
+        <!-- HERO SECTION: Inizia subito a 56px sotto l'header, senza buchi neri artificiali -->
+        <section class="relative min-h-[92vh] flex items-start justify-start px-5 sm:px-10 lg:px-16 pt-[76px] pb-16 overflow-hidden">
             
-            <!-- SFONDO FOTO A FILO COMPLETO -->
+            <!-- SFONDO FOTO A FILO -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                 <img src="Modificata2.jpg" 
                      alt="Setup didattico studio Marco Sartore" 
                      class="w-full h-full object-cover object-bottom sm:object-center" />
 
                 <!-- Gradiente asimmetrico SOLO a sinistra per il testo -->
-                <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/90 via-stage-base/55 to-transparent w-full md:w-3/5"></div>
+                <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/95 via-stage-base/60 to-transparent w-full md:w-3/5"></div>
                 
                 <!-- Dissolvenza inferiore verso la sezione successiva -->
-                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-28 bottom-0"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-24 bottom-0"></div>
             </div>
 
-            <!-- BLOCCO TESTO (Ancorato a sinistra con contrasto naturale) -->
-            <div class="w-full max-w-xl lg:max-w-2xl text-left relative z-10 reveal-element">
+            <!-- BLOCCO TESTO: Parte subito in alto a soli 20px sotto la barra di 56px -->
+            <div class="w-full max-w-xl lg:max-w-2xl text-left relative z-10 reveal-element mt-5 sm:mt-8">
                 
                 <div class="p-4 sm:p-0 rounded-2xl bg-stage-base/60 sm:bg-transparent backdrop-blur-sm sm:backdrop-blur-none border border-stage-border/40 sm:border-none">
                     
                     <!-- Badge Setup -->
-                    <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full border border-slate-300/30 bg-stage-surface/85 backdrop-blur-md text-[11px] tracking-wider text-slate-200 mb-5 uppercase font-medium shadow-xl">
+                    <div class="inline-flex items-center gap-2.5 px-3 py-1 rounded-full border border-slate-300/30 bg-stage-surface/90 backdrop-blur-md text-[11px] tracking-wider text-slate-200 mb-4 uppercase font-medium shadow-xl">
                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                         <span>Studio Setup • Audio HD Diretto & Dual Cam</span>
                     </div>
@@ -209,7 +202,7 @@
                         <span class="text-slate-300 font-light">Si ascolta, si comprende, si suona.</span>
                     </h1>
 
-                    <p class="text-sm sm:text-base text-slate-200 max-w-lg mb-7 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                    <p class="text-sm sm:text-base text-slate-200 max-w-lg mb-6 leading-relaxed font-normal drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
                         Lezioni individuali di Pianoforte Moderno e Armonia Funzionale. Un percorso rigoroso, visivo e applicato direttamente sulla tastiera per padroneggiare la musica senza schemi sterili.
                     </p>
 
@@ -560,16 +553,6 @@
 
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Gestione Scurimento della Barra allo Scroll (56px fissa)
-        const mainHeader = document.getElementById('main-header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 15) {
-                mainHeader.classList.add('scrolled');
-            } else {
-                mainHeader.classList.remove('scrolled');
-            }
-        });
 
         // Gestione Menu Mobile
         const menuBtn = document.getElementById('menu-btn');
