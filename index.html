@@ -67,7 +67,7 @@
             position: relative;
             padding: 0.45rem 0.85rem;
             border-radius: 4px;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid transparent;
             overflow: hidden;
         }
@@ -78,7 +78,7 @@
             inset: 0;
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 70%, transparent 100%);
             opacity: 0;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.2s ease;
             pointer-events: none;
         }
 
@@ -96,27 +96,25 @@
             opacity: 1;
         }
 
-        /* BARRA UNICA: 60px precisi sempre.
-           All'apertura c'è solo il gradiente sfumato verso il basso.
-           Allo scroll il gradiente si trasforma in nero compatto. */
+        /* BARRA UNICA: 56px esatti sempre. Nessun doppio livello. */
         #main-header {
-            height: 60px;
-            background: linear-gradient(to bottom, rgba(7, 9, 14, 0.92) 0%, rgba(7, 9, 14, 0.5) 65%, transparent 100%);
+            height: 56px;
+            background: linear-gradient(to bottom, rgba(7, 9, 14, 0.85) 0%, rgba(7, 9, 14, 0.3) 70%, transparent 100%);
             border-bottom: 1px solid transparent;
-            transition: background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
         }
 
         #main-header.scrolled {
-            background: rgba(7, 9, 14, 0.97);
+            background: rgba(7, 9, 14, 0.96);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(31, 41, 61, 0.75);
+            border-bottom: 1px solid rgba(31, 41, 61, 0.8);
         }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (UNICO ELEMENTO: 60px fisso, gradiente all'apertura, scuro compatto allo scroll) -->
+    <!-- HEADER / NAVIGATION (Unico, 56px, compatto sempre) -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
@@ -178,11 +176,11 @@
 
     <main>
 
-        <!-- HERO SECTION: Inizia a filo sotto l'header senza doppi gradienti -->
-        <section class="relative min-h-[96vh] lg:min-h-screen flex items-center justify-start px-5 sm:px-10 lg:px-16 pt-20 pb-16 overflow-hidden">
+        <!-- HERO SECTION: Copre l'intero schermo (h-screen) partendo da cima assoluta, senza padding che spezzano l'immagine -->
+        <section class="relative h-screen flex items-center justify-start px-5 sm:px-10 lg:px-16 overflow-hidden">
             
-            <!-- SFONDO FOTO A FILO -->
-            <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <!-- SFONDO SETUP: Inizia da 0px in alto a tutto schermo -->
+            <div class="absolute inset-0 z-0 pointer-events-none">
                 <img src="Modificata2.jpg" 
                      alt="Setup didattico studio Marco Sartore" 
                      class="w-full h-full object-cover object-bottom sm:object-center" />
@@ -191,7 +189,7 @@
                 <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/95 via-stage-base/60 to-transparent w-full md:w-3/5"></div>
                 
                 <!-- Dissolvenza inferiore verso la sezione successiva -->
-                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-28 bottom-0"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-24 bottom-0"></div>
             </div>
 
             <!-- BLOCCO TESTO (Ancorato a sinistra con contrasto naturale) -->
@@ -562,7 +560,7 @@
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Gestione Scurimento della Barra allo Scroll (60px sempre)
+        // Gestione Scurimento della Barra allo Scroll (56px fissa)
         const mainHeader = document.getElementById('main-header');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 20) {
