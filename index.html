@@ -61,13 +61,40 @@
         .accordion-content.expanded {
             opacity: 1;
         }
+
+        /* Effetto Liquid Glass sui link del menu */
+        .nav-glass-link {
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid transparent;
+        }
+        .nav-glass-link:hover {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-color: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* Stato dell'header durante lo scroll: satinato e pulito senza righe rigide */
+        header.scrolled {
+            background: rgba(7, 9, 14, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+        }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Senza bordo inferiore, sfumatura continua verso la foto) -->
-    <header class="fixed top-0 left-0 w-full z-50 bg-gradient-to-b from-stage-base/95 via-stage-base/70 to-transparent backdrop-blur-[2px]">
+    <!-- HEADER / NAVIGATION (Senza alcuna riga inferiore, transizione fluida allo scroll) -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-gradient-to-b from-stage-base/90 via-stage-base/40 to-transparent">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-20 flex items-center justify-between">
+            
             <!-- Brand -->
             <a href="#" class="group flex items-center gap-3">
                 <span class="w-1.5 h-6 bg-slate-300 group-hover:bg-white transition-colors duration-300"></span>
@@ -79,20 +106,20 @@
                 </div>
             </a>
 
-            <!-- Nav Desktop -->
-            <nav class="hidden md:flex items-center gap-8">
-                <a href="#lezioni" class="text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors font-medium">Lezioni</a>
-                <a href="#metodo" class="text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors font-medium">Setup & Metodo</a>
-                <a href="#chi-sono" class="text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors font-medium">Profilo</a>
-                <a href="#concerti" class="text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors font-medium">Concerti</a>
-                <a href="#faq" class="text-xs uppercase tracking-widest text-slate-300 hover:text-white transition-colors font-medium">FAQ</a>
+            <!-- Nav Desktop con Effetto Liquid Glass Capsule -->
+            <nav class="hidden md:flex items-center gap-2 p-1.5 rounded-full bg-stage-base/20 backdrop-blur-[6px] border border-white/5">
+                <a href="#lezioni" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Lezioni</a>
+                <a href="#metodo" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Setup & Metodo</a>
+                <a href="#chi-sono" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Profilo</a>
+                <a href="#concerti" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">Concerti</a>
+                <a href="#faq" class="nav-glass-link text-xs uppercase tracking-widest text-slate-300 font-medium">FAQ</a>
             </nav>
 
-            <!-- CTA Desktop -->
+            <!-- CTA Desktop in Vetro Satinato Lucido -->
             <div class="hidden md:flex items-center">
                 <!-- LINK GOOGLE CALENDAR QUI (Header) -->
                 <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded border border-slate-300/40 bg-stage-surface/80 backdrop-blur-md hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-md">
+                   class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-white/20 bg-white/10 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase backdrop-blur-md transition-all duration-300 shadow-lg hover:shadow-white/10">
                     <i data-lucide="calendar" class="w-4 h-4"></i>
                     <span>Prenota Chiamata (15 min)</span>
                 </a>
@@ -104,9 +131,9 @@
             </button>
         </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-stage-surface/98 backdrop-blur-xl border-b border-stage-border px-6 py-6 transition-all duration-300">
-            <div class="flex flex-col gap-4 text-sm font-medium tracking-wide">
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-stage-surface/98 backdrop-blur-2xl border-b border-stage-border px-6 py-6 transition-all duration-300">
+            <div class="flex flex-col gap-3 text-sm font-medium tracking-wide">
                 <a href="#lezioni" class="mobile-link py-2 text-slate-200 hover:text-white">Lezioni</a>
                 <a href="#metodo" class="mobile-link py-2 text-slate-200 hover:text-white">Setup & Metodo</a>
                 <a href="#chi-sono" class="mobile-link py-2 text-slate-200 hover:text-white">Chi Sono</a>
@@ -115,7 +142,7 @@
                 <div class="pt-4 border-t border-stage-border">
                     <!-- LINK GOOGLE CALENDAR QUI (Mobile) -->
                     <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                       class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded bg-white text-stage-base text-xs uppercase tracking-wider font-bold">
+                       class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded bg-white text-stage-base text-xs uppercase tracking-wider font-bold shadow-lg">
                         <i data-lucide="calendar" class="w-4 h-4"></i>
                         <span>Prenota Chiamata (15 min)</span>
                     </a>
@@ -126,10 +153,10 @@
 
     <main>
 
-        <!-- HERO SECTION (Foto a tutto schermo senza interruzioni né righe) -->
-        <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-24 pb-16 overflow-hidden">
+        <!-- HERO SECTION (Senza alcuna linea di separazione) -->
+        <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-28 sm:pt-24 pb-20 overflow-hidden">
             
-            <!-- SFONDO SETUP SENZA RIGHE DI TAGLIO -->
+            <!-- SFONDO SETUP INTEGRALE -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                 <img src="Modificata2.jpg" 
                      alt="Setup didattico studio Marco Sartore" 
@@ -141,8 +168,8 @@
                 <!-- Dissolvenza mobile superiore -->
                 <div class="sm:hidden absolute inset-0 bg-gradient-to-b from-stage-base/95 via-stage-base/75 to-transparent"></div>
                 
-                <!-- Dissolvenza inferiore verso la sezione successiva -->
-                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-24 bottom-0"></div>
+                <!-- Dissolvenza inferiore continua verso le sezioni seguenti (NESSUNA RIGA DURA) -->
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/50 to-transparent h-40 bottom-0"></div>
             </div>
 
             <!-- BLOCCO TESTO (Ancorato a sinistra con contrasto naturale) -->
@@ -189,7 +216,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE LEZIONI & CORSI -->
+        <!-- SEZIONE LEZIONI & CORSI (Senza alcuna riga né bordo sopra) -->
         <section id="lezioni" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Didattica e Metodo</span>
@@ -298,7 +325,7 @@
             </div>
         </section>
 
-        <!-- CHI SONO / BIOGRAFIA -->
+        <!-- CHI SONO / BIOGRAFIA (Nessuna riga superiore) -->
         <section id="chi-sono" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
@@ -346,7 +373,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE CONCERTI -->
+        <!-- SEZIONE CONCERTI (Nessuna riga superiore) -->
         <section id="concerti" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 reveal-element">
                 <div>
@@ -408,7 +435,7 @@
             </div>
         </section>
 
-        <!-- SEZIONE FAQ -->
+        <!-- SEZIONE FAQ (Nessuna riga superiore) -->
         <section id="faq" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-4xl mx-auto">
             <div class="text-center mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Domande Frequenti</span>
@@ -512,6 +539,16 @@
 
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Gestione Header Dinamico allo Scroll
+        const mainHeader = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 30) {
+                mainHeader.classList.add('scrolled');
+            } else {
+                mainHeader.classList.remove('scrolled');
+            }
+        });
 
         // Gestione Menu Mobile
         const menuBtn = document.getElementById('menu-btn');
