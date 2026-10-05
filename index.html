@@ -95,12 +95,26 @@
         .lens-nav-item:hover::before {
             opacity: 1;
         }
+
+        /* Header Dinamico: In cima trasparente con gradiente continuo; allo scroll si scurisce senza scatti di dimensione */
+        #main-header {
+            height: 80px;
+            background: linear-gradient(to bottom, rgba(7, 9, 14, 0.85) 0%, rgba(7, 9, 14, 0.3) 60%, transparent 100%);
+            transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        #main-header.scrolled {
+            background: rgba(7, 9, 14, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.9);
+        }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Costante, fisso, 80px di altezza stabile senza ridimensionamenti) -->
-    <header class="fixed top-0 left-0 w-full z-50 h-20 bg-stage-base/90 backdrop-blur-md">
+    <!-- HEADER / NAVIGATION (Costante, 80px fisso, trasparenza iniziale e scurimento graduale allo scroll) -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
             <!-- Brand -->
@@ -547,6 +561,16 @@
 
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Gestione Scurimento Graduale dell'Header allo Scroll
+        const mainHeader = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                mainHeader.classList.add('scrolled');
+            } else {
+                mainHeader.classList.remove('scrolled');
+            }
+        });
 
         // Gestione Menu Mobile
         const menuBtn = document.getElementById('menu-btn');
