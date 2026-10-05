@@ -75,25 +75,20 @@
       overflow: hidden;
     }
 
-    /* Gruppo onde con transizione cinematografica ultra-fluida */
+    /* Gruppo onde con transizione fluida cinematografica */
     #stave-waves {
       transform-origin: 0 0;
       transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: transform;
     }
 
-    /* Note musicali: sfumano dolcemente in trasparenza durante il super-zoom per non disturbare la lettura */
-    #musical-notes {
-      transition: opacity 0.6s ease;
-    }
-
-    /* Schede editoriali smerigliate con contrasto nitido e leggibilità perfetta */
+    /* Schede editoriali protette ad altissimo contrasto (WCAG AAA) */
     .editorial-card {
       background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 15px 35px -10px rgba(22, 52, 63, 0.12);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 20px 40px -15px rgba(22, 52, 63, 0.12);
     }
   </style>
 </head>
@@ -101,6 +96,7 @@
 
   <!-- ========================================== -->
   <!-- BACKGROUND ANIMATO: PENTAGRAMMA ARCOBALENO -->
+  <!-- CON SPAZIO BIANCO TRA LE STRISCE E SENZA NOTE -->
   <!-- ========================================== -->
   <div id="wave-canvas-container">
     <svg id="rainbow-svg" class="w-full h-full" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,49 +104,17 @@
       <!-- Gruppo Onde Pentagramma (Animato via JS) -->
       <g id="stave-waves">
         
-        <!-- Fascia 1: Petrolio Scuro (y_center ~ 267) -->
-        <path d="M -300,320 C 450,500 1050,180 2100,-620 L 2100,-510 C 1050,290 450,610 -300,430 Z" fill="#16343F" />
+        <!-- Fascia 1: Blu Petrolio Scuro (y_base: 520 a 600) -->
+        <path d="M -300,490 C 450,640 1050,380 2100,-360 L 2100,-280 C 1050,460 450,720 -300,570 Z" fill="#16343F" />
         
-        <!-- Fascia 2: Verde Teal (y_center ~ 377) -->
-        <path d="M -300,430 C 450,610 1050,290 2100,-510 L 2100,-400 C 1050,400 450,720 -300,540 Z" fill="#268177" />
+        <!-- Fascia 2: Verde Teal (y_base: 618 a 698) -->
+        <path d="M -300,588 C 450,738 1050,478 2100,-262 L 2100,-182 C 1050,558 450,818 -300,668 Z" fill="#268177" />
 
-        <!-- Fascia 3: Ocra / Oro Caldo (y_center ~ 487) -->
-        <path d="M -300,540 C 450,720 1050,400 2100,-400 L 2100,-290 C 1050,510 450,830 -300,650 Z" fill="#E19E37" />
+        <!-- Fascia 3: Ocra / Oro Caldo (y_base: 716 a 796) -->
+        <path d="M -300,686 C 450,836 1050,576 2100,-164 L 2100,-84 C 1050,656 450,916 -300,766 Z" fill="#E19E37" />
 
-        <!-- Fascia 4: Terracotta / Corallo (y_center ~ 597) -->
-        <path d="M -300,650 C 450,830 1050,510 2100,-290 L 2100,-180 C 1050,620 450,940 -300,760 Z" fill="#DB654E" />
-
-        <!-- Elementi Grafici Musicali (Visibili in panoramica, sfumati durante lo zoom profondo) -->
-        <g id="musical-notes" opacity="0.9">
-          <!-- Linee di battuta verticali bianche -->
-          <g stroke="#FAF7F2" stroke-width="3" opacity="0.8" stroke-linecap="round">
-            <line x1="280" y1="520" x2="280" y2="760"/>
-            <line x1="520" y1="560" x2="520" y2="800"/>
-            <line x1="780" y1="520" x2="780" y2="760"/>
-            <line x1="1040" y1="410" x2="1040" y2="670"/>
-            <line x1="1280" y1="230" x2="1280" y2="520"/>
-          </g>
-
-          <!-- Simboli musicali bianchi stile copertina -->
-          <g fill="#FAF7F2" opacity="0.95">
-            <!-- Nota 1 con gambo (su fascia verde) -->
-            <ellipse cx="440" cy="625" rx="19" ry="13" transform="rotate(-20 440 625)" fill="none" stroke="#FAF7F2" stroke-width="7"/>
-            <line x1="458" y1="620" x2="458" y2="520" stroke="#FAF7F2" stroke-width="6" stroke-linecap="round"/>
-            
-            <!-- Diesis e nota -->
-            <text x="320" y="625" font-family="'Plus Jakarta Sans', sans-serif" font-size="44" font-weight="bold" fill="#FAF7F2">♯</text>
-            <ellipse cx="365" cy="620" rx="18" ry="12" transform="rotate(-20 365 620)" fill="none" stroke="#FAF7F2" stroke-width="6.5"/>
-
-            <!-- Bemolle e nota -->
-            <text x="880" y="550" font-family="'Plus Jakarta Sans', sans-serif" font-size="46" font-weight="bold" fill="#FAF7F2">♭</text>
-            <ellipse cx="925" cy="535" rx="20" ry="14" transform="rotate(-22 925 535)" fill="none" stroke="#FAF7F2" stroke-width="7"/>
-            <line x1="944" y1="530" x2="944" y2="420" stroke="#FAF7F2" stroke-width="6" stroke-linecap="round"/>
-
-            <!-- Bequadro e nota su fascia corallo -->
-            <ellipse cx="1180" cy="570" rx="24" ry="16" transform="rotate(-20 1180 570)" fill="none" stroke="#FAF7F2" stroke-width="7.5"/>
-            <text x="1115" y="575" font-family="'Plus Jakarta Sans', sans-serif" font-size="48" font-weight="bold" fill="#FAF7F2">♮</text>
-          </g>
-        </g>
+        <!-- Fascia 4: Terracotta / Corallo (y_base: 814 a 894) -->
+        <path d="M -300,784 C 450,934 1050,674 2100,-66 L 2100,14 C 1050,754 450,1014 -300,864 Z" fill="#DB654E" />
 
       </g>
     </svg>
@@ -182,10 +146,10 @@
 
       <!-- Menu Desktop -->
       <nav class="hidden md:flex items-center gap-8 font-semibold text-sm text-petrol/80">
-        <a href="#lezioni" class="hover:text-tealBand transition-colors py-1 relative">Lezioni</a>
-        <a href="#chi-sono" class="hover:text-ochreBand transition-colors py-1 relative">Chi Sono</a>
-        <a href="#concerti" class="hover:text-coralBand transition-colors py-1 relative">Concerti</a>
-        <a href="#contatti" class="hover:text-petrol transition-colors py-1 relative">FAQ & Info</a>
+        <a href="#lezioni" class="hover:text-tealBand transition-colors py-1">Lezioni</a>
+        <a href="#chi-sono" class="hover:text-ochreBand transition-colors py-1">Chi Sono</a>
+        <a href="#concerti" class="hover:text-coralBand transition-colors py-1">Concerti</a>
+        <a href="#contatti" class="hover:text-petrol transition-colors py-1">FAQ & Info</a>
       </nav>
 
       <!-- CTA Header -->
@@ -229,18 +193,20 @@
     <!-- ========================================== -->
     <!-- 1. HERO SECTION: L'ARMONIA IN LONTANANZA -->
     <!-- ========================================== -->
-    <section id="hero" class="min-h-[90vh] flex items-center justify-center pt-8 pb-20 px-6" data-zoom="overview">
+    <section id="hero" class="min-h-[90vh] flex items-center justify-center pt-6 pb-20 px-6" data-zoom="overview">
       <div class="max-w-5xl mx-auto w-full">
         
-        <div class="max-w-3xl">
+        <!-- CARD EDITORIALE HERO (Protegge il testo ed evita sovrapposizioni) -->
+        <div class="editorial-card p-8 sm:p-12 md:p-14 rounded-3xl max-w-3xl border-t-4 border-t-petrol mb-12">
+          
           <!-- Tag / Badge -->
-          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/85 border border-petrol/10 text-xs font-semibold tracking-wider text-petrol uppercase mb-6 shadow-sm">
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-ivory border border-petrol/10 text-xs font-semibold tracking-wider text-petrol uppercase mb-6 shadow-sm">
             <span class="w-2 h-2 rounded-full bg-coralBand"></span>
             Didattica 1-a-1 & Attività Concertistica
           </div>
 
-          <!-- Headline Principale -->
-          <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-petrol leading-[1.08] mb-6">
+          <!-- Headline Principale ad Altissimo Contrasto -->
+          <h1 class="text-4xl sm:text-6xl md:text-6xl font-extrabold tracking-tight text-petrol leading-[1.1] mb-6">
             Pianoforte e <br class="hidden sm:inline" />
             <span class="text-tealBand">Armonia</span> 
             <span class="text-ochreBand">Senza</span> 
@@ -262,14 +228,14 @@
               </svg>
             </a>
 
-            <a href="#lezioni" class="inline-flex items-center justify-center px-6 py-4 text-base font-semibold rounded-2xl text-petrol bg-white/85 hover:bg-white border border-petrol/15 transition-all shadow-sm">
+            <a href="#lezioni" class="inline-flex items-center justify-center px-6 py-4 text-base font-semibold rounded-2xl text-petrol bg-ivory hover:bg-white border border-petrol/15 transition-all shadow-sm">
               Scopri i Corsi
             </a>
           </div>
 
           <!-- Micro-copy Rassicurazione -->
           <div class="flex items-center gap-2 text-xs sm:text-sm text-petrol/60 font-medium">
-            <svg class="w-4 h-4 text-tealBand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-tealBand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
             </svg>
             <span>Totalmente gratuita e senza impegno • Valutiamo insieme livello e obiettivi</span>
@@ -278,7 +244,7 @@
         </div>
 
         <!-- Banner Formato in 4 Punti -->
-        <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="editorial-card p-4 sm:p-5 rounded-2xl border-l-4 border-l-petrol">
             <div class="text-xs font-mono uppercase text-petrol/50 mb-1">Formato</div>
             <div class="font-bold text-petrol text-base sm:text-lg">Online 1-a-1</div>
@@ -877,29 +843,26 @@
       });
 
       // 4. SUPER-ZOOM DINAMICO ARCOBALENO
-      // Ingrandisce a fattore 7x centrando esattamente la fascia corrispondente
-      // coprendo circa l'85% dello schermo e lasciando un elegante bordo sopra e sotto
+      // Zoom 9.5x che riempie ~85% dell'altezza dello schermo con il colore selezionato,
+      // lasciando visibile una sottile fessura bianca e un tocco del colore contiguo
       const staveWaves = document.getElementById('stave-waves');
-      const musicalNotes = document.getElementById('musical-notes');
       const sections = document.querySelectorAll('section[data-zoom]');
       const navDots = document.querySelectorAll('.nav-indicator-dot');
 
       const zoomTransforms = {
-        'overview': { scale: 1.0, tx: 0,     ty: 0,     notesOpacity: 0.9  },
-        'teal':     { scale: 7.0, tx: -4800, ty: -2190, notesOpacity: 0.08 },
-        'ochre':    { scale: 7.0, tx: -4800, ty: -2960, notesOpacity: 0.08 },
-        'coral':    { scale: 7.0, tx: -4800, ty: -3730, notesOpacity: 0.08 },
-        'petrol':   { scale: 7.0, tx: -4800, ty: -1420, notesOpacity: 0.08 }
+        'overview': { scale: 1.0, tx: 0,     ty: 0     },
+        'teal':     { scale: 9.5, tx: -6800, ty: -4601 },
+        'ochre':    { scale: 9.5, tx: -6800, ty: -5532 },
+        'coral':    { scale: 9.5, tx: -6800, ty: -6463 },
+        'petrol':   { scale: 9.5, tx: -6800, ty: -3670 }
       };
 
       const applyZoom = (zoomKey, sectionId) => {
         const conf = zoomTransforms[zoomKey] || zoomTransforms['overview'];
         
-        // Applica trasformazione vettoriale precisa
         staveWaves.style.transform = `translate(${conf.tx}px, ${conf.ty}px) scale(${conf.scale})`;
-        musicalNotes.style.opacity = conf.notesOpacity;
 
-        // Aggiorna gli indicatori a pallino laterali
+        // Aggiorna gli indicatori laterali
         navDots.forEach(dot => {
           if (dot.getAttribute('data-section') === sectionId) {
             dot.classList.remove('bg-petrol/20');
@@ -911,7 +874,7 @@
         });
       };
 
-      // Aggiornamento allo scorrimento della pagina
+      // Aggiornamento allo scorrimento
       const handleScroll = () => {
         const scrollPos = window.scrollY + (window.innerHeight * 0.42);
 
@@ -931,7 +894,7 @@
       };
 
       window.addEventListener('scroll', handleScroll, { passive: true });
-      handleScroll(); // Trigger iniziale all'avvio
+      handleScroll();
     });
   </script>
 </body>
