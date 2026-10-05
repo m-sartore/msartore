@@ -96,19 +96,27 @@
             opacity: 1;
         }
 
-        /* HEADER UNICO: 56px compatto, scuro e rifinito fin dal caricamento */
+        /* BARRA DI NAVIGAZIONE:
+           All'inizio è invisibile e lascia agire solo il gradiente continuo dell'immagine.
+           Allo scroll diventa scura e compatta in modo fluido. */
         #main-header {
             height: 56px;
-            background: rgba(7, 9, 14, 0.94);
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease;
+        }
+
+        #main-header.scrolled {
+            background: rgba(7, 9, 14, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(31, 41, 61, 0.75);
+            border-bottom: 1px solid rgba(31, 41, 61, 0.8);
         }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Unico, 56px, compatto sempre) -->
+    <!-- HEADER / NAVIGATION -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
@@ -168,7 +176,7 @@
 
     <main>
 
-        <!-- HERO SECTION: a tutto schermo, parte dall'alto -->
+        <!-- HERO SECTION: a tutto schermo, parte da cima assoluta -->
         <section class="relative h-screen flex items-center justify-start px-5 sm:px-10 lg:px-16 overflow-hidden">
             
             <!-- SFONDO SETUP -->
@@ -177,7 +185,10 @@
                      alt="Setup didattico studio Marco Sartore" 
                      class="w-full h-full object-cover object-bottom sm:object-center" />
 
-                <!-- Gradiente asimmetrico a sinistra per garantire la massima leggibilità -->
+                <!-- UNICO GRADIENTE SUPERIORE: Morbido, parte dall'alto e sfuma naturalmente verso il basso senza nessun taglio a 56px -->
+                <div class="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-stage-base/90 via-stage-base/40 to-transparent"></div>
+
+                <!-- Gradiente asimmetrico a sinistra per la leggibilità del testo -->
                 <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/95 via-stage-base/65 to-transparent w-full md:w-3/5"></div>
                 
                 <!-- Dissolvenza inferiore verso la sezione successiva -->
@@ -549,6 +560,18 @@
 
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Gestione Transizione Header (Trasparente in cima -> Scuro allo scroll)
+        const mainHeader = document.getElementById('main-header');
+        function handleScroll() {
+            if (window.scrollY > 30) {
+                mainHeader.classList.add('scrolled');
+            } else {
+                mainHeader.classList.remove('scrolled');
+            }
+        }
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll(); // Controllo iniziale immediato
 
         // Gestione Menu Mobile
         const menuBtn = document.getElementById('menu-btn');
