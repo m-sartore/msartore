@@ -95,20 +95,31 @@
       border: 1px solid rgba(255, 255, 255, 0.8);
       box-shadow: 0 22px 45px -12px rgba(39, 67, 78, 0.16), 0 4px 12px -2px rgba(39, 67, 78, 0.05);
     }
+
+    /* Animazione fluida per espansione FAQ con CSS Grid */
+    .faq-collapse {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .faq-collapse.open {
+      grid-template-rows: 1fr;
+    }
+    .faq-collapse > div {
+      overflow: hidden;
+    }
   </style>
 </head>
 <body class="antialiased selection:bg-ochreBand selection:text-white relative">
 
   <!-- ========================================== -->
   <!-- BACKGROUND ANIMATO: PENTAGRAMMA A 5 LINEE -->
-  <!-- (COLORI ORIGINALI ESATTI DALLA COPERTINA) -->
   <!-- ========================================== -->
   <div id="wave-canvas-container">
     <svg id="rainbow-svg" class="w-full h-full" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
       
       <!-- Gruppo Onde Pentagramma (5 Fasce Parallele con fessura bianca) -->
       <g id="stave-waves">
-        
         <!-- Fascia 1: Blu Petrolio Scuro (#27434E) -->
         <path d="M -300,420 C 450,570 1050,310 2100,-430 L 2100,-360 C 1050,380 450,640 -300,490 Z" fill="#27434E" />
         
@@ -123,7 +134,6 @@
 
         <!-- Fascia 5: Rosso Terracotta / Corallo (#E37055) -->
         <path d="M -300,760 C 450,910 1050,650 2100,-90 L 2100,-20 C 1050,720 450,980 -300,830 Z" fill="#E37055" />
-
       </g>
     </svg>
   </div>
@@ -145,11 +155,10 @@
   <header class="sticky top-0 z-50 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-petrol/5 transition-all duration-300">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       
-      <!-- Logo Brand (Esattamente come in copertina) -->
+      <!-- Logo Brand: Marco diventa verde e Sartore diventa giallo al passaggio del mouse -->
       <a href="#hero" class="group flex items-center gap-1.5 text-2xl font-bold tracking-tight">
-        <span class="text-petrol transition-colors group-hover:text-tealBand">Marco</span>
-        <span class="text-coralBand">Sartore</span>
-        <span class="text-xs font-mono text-petrol/40 ml-1.5 tracking-widest uppercase hidden sm:inline-block">/ Music</span>
+        <span class="text-petrol transition-colors duration-300 group-hover:text-tealBand">Marco</span>
+        <span class="text-coralBand transition-colors duration-300 group-hover:text-ochreBand">Sartore</span>
       </a>
 
       <!-- Menu Desktop -->
@@ -199,12 +208,11 @@
 
     <!-- ========================================== -->
     <!-- 1. HERO SECTION: IL PENTAGRAMMA COMPLETO -->
-    <!-- (BORDO SUPERIORE IN TEAL: LINEA 2) -->
     <!-- ========================================== -->
     <section id="hero" class="min-h-[90vh] flex items-center justify-center pt-6 pb-20 px-6" data-zoom="overview">
       <div class="max-w-5xl mx-auto w-full">
         
-        <!-- CARD EDITORIALE HERO (Bordo superiore in TEAL) -->
+        <!-- CARD EDITORIALE HERO -->
         <div class="editorial-card p-8 sm:p-12 md:p-14 rounded-3xl max-w-3xl border-t-8 border-t-tealBand mb-12">
           
           <!-- Tag / Badge -->
@@ -213,12 +221,10 @@
             Didattica 1-a-1 & Attività Concertistica
           </div>
 
-          <!-- Headline Principale ad Altissimo Contrasto -->
+          <!-- Headline: Pianoforte (Giallo), Armonia (Verde), il resto tutto Blu Petrolio -->
           <h1 class="text-4xl sm:text-6xl md:text-6xl font-extrabold tracking-tight text-petrol leading-[1.1] mb-6">
-            Pianoforte e <br class="hidden sm:inline" />
-            <span class="text-tealBand">Armonia</span> 
-            <span class="text-ochreBand">Senza</span> 
-            <span class="text-coralBand">Segreti.</span>
+            <span class="text-ochreBand">Pianoforte</span> e <br class="hidden sm:inline" />
+            <span class="text-tealBand">Armonia</span> Senza Segreti.
           </h1>
 
           <!-- Subheadline -->
@@ -251,7 +257,7 @@
 
         </div>
 
-        <!-- Banner Formato: 5 Schede, ognuna associata a un colore del pentagramma -->
+        <!-- Banner Formato: 5 Schede associate ai 5 colori del pentagramma -->
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
           <div class="editorial-card p-4 rounded-2xl border-l-4 border-l-petrol">
             <div class="text-xs font-mono uppercase text-petrol font-bold mb-1">Formato</div>
@@ -306,17 +312,13 @@
           </p>
         </div>
 
-        <!-- Griglia Corsi (Pianoforte & Armonia) -->
+        <!-- Griglia Corsi (Senza icone, tipografia pulita ed essenziale) -->
         <div class="grid md:grid-cols-2 gap-8 mb-12">
           
-          <!-- Corso Pianoforte (Bordo in Ocra) -->
+          <!-- Corso Pianoforte -->
           <div class="editorial-card rounded-3xl p-8 sm:p-10 border-l-4 border-l-ochreBand relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
-            <div class="w-12 h-12 rounded-2xl bg-ochreBand text-white flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
-              🎹
-            </div>
-
-            <span class="text-xs font-mono font-bold tracking-wider text-ochreBand uppercase">Corso Pratico</span>
-            <h3 class="text-2xl sm:text-3xl font-bold text-petrol mt-1 mb-4">Pianoforte Moderno & Classico</h3>
+            <span class="text-xs font-mono font-bold tracking-wider text-ochreBand uppercase">Corso Pratico // 01</span>
+            <h3 class="text-2xl sm:text-3xl font-bold text-petrol mt-2 mb-4">Pianoforte Moderno & Classico</h3>
             <p class="text-petrol/80 text-sm sm:text-base leading-relaxed mb-6">
               Sviluppo della tecnica fisiologica, postura rilassata, indipendenza delle mani, interpretazione del repertorio classico, jazzistico o pop-contemporaneo.
             </p>
@@ -337,21 +339,17 @@
             </ul>
 
             <div class="pt-6 border-t border-petrol/10 flex items-center justify-between">
-              <span class="text-xs font-mono text-petrol/60">Sessioni 60 min</span>
+              <span class="text-xs font-mono text-petrol/60">Sessioni da 60 min</span>
               <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" class="text-sm font-bold text-ochreBand hover:text-petrol inline-flex items-center gap-1.5">
                 Prenota prova <span aria-hidden="true">&rarr;</span>
               </a>
             </div>
           </div>
 
-          <!-- Corso Armonia Funzionale (Bordo in Ocra) -->
+          <!-- Corso Armonia Funzionale -->
           <div class="editorial-card rounded-3xl p-8 sm:p-10 border-l-4 border-l-ochreBand relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
-            <div class="w-12 h-12 rounded-2xl bg-petrol text-white flex items-center justify-center font-bold text-xl mb-6 shadow-sm">
-              🎼
-            </div>
-
-            <span class="text-xs font-mono font-bold tracking-wider text-ochreBand uppercase">Teoria & Analisi</span>
-            <h3 class="text-2xl sm:text-3xl font-bold text-petrol mt-1 mb-4">Armonia Funzionale & Jazz</h3>
+            <span class="text-xs font-mono font-bold tracking-wider text-ochreBand uppercase">Teoria & Analisi // 02</span>
+            <h3 class="text-2xl sm:text-3xl font-bold text-petrol mt-2 mb-4">Armonia Funzionale & Jazz</h3>
             <p class="text-petrol/80 text-sm sm:text-base leading-relaxed mb-6">
               L'armonia vissuta come sistema fluido di tensioni e risoluzioni. Dalle triadi essenziali alle sostituzioni avanzate, accordi alterati e modulazioni.
             </p>
@@ -381,7 +379,7 @@
 
         </div>
 
-        <!-- Scheda Pacchetto Lezioni (Bordo in Ocra) -->
+        <!-- Scheda Pacchetto Lezioni (SENZA PREZZI: Approccio su misura) -->
         <div class="editorial-card rounded-3xl p-8 sm:p-12 border-l-8 border-l-ochreBand border-t-2 border-r-2 border-b-2 border-ochreBand/25 shadow-xl">
           <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             
@@ -393,7 +391,7 @@
                 Pacchetto Continuativo: 4 Lezioni Individuali
               </h3>
               <p class="text-petrol/85 text-sm sm:text-base leading-relaxed mb-6">
-                Le lezioni hanno un formato individuale da <strong>60 minuti</strong> con audio HD stereo. Per assicurare continuità e risultati tangibili, il ciclo viene acquistato a blocchi di 4 lezioni.
+                Le lezioni hanno un formato individuale da <strong>60 minuti</strong> con audio HD stereo. Per assicurare continuità e risultati tangibili, il ciclo viene acquistato a blocchi di 4 lezioni con massima flessibilità organizzativa.
               </p>
 
               <!-- Elenco condizioni e trasparenza -->
@@ -417,19 +415,21 @@
               </div>
             </div>
 
-            <!-- Box Tariffa & CTA -->
+            <!-- Box Info & Prenotazione (Zero prezzi menzionati) -->
             <div class="bg-ivory/80 border border-petrol/10 p-6 sm:p-8 rounded-2xl flex flex-col items-center justify-center text-center lg:min-w-[280px]">
-              <span class="text-xs font-mono uppercase tracking-wider text-petrol/60">Tariffa Oraria</span>
-              <div class="text-3xl sm:text-4xl font-black text-petrol my-1">
-                37,50€ <span class="text-base font-normal text-petrol/60">/ora</span>
+              <span class="text-xs font-mono uppercase tracking-wider text-ochreBand font-bold">Percorso Dedicato</span>
+              <div class="text-2xl sm:text-3xl font-extrabold text-petrol my-2">
+                Su Misura
               </div>
-              <span class="text-xs text-petrol/70 mb-5">Pacchetto da 4 lezioni (150€)</span>
+              <span class="text-xs text-petrol/70 mb-5 leading-relaxed max-w-[220px]">
+                Definiamo insieme frequenza e piano di studio durante la chiamata orientativa
+              </span>
               
               <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" rel="noopener noreferrer"
                  class="w-full py-3.5 px-6 rounded-xl bg-petrol text-white font-bold text-sm hover:bg-ochreBand shadow transition-all duration-200 text-center">
                 Prenota Chiamata (15 min)
               </a>
-              <span class="text-[11px] text-petrol/50 mt-2.5">Nessun pagamento anticipato richiesto per la call</span>
+              <span class="text-[11px] text-petrol/50 mt-2.5">Chiamata conoscitiva 100% gratuita</span>
             </div>
 
           </div>
@@ -448,7 +448,7 @@
         
         <div class="grid lg:grid-cols-12 gap-8 items-stretch">
           
-          <!-- Colonna Sinistra: Bordo laterale in ARANCIO PESCA (Colore Successivo) -->
+          <!-- Colonna Sinistra: Bordo laterale in ARANCIO PESCA -->
           <div class="lg:col-span-7 editorial-card p-8 sm:p-12 rounded-3xl border-l-8 border-l-peachBand flex flex-col justify-between">
             <div>
               <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-peachBand uppercase mb-3">
@@ -488,7 +488,7 @@
 
           </div>
 
-          <!-- Colonna Destra: Bordo superiore in ARANCIO PESCA (Colore Successivo) -->
+          <!-- Colonna Destra: Bordo superiore in ARANCIO PESCA -->
           <div class="lg:col-span-5 editorial-card p-8 sm:p-12 rounded-3xl border-t-8 border-t-peachBand flex flex-col justify-between">
             <div>
               <div class="text-5xl text-peachBand/40 font-serif leading-none select-none">“</div>
@@ -528,7 +528,7 @@
     <section id="concerti" class="py-28 px-6 scroll-mt-16" data-zoom="peach">
       <div class="max-w-6xl mx-auto">
         
-        <!-- Header Concerti: Bordo laterale in ROSSO CORALLO (Colore Successivo) -->
+        <!-- Header Concerti: Bordo laterale in ROSSO CORALLO -->
         <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-8 border-l-8 border-l-coralBand flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-coralBand uppercase mb-3">
@@ -554,7 +554,7 @@
           </div>
         </div>
 
-        <!-- LISTA DATE: PROSSIME DATE (Bordi laterali in Corallo) -->
+        <!-- LISTA DATE: PROSSIME DATE -->
         <div id="concerts-upcoming" class="space-y-4">
           
           <!-- Data 1 -->
@@ -659,7 +659,7 @@
     <section id="contatti" class="py-28 px-6 scroll-mt-16" data-zoom="coral">
       <div class="max-w-4xl mx-auto">
         
-        <!-- Header FAQ: Bordo laterale in BLU PETROLIO (Colore Successivo/Ciclico) -->
+        <!-- Header FAQ: Bordo laterale in BLU PETROLIO -->
         <div class="editorial-card rounded-3xl p-8 sm:p-12 mb-12 border-l-8 border-l-petrol text-center sm:text-left">
           <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-petrol uppercase mb-3">
             <span class="w-2.5 h-1 bg-petrol rounded-full"></span>
@@ -673,64 +673,80 @@
           </p>
         </div>
 
-        <!-- Accordion FAQ -->
+        <!-- Accordion FAQ con Animazione Morbida a Tendina -->
         <div class="space-y-4 mb-16">
           
           <!-- Domanda 1 -->
-          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol">
-            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
+          <div class="faq-item editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol transition-all duration-300">
+            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4 select-none">
               <span>Come si svolgono le lezioni online e cosa serve per la qualità audio?</span>
-              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-300 ease-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div class="faq-content hidden px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
-              Le lezioni si tengono su <strong>Google Meet con modalità Audio HQ ad alta fedeltà stereo</strong> (senza soppressione automatica della musica). Ti basterà un computer, tablet o smartphone posizionato in modo da inquadrare tastiera e mani, e una connessione stabile. Per chi studia pianoforte è consigliato l'uso di cuffie per ascoltare ogni sfumatura di tocco e armonizzazione.
+            <div class="faq-collapse">
+              <div>
+                <div class="px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
+                  Le lezioni si tengono su <strong>Google Meet con modalità Audio HQ ad alta fedeltà stereo</strong> (senza soppressione automatica della musica). Ti basterà un computer, tablet o smartphone posizionato in modo da inquadrare tastiera e mani, e una connessione stabile. Per chi studia pianoforte è consigliato l'uso di cuffie per ascoltare ogni sfumatura di tocco e armonizzazione.
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- Domanda 2 -->
-          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol">
-            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
+          <div class="faq-item editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol transition-all duration-300">
+            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4 select-none">
               <span>Come prenoto i miei orari e gestisco il calendario?</span>
-              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-300 ease-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div class="faq-content hidden px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
-              In totale autonomia! Dopo aver concordato il percorso nella chiamata conoscitiva, riceverai un link diretto al mio <strong>Google Calendar personale</strong>. Potrai fissare la tua lezione scegliendo gli slot liberi che preferisci settimana per settimana, senza dover concordare ogni singolo orario via messaggio.
+            <div class="faq-collapse">
+              <div>
+                <div class="px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
+                  In totale autonomia! Dopo aver concordato il percorso nella chiamata conoscitiva, riceverai un link diretto al mio <strong>Google Calendar personale</strong>. Potrai fissare la tua lezione scegliendo gli slot liberi che preferisci settimana per settimana, senza dover concordare ogni singolo orario via messaggio.
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- Domanda 3 -->
-          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol">
-            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
+          <div class="faq-item editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol transition-all duration-300">
+            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4 select-none">
               <span>Cosa succede se ho un imprevisto e devo spostare una lezione?</span>
-              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-300 ease-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div class="faq-content hidden px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
-              Massima flessibilità: puoi riprogrammare o spostare la tua lezione direttamente dal link di prenotazione con almeno <strong>24 ore di preavviso</strong>, senza perdere la sessione. Il pacchetto da 4 lezioni ha una durata di validità di <strong>60 giorni</strong>, offrendoti tutto il tempo necessario per recuperare eventuali date.
+            <div class="faq-collapse">
+              <div>
+                <div class="px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
+                  Massima flessibilità: puoi riprogrammare o spostare la tua lezione direttamente dal link di prenotazione con almeno <strong>24 ore di preavviso</strong>, senza perdere la sessione. Il pacchetto da 4 lezioni ha una durata di validità di <strong>60 giorni</strong>, offrendoti tutto il tempo necessario per recuperare eventuali date.
+                </div>
+              </div>
             </div>
           </div>
 
           <!-- Domanda 4 -->
-          <div class="editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol">
-            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4">
+          <div class="faq-item editorial-card rounded-2xl overflow-hidden border-l-4 border-l-petrol transition-all duration-300">
+            <button class="faq-toggle w-full p-6 text-left flex items-center justify-between font-bold text-petrol text-lg gap-4 select-none">
               <span>Il corso è adatto anche se parto da zero o suono solo a orecchio?</span>
-              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="faq-icon w-5 h-5 shrink-0 text-petrol/50 transition-transform duration-300 ease-out" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div class="faq-content hidden px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
-              Assolutamente sì. Il programma viene calibrato esattamente sul tuo punto di partenza. Se suoni a orecchio, daremo un nome e una logica geometrica immediata a ciò che già fai intuitivamente; se parti da zero, acquisirai subito una solida impostazione tecnica e di lettura senza blocchi nozionistici.
+            <div class="faq-collapse">
+              <div>
+                <div class="px-6 pb-6 text-petrol/85 text-sm sm:text-base leading-relaxed border-t border-petrol/5 pt-3">
+                  Assolutamente sì. Il programma viene calibrato esattamente sul tuo punto di partenza. Se suoni a orecchio, daremo un nome e una logica geometrica immediata a ciò che già fai intuitivamente; se parti da zero, acquisirai subito una solida impostazione tecnica e di lettura senza blocchi nozionistici.
+                </div>
+              </div>
             </div>
           </div>
 
         </div>
 
-        <!-- BOX CTA FINALE (Bordi e accenti in Petrolio) -->
+        <!-- BOX CTA FINALE -->
         <div class="editorial-card rounded-3xl p-8 sm:p-14 text-center border-2 border-petrol/20 relative overflow-hidden shadow-2xl">
           <div class="max-w-xl mx-auto">
             <span class="text-xs font-mono font-bold tracking-widest text-coralBand uppercase">Inizia Oggi</span>
@@ -796,7 +812,7 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- JAVASCRIPT: SUPER-ZOOM & INTERAZIONI SULLE 5 LINEE -->
+  <!-- JAVASCRIPT: SUPER-ZOOM & ACCORDION ANIMATO -->
   <!-- ========================================== -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -815,20 +831,28 @@
         });
       });
 
-      // 2. Accordion FAQ
-      const faqToggles = document.querySelectorAll('.faq-toggle');
-      faqToggles.forEach(toggle => {
+      // 2. Accordion FAQ con Animazione Morbida
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(item => {
+        const toggle = item.querySelector('.faq-toggle');
+        const collapse = item.querySelector('.faq-collapse');
+        const icon = item.querySelector('.faq-icon');
+
         toggle.addEventListener('click', () => {
-          const content = toggle.nextElementSibling;
-          const icon = toggle.querySelector('.faq-icon');
-          const isClosed = content.classList.contains('hidden');
+          const isOpen = collapse.classList.contains('open');
 
-          document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
-          document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotate-180'));
+          // Chiudi tutti gli altri
+          faqItems.forEach(otherItem => {
+            otherItem.querySelector('.faq-collapse').classList.remove('open');
+            otherItem.querySelector('.faq-icon').classList.remove('rotate-180');
+            otherItem.classList.remove('shadow-xl', 'bg-white');
+          });
 
-          if (isClosed) {
-            content.classList.remove('hidden');
+          // Se era chiuso, aprilo con animazione
+          if (!isOpen) {
+            collapse.classList.add('open');
             icon.classList.add('rotate-180');
+            item.classList.add('shadow-xl', 'bg-white');
           }
         });
       });
@@ -860,18 +884,16 @@
       });
 
       // 4. SUPER-ZOOM DINAMICO PENTAGRAMMA A 5 LINEE
-      // Zoom 10.5x che centra la linea selezionata riempiendo l'82% dello schermo
-      // lasciando visibile una fessura bianca e il tocco della linea adiacente
       const staveWaves = document.getElementById('stave-waves');
       const sections = document.querySelectorAll('section[data-zoom]');
       const navDots = document.querySelectorAll('.nav-indicator-dot');
 
       const zoomTransforms = {
         'overview': { scale: 1.0,  tx: 0,     ty: 0     },
-        'teal':     { scale: 10.5, tx: -7600, ty: -4209 }, // Linea 2: Verde Teal (#379386)
-        'ochre':    { scale: 10.5, tx: -7600, ty: -5101 }, // Linea 3: Giallo Ocra (#E0C36F)
-        'peach':    { scale: 10.5, tx: -7600, ty: -5994 }, // Linea 4: Arancio Pesca (#EBA066)
-        'coral':    { scale: 10.5, tx: -7600, ty: -6886 }  // Linea 5: Rosso Corallo (#E37055)
+        'teal':     { scale: 10.5, tx: -7600, ty: -4209 }, // Linea 2: Verde Teal
+        'ochre':    { scale: 10.5, tx: -7600, ty: -5101 }, // Linea 3: Giallo Ocra
+        'peach':    { scale: 10.5, tx: -7600, ty: -5994 }, // Linea 4: Arancio Pesca
+        'coral':    { scale: 10.5, tx: -7600, ty: -6886 }  // Linea 5: Rosso Corallo
       };
 
       const applyZoom = (zoomKey, sectionId) => {
