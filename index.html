@@ -65,7 +65,7 @@
         /* Effetto Quadrato con Lente Ottica Illuminata */
         .lens-nav-item {
             position: relative;
-            padding: 0.6rem 1.1rem;
+            padding: 0.5rem 1rem;
             border-radius: 4px;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid transparent;
@@ -96,24 +96,24 @@
             opacity: 1;
         }
 
-        /* Header Dinamico: In cima trasparente con gradiente continuo; allo scroll si scurisce senza scatti di dimensione */
+        /* Header fisso con altezza identica (68px) sempre */
         #main-header {
-            height: 80px;
-            background: linear-gradient(to bottom, rgba(7, 9, 14, 0.85) 0%, rgba(7, 9, 14, 0.3) 60%, transparent 100%);
-            transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+            height: 68px;
+            background-color: transparent;
+            transition: background-color 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease;
         }
 
         #main-header.scrolled {
-            background: rgba(7, 9, 14, 0.94);
+            background-color: rgba(7, 9, 14, 0.94);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.85);
         }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Costante, 80px fisso, trasparenza iniziale e scurimento graduale allo scroll) -->
+    <!-- HEADER / NAVIGATION (Altezza sempre identica sia in cima sia allo scroll) -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
@@ -141,7 +141,7 @@
             <div class="hidden md:flex items-center shrink-0">
                 <!-- LINK GOOGLE CALENDAR QUI (Header) -->
                 <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-sm border border-slate-300/40 bg-stage-surface/80 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-md">
+                   class="inline-flex items-center gap-2.5 px-4 py-2 rounded-sm border border-slate-300/40 bg-stage-surface/80 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-md">
                     <i data-lucide="calendar" class="w-4 h-4"></i>
                     <span>Prenota Chiamata (15 min)</span>
                 </a>
@@ -176,7 +176,7 @@
     <main>
 
         <!-- HERO SECTION -->
-        <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-28 sm:pt-24 pb-20 overflow-hidden">
+        <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-24 pb-20 overflow-hidden">
             
             <!-- SFONDO SETUP INTEGRALE -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -296,7 +296,7 @@
             </div>
 
             <!-- SETUP & METODO -->
-            <div id="metodo" class="scroll-mt-28 rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element shadow-2xl">
+            <div id="metodo" class="scroll-mt-24 rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element shadow-2xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     
                     <div class="lg:col-span-7">
@@ -565,7 +565,7 @@
         // Gestione Scurimento Graduale dell'Header allo Scroll
         const mainHeader = document.getElementById('main-header');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 40) {
+            if (window.scrollY > 20) {
                 mainHeader.classList.add('scrolled');
             } else {
                 mainHeader.classList.remove('scrolled');
