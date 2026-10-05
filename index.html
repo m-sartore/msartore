@@ -96,7 +96,7 @@
             opacity: 1;
         }
 
-        /* BARRA UNICA: 56px esatti sempre sia a riposo che allo scroll */
+        /* BARRA UNICA: 56px fissi sempre */
         #main-header {
             height: 56px;
             background: linear-gradient(to bottom, rgba(7, 9, 14, 0.85) 0%, rgba(7, 9, 14, 0.2) 75%, transparent 100%);
@@ -174,14 +174,14 @@
 
     <main>
 
-        <!-- HERO SECTION: a tutto schermo, parte dall'alto -->
+        <!-- HERO SECTION: a tutto schermo -->
         <section class="relative h-screen flex items-center justify-start px-5 sm:px-10 lg:px-16 overflow-hidden">
             
-            <!-- SFONDO SETUP -->
-            <div class="absolute inset-0 z-0 pointer-events-none">
+            <!-- SFONDO SETUP: con ritaglio dei primi 90px in alto per eliminare definitivamente la riga della foto -->
+            <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
                 <img src="Modificata2.jpg" 
                      alt="Setup didattico studio Marco Sartore" 
-                     class="w-full h-full object-cover object-bottom sm:object-center" />
+                     class="w-full h-[calc(100%+90px)] -translate-y-[90px] object-cover object-bottom sm:object-center" />
 
                 <!-- Gradiente asimmetrico a sinistra per la leggibilità del testo -->
                 <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/95 via-stage-base/65 to-transparent w-full md:w-3/5"></div>
