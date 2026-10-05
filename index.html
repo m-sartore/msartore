@@ -65,9 +65,9 @@
         /* Effetto Quadrato con Lente Ottica Illuminata */
         .lens-nav-item {
             position: relative;
-            padding: 0.5rem 1rem;
+            padding: 0.45rem 0.9rem;
             border-radius: 4px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid transparent;
             overflow: hidden;
         }
@@ -78,17 +78,17 @@
             inset: 0;
             background: radial-gradient(circle at center, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.03) 70%, transparent 100%);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
             pointer-events: none;
         }
 
         .lens-nav-item:hover {
-            transform: scale(1.04);
+            transform: scale(1.03);
             border-color: rgba(255, 255, 255, 0.22);
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7), inset 0 0 12px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.7);
             color: #ffffff;
         }
 
@@ -96,40 +96,42 @@
             opacity: 1;
         }
 
-        /* Header fisso con altezza identica (68px) sempre */
+        /* BARRA SEMPRE BASSA E IDENTICA (60px esatti) */
         #main-header {
-            height: 68px;
+            height: 60px;
             background-color: transparent;
-            transition: background-color 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease;
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+            border-bottom: 1px solid transparent;
         }
 
+        /* Quando scendi giù diventa scura come nel secondo screenshot */
         #main-header.scrolled {
-            background-color: rgba(7, 9, 14, 0.94);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.85);
+            background-color: rgba(7, 9, 14, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(31, 41, 61, 0.7);
         }
     </style>
 </head>
 <body class="bg-stage-base text-slate-200 font-sans antialiased selection:bg-slate-200 selection:text-black min-h-screen">
 
-    <!-- HEADER / NAVIGATION (Altezza sempre identica sia in cima sia allo scroll) -->
+    <!-- HEADER / NAVIGATION (Sempre basso 60px: trasparente all'inizio, scuro allo scroll) -->
     <header id="main-header" class="fixed top-0 left-0 w-full z-50">
         <div class="w-full px-5 sm:px-10 lg:px-16 h-full flex items-center justify-between">
             
             <!-- Brand -->
             <a href="#" class="group flex items-center gap-3 shrink-0">
-                <span class="w-1.5 h-6 bg-slate-300 group-hover:bg-white transition-colors duration-300"></span>
+                <span class="w-1.5 h-5 bg-slate-300 group-hover:bg-white transition-colors duration-300"></span>
                 <div class="flex flex-col">
-                    <span class="font-classical text-lg sm:text-xl font-bold tracking-widest text-white uppercase group-hover:text-slate-300 transition-colors">
+                    <span class="font-classical text-base sm:text-lg font-bold tracking-widest text-white uppercase group-hover:text-slate-300 transition-colors leading-none">
                         Marco Sartore
                     </span>
-                    <span class="text-[11px] font-medium tracking-wider text-slate-400">Pianoforte & Armonia</span>
+                    <span class="text-[10px] font-medium tracking-wider text-slate-400 mt-1">Pianoforte & Armonia</span>
                 </div>
             </a>
 
             <!-- Nav Desktop con Quadrato Lente Luminosa -->
-            <nav class="hidden md:flex items-center gap-1.5">
+            <nav class="hidden md:flex items-center gap-1">
                 <a href="#lezioni" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">Lezioni</a>
                 <a href="#metodo" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">Setup & Metodo</a>
                 <a href="#chi-sono" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">Profilo</a>
@@ -137,19 +139,19 @@
                 <a href="#faq" class="lens-nav-item text-xs uppercase tracking-widest text-slate-300 font-medium">FAQ</a>
             </nav>
 
-            <!-- CTA Desktop Quadrata / Lineare Coerente -->
+            <!-- CTA Desktop Quadrata e Compatta -->
             <div class="hidden md:flex items-center shrink-0">
                 <!-- LINK GOOGLE CALENDAR QUI (Header) -->
                 <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                   class="inline-flex items-center gap-2.5 px-4 py-2 rounded-sm border border-slate-300/40 bg-stage-surface/80 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-md">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                   class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm border border-slate-300/40 bg-stage-surface/80 hover:bg-white hover:text-stage-base text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 shadow-sm">
+                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                     <span>Prenota Chiamata (15 min)</span>
                 </a>
             </div>
 
             <!-- Hamburger Mobile -->
             <button id="menu-btn" aria-label="Menu" class="md:hidden p-2 text-slate-200 hover:text-white">
-                <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+                <i data-lucide="menu" id="menu-icon" class="w-5 h-5"></i>
             </button>
         </div>
 
@@ -164,7 +166,7 @@
                 <div class="pt-4 border-t border-stage-border">
                     <!-- LINK GOOGLE CALENDAR QUI (Mobile) -->
                     <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                       class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-sm bg-white text-stage-base text-xs uppercase tracking-wider font-bold shadow-lg">
+                       class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-sm bg-white text-stage-base text-xs uppercase tracking-wider font-bold shadow-lg">
                         <i data-lucide="calendar" class="w-4 h-4"></i>
                         <span>Prenota Chiamata (15 min)</span>
                     </a>
@@ -175,23 +177,20 @@
 
     <main>
 
-        <!-- HERO SECTION -->
-        <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-24 pb-20 overflow-hidden">
+        <!-- HERO SECTION (Senza alcun finto gradiente nero in alto che inspessisce la barra) -->
+        <section class="relative min-h-[96vh] lg:min-h-screen flex items-start sm:items-center justify-start px-5 sm:px-10 lg:px-16 pt-24 pb-16 overflow-hidden">
             
-            <!-- SFONDO SETUP INTEGRALE -->
+            <!-- SFONDO FOTO: NESSUNA FASCIA SCURA IN CIMA -->
             <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                 <img src="Modificata2.jpg" 
                      alt="Setup didattico studio Marco Sartore" 
                      class="w-full h-full object-cover object-bottom sm:object-center" />
 
-                <!-- Gradiente asimmetrico: scurisce la colonna sinistra per il testo lasciando pura la destra -->
-                <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/90 via-stage-base/65 to-transparent w-full md:w-3/5"></div>
+                <!-- Gradiente asimmetrico SOLO a sinistra per il testo, senza toccare la parte alta dei microfoni -->
+                <div class="hidden sm:block absolute inset-0 bg-gradient-to-r from-stage-base/90 via-stage-base/60 to-transparent w-full md:w-3/5"></div>
                 
-                <!-- Dissolvenza mobile superiore -->
-                <div class="sm:hidden absolute inset-0 bg-gradient-to-b from-stage-base/95 via-stage-base/75 to-transparent"></div>
-                
-                <!-- Dissolvenza inferiore continua verso le sezioni seguenti -->
-                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-stage-base/50 to-transparent h-40 bottom-0"></div>
+                <!-- Dissolvenza inferiore verso la sezione successiva -->
+                <div class="absolute inset-0 bg-gradient-to-t from-stage-base via-transparent to-transparent h-32 bottom-0"></div>
             </div>
 
             <!-- BLOCCO TESTO (Ancorato a sinistra con contrasto naturale) -->
@@ -217,13 +216,13 @@
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 mb-4">
                         <!-- LINK GOOGLE CALENDAR QUI (Hero CTA) -->
                         <a href="https://calendar.google.com" target="_blank" rel="noopener noreferrer" 
-                           class="inline-flex items-center justify-center gap-3 px-7 py-3.5 rounded-sm bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
+                           class="inline-flex items-center justify-center gap-3 px-7 py-3 rounded-sm bg-white text-stage-base font-bold text-xs uppercase tracking-widest hover:bg-slate-200 transition-all duration-300 shadow-xl hover:-translate-y-0.5">
                             <i data-lucide="calendar" class="w-4 h-4"></i>
                             <span>Prenota Chiamata Conoscitiva (15 min)</span>
                         </a>
 
                         <a href="#metodo" 
-                           class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-sm border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
+                           class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-sm border border-slate-300/40 hover:border-white bg-stage-base/80 backdrop-blur-md text-white font-semibold text-xs uppercase tracking-widest transition-all duration-300">
                             <span>Setup & Metodo</span>
                             <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
                         </a>
@@ -239,7 +238,7 @@
         </section>
 
         <!-- SEZIONE LEZIONI & CORSI -->
-        <section id="lezioni" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
+        <section id="lezioni" class="scroll-mt-20 py-24 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="text-center max-w-3xl mx-auto mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Didattica e Metodo</span>
                 <h2 class="font-classical text-3xl sm:text-4xl font-semibold text-white mt-2 mb-4">Percorsi di Studio Individuali</h2>
@@ -296,7 +295,7 @@
             </div>
 
             <!-- SETUP & METODO -->
-            <div id="metodo" class="scroll-mt-24 rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element shadow-2xl">
+            <div id="metodo" class="scroll-mt-20 rounded-xl bg-stage-surface border border-stage-border p-8 sm:p-12 relative reveal-element shadow-2xl">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     
                     <div class="lg:col-span-7">
@@ -348,7 +347,7 @@
         </section>
 
         <!-- CHI SONO / BIOGRAFIA -->
-        <section id="chi-sono" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
+        <section id="chi-sono" class="scroll-mt-20 py-24 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 
                 <div class="lg:col-span-5 reveal-element">
@@ -396,7 +395,7 @@
         </section>
 
         <!-- SEZIONE CONCERTI -->
-        <section id="concerti" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-6xl mx-auto">
+        <section id="concerti" class="scroll-mt-20 py-24 px-5 sm:px-8 max-w-6xl mx-auto">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 reveal-element">
                 <div>
                     <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Attività Artistica</span>
@@ -458,7 +457,7 @@
         </section>
 
         <!-- SEZIONE FAQ -->
-        <section id="faq" class="scroll-mt-24 py-28 px-5 sm:px-8 max-w-4xl mx-auto">
+        <section id="faq" class="scroll-mt-20 py-24 px-5 sm:px-8 max-w-4xl mx-auto">
             <div class="text-center mb-16 reveal-element">
                 <span class="text-slate-400 text-xs uppercase tracking-widest font-semibold">Domande Frequenti</span>
                 <h2 class="font-classical text-3xl sm:text-4xl font-semibold text-white mt-2 mb-3">Informazioni e Chiarimenti</h2>
@@ -562,7 +561,7 @@
         // Anno Corrente Dinamico nel Footer
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Gestione Scurimento Graduale dell'Header allo Scroll
+        // Gestione Scurimento della Barra allo Scroll
         const mainHeader = document.getElementById('main-header');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 20) {
