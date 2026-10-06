@@ -99,11 +99,11 @@
       position: relative;
       align-self: center;
       justify-self: center;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                  box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
-                  opacity 0.28s ease, 
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                  box-shadow 0.2s ease, 
+                  opacity 0.25s ease, 
                   border-color 0.25s ease, 
-                  filter 0.28s ease;
+                  filter 0.25s ease;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
     }
 
@@ -129,59 +129,54 @@
     }
 
     /* ================================================================ */
-    /* MODALITÀ CREAZIONE DOCENTE: SELEZIONI E ALONI LUMINOSI           */
+    /* GRAFICA PULITA MODALITÀ CREAZIONE DOCENTE (SENZA ALONI STRANI)   */
     /* ================================================================ */
     body.creator-mode .round-note-btn {
-      opacity: 0.2;
-      filter: grayscale(80%) brightness(0.7);
+      opacity: 0.22;
+      filter: grayscale(100%);
       box-shadow: none !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* Note naturali selezionate da indovinare */
+    /* Note selezionate da indovinare: identiche alla pagina iniziale */
+    body.creator-mode .round-note-btn.teacher-selected {
+      opacity: 1 !important;
+      filter: none !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
+    }
+
     body.creator-mode .round-note-btn.teacher-selected:not(.accidental) {
-      opacity: 1 !important;
-      filter: none !important;
-      border-color: #FFFFFF !important;
-      transform: scale(1.06);
-      box-shadow: 0 0 0 3px #0D171C, 
-                  0 0 0 6px var(--btn-color, #379386), 
-                  0 0 24px var(--btn-glow-color, rgba(55, 147, 134, 0.85)) !important;
+      border-color: rgba(255, 255, 255, 0.25) !important;
     }
 
-    /* Note ALTERATE selezionate da indovinare: riga tratteggiata VIVIDA del colore della nota */
+    /* Note alterate selezionate: riga tratteggiata del colore della palette */
     body.creator-mode .round-note-btn.accidental.teacher-selected {
-      opacity: 1 !important;
-      filter: none !important;
-      border-color: var(--btn-color, #379386) !important;
+      border-color: var(--btn-color) !important;
       border-style: dashed !important;
-      border-width: 2.5px !important;
-      transform: scale(1.06);
-      box-shadow: 0 0 0 3px #0D171C, 
-                  0 0 0 5px var(--btn-color, #379386), 
-                  0 0 24px var(--btn-glow-color, rgba(55, 147, 134, 0.85)) !important;
+      border-width: 2px !important;
     }
 
-    /* NOTE DRONE SELEZIONATE: Evidenziate di GIALLO ORO con alone dorato */
-    body.creator-mode .round-note-btn.drone-selected,
-    .round-note-btn.drone-selected {
+    /* Note Drone attive: sobrie, visibili e con contorno giallo/oro discreto */
+    body.creator-mode .round-note-btn.is-drone-active {
       opacity: 1 !important;
       filter: none !important;
       border-color: #E0C36F !important;
-      border-style: solid !important;
-      border-width: 2.5px !important;
-      transform: scale(1.06);
-      box-shadow: 0 0 0 3px #0D171C, 
-                  0 0 0 6px #E0C36F, 
-                  0 0 25px rgba(224, 195, 111, 0.85) !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
     }
 
-    /* In Prova Esercizio o Allievo Pro: le note escluse spariscono, droni e tonica CI SONO SEMPRE */
+    body.creator-mode .round-note-btn.accidental.is-drone-active {
+      border-color: #E0C36F !important;
+      border-style: dashed !important;
+      border-width: 2px !important;
+    }
+
+    /* In Prova Esercizio o Allievo Pro: le note escluse spariscono */
     body.student-pro-mode .round-note-btn:not(.active-in-exercise):not(#btn-1),
     body.test-mode .round-note-btn:not(.active-in-exercise):not(#btn-1) {
       display: none !important;
     }
 
-    /* Spinner dinamico su pulsante PRO */
+    /* Spinner su pulsante PRO */
     #pro-btn-spinner {
       border-color: #E0C36F;
       border-top-color: transparent;
@@ -440,10 +435,10 @@
         </button>
       </div>
 
-      <!-- Row 14 Alternativo: Controlli Docente BEN SEPARATI con Tono Iniziale e Selezione Droni -->
+      <!-- Row 14 Alternativo: Controlli Docente BEN SEPARATI con Tono Iniziale e Tasto Droni Pulito -->
       <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-2 pt-3 opacity-0 translate-y-2">
         
-        <!-- RIGA 1: TONALITÀ + NUMERO NOTE + TOGGLE SELEZIONE DRONE -->
+        <!-- RIGA 1: TONALITÀ + NUMERO NOTE + PULSANTE DRONI (SENZA SPUNTE) -->
         <div class="flex items-center justify-between gap-2 text-xs w-full max-w-sm">
           
           <!-- Tono Iniziale (Tonalità della nota 1) -->
@@ -487,11 +482,10 @@
             <option value="20">20 Note</option>
           </select>
 
-          <!-- Casella Seleziona Drone -->
-          <label id="creator-drone-toggle-label" class="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-[#15232A] border border-white/20 cursor-pointer select-none text-[11px] font-bold text-white/80 hover:border-ochreBand transition-all">
-            <input type="checkbox" id="creator-drone-toggle" class="accent-ochreBand w-3.5 h-3.5 rounded cursor-pointer">
-            <span class="text-ochreBand whitespace-nowrap">Droni</span>
-          </label>
+          <!-- Pulsante Droni (Senza spunte, diventa giallo al click) -->
+          <button type="button" id="creator-drone-btn" class="px-3.5 py-2 rounded-xl bg-[#15232A] border border-white/20 text-white/80 font-bold text-xs transition-all hover:border-ochreBand select-none whitespace-nowrap">
+            Droni
+          </button>
 
         </div>
 
@@ -503,7 +497,7 @@
         </div>
 
         <p id="creator-helper-text" class="text-[10px] text-white/50 text-center mt-0.5">
-          Tocca i cerchi per includere le note da indovinare (colorate).
+          Tocca i cerchi per includere le note da indovinare.
         </p>
       </div>
 
@@ -814,6 +808,7 @@
         this.secretGain.gain.linearRampToValueAtTime(0, now + fadeSeconds);
       }
 
+      // Riproduce una nota isolata con rilascio morbido e la ferma automaticamente
       previewNote(midiNote, duration = 1.0) {
         this.ensureContextRunning();
         if (!this.ctx) return;
@@ -1056,7 +1051,7 @@
         waitingForAnswer: false,
         creatorMode: false,
         testMode: false,
-        droneSelectionMode: false, // Se l'insegnante sta scegliendo i droni
+        droneSelectionMode: false,
         
         keyRootMidi: 60, // Tonalità d'impianto (Do3 = 60)
         currentDroneMidi: 60,
@@ -1078,7 +1073,7 @@
       // Set delle note da indovinare scelte dal docente
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
 
-      // Set dei droni scelti dal docente (di default solo grado 1)
+      // Set dei droni scelti dal docente (di default grado 1)
       let teacherDroneNoteIds = new Set(['btn-1']);
 
       // Elementi DOM Principali
@@ -1115,7 +1110,7 @@
       const creatorControlsRow = document.getElementById('creator-controls-row');
       const creatorKeySelect = document.getElementById('creator-key-select');
       const creatorCountSelect = document.getElementById('creator-count-select');
-      const creatorDroneToggle = document.getElementById('creator-drone-toggle');
+      const creatorDroneBtn = document.getElementById('creator-drone-btn');
       const creatorHelperText = document.getElementById('creator-helper-text');
       const creatorCopyLinkBtn = document.getElementById('creator-copy-link-btn');
 
@@ -1277,7 +1272,6 @@
             }
             teacherSelectedNoteIds = new Set(ids);
 
-            // Carica droni salvati (o default btn-1)
             let droneIds = ['btn-1'];
             if (Array.isArray(l.droneIds) && l.droneIds.length > 0) {
               droneIds = l.droneIds.map(token => {
@@ -1447,39 +1441,50 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* MODALITÀ CREAZIONE DOCENTE: AGGIORNAMENTO GRAFICO                */
+      /* MODALITÀ CREAZIONE DOCENTE: AGGIORNAMENTO GRAFICO PULITO         */
       /* ================================================================ */
       function updateTeacherGridVisuals() {
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
           if (!el) return;
 
-          // 1. Droni: evidenziati in GIALLO/ORO
+          // 1. Droni: indicatore visivo pulito
           if (teacherDroneNoteIds.has(item.id)) {
-            el.classList.add('drone-selected');
+            el.classList.add('is-drone-active');
             el.classList.remove('teacher-selected');
           } 
-          // 2. Note da indovinare: evidenziate nella loro palette
+          // 2. Note da indovinare: colorazione identica a pagina iniziale
           else if (teacherSelectedNoteIds.has(item.id)) {
             el.classList.add('teacher-selected');
-            el.classList.remove('drone-selected');
+            el.classList.remove('is-drone-active');
           } 
-          // 3. Spente
+          // 3. Spente: grigie e poco visibili
           else {
-            el.classList.remove('teacher-selected', 'drone-selected');
+            el.classList.remove('teacher-selected', 'is-drone-active');
           }
         });
       }
 
-      // Switch tra modalità note da indovinare e modalità droni
-      creatorDroneToggle.addEventListener('change', () => {
-        gameState.droneSelectionMode = creatorDroneToggle.checked;
+      // Switch pulsante DRONI (diventa giallo ocra senza spunte)
+      creatorDroneBtn.addEventListener('click', () => {
+        gameState.droneSelectionMode = !gameState.droneSelectionMode;
+        
         if (gameState.droneSelectionMode) {
-          creatorHelperText.textContent = "Modalità Droni attiva: tocca i cerchi per scegliere i pedali (in giallo/oro).";
+          creatorDroneBtn.classList.remove('bg-[#15232A]', 'text-white/80', 'border-white/20');
+          creatorDroneBtn.classList.add('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
+          creatorHelperText.textContent = "Modalità Droni: tocca i cerchi per scegliere i pedali (vedi l'onda e ascolta).";
           creatorHelperText.classList.add('text-ochreBand');
           creatorHelperText.classList.remove('text-white/50');
+          
+          // Genera onda visiva da ciascun drone attualmente attivo
+          teacherDroneNoteIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) spawnPropagatingWave(el, false);
+          });
         } else {
-          creatorHelperText.textContent = "Tocca i cerchi per includere le note da indovinare (colorate).";
+          creatorDroneBtn.classList.add('bg-[#15232A]', 'text-white/80', 'border-white/20');
+          creatorDroneBtn.classList.remove('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
+          creatorHelperText.textContent = "Tocca i cerchi per includere le note da indovinare.";
           creatorHelperText.classList.remove('text-ochreBand');
           creatorHelperText.classList.add('text-white/50');
         }
@@ -1490,8 +1495,17 @@
 
         gameState.creatorMode = true;
         gameState.testMode = false;
+        gameState.droneSelectionMode = false;
+
         document.body.classList.remove('test-mode');
         document.body.classList.add('creator-mode');
+
+        // Reset pulsante Droni a scuro
+        creatorDroneBtn.classList.add('bg-[#15232A]', 'text-white/80', 'border-white/20');
+        creatorDroneBtn.classList.remove('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
+        creatorHelperText.textContent = "Tocca i cerchi per includere le note da indovinare.";
+        creatorHelperText.classList.remove('text-ochreBand');
+        creatorHelperText.classList.add('text-white/50');
 
         freeNotice.classList.add('hidden');
         testModeBar.classList.add('hidden');
@@ -1528,6 +1542,7 @@
 
         gameState.creatorMode = false;
         gameState.testMode = false;
+        gameState.droneSelectionMode = false;
 
         creatorTopBar.classList.add('opacity-0', '-translate-y-2');
         creatorControlsRow.classList.add('opacity-0', 'translate-y-2');
@@ -1554,7 +1569,7 @@
             const el = document.getElementById(item.id);
             if (el) {
               el.classList.add('active-in-exercise');
-              el.classList.remove('teacher-selected', 'drone-selected');
+              el.classList.remove('teacher-selected', 'is-drone-active');
             }
           });
 
@@ -1796,7 +1811,6 @@
         gameState.currentQuestionHasMistake = false;
         gameState.intervalStatsTracker = {};
 
-        // Inizializza il Tono Iniziale
         if (!gameState.isProStudent && !gameState.testMode) {
           gameState.keyRootMidi = 60; // Do fisso in modalità libera
         }
@@ -1848,7 +1862,6 @@
         const pickedDroneId = availableDroneIds[Math.floor(Math.random() * availableDroneIds.length)];
         const droneItem = intervalButtonsData.find(i => i.id === pickedDroneId) || intervalButtonsData.find(i => i.id === 'btn-1');
 
-        // Calcola la frequenza MIDI del Drone trasposta sul Tono Iniziale
         gameState.currentDroneMidi = gameState.keyRootMidi + droneItem.semitones;
 
         // Avvia il drone e fa partire l'onda dal pulsante ESATTO del drone estratto
@@ -1876,7 +1889,6 @@
           gameState.intervalStatsTracker[pickedItem.id].totalProposed++;
         }
 
-        // Calcola la frequenza della nota misteriosa trasposta sul Tono Iniziale
         const secretNoteMidi = gameState.keyRootMidi + pickedItem.semitones;
 
         setTimeout(() => {
@@ -1992,14 +2004,20 @@
                 }
               } else {
                 teacherDroneNoteIds.add(item.id);
-                const previewMidi = 60 + item.semitones;
-                audio.previewNote(previewMidi, 1.0);
+                
+                // Suona la nota effettiva del drone trasposta e sfuma dopo 1.4s (non continua a suonare!)
+                const keyRoot = (creatorKeySelect.value === 'random') ? 60 : (parseInt(creatorKeySelect.value, 10) || 60);
+                const droneMidi = keyRoot + item.semitones;
+                audio.previewNote(droneMidi, 1.4);
+                
+                // Spawna l'onda visiva dal tasto esatto del drone
+                spawnPropagatingWave(btnEl, false);
               }
               updateTeacherGridVisuals();
               return;
             }
 
-            // SOTTOCASO A2: MODALITÀ NOTE DA INDOVINARE (COLORATE)
+            // SOTTOCASO A2: MODALITÀ NOTE DA INDOVINARE (GRAFICA PULITA)
             if (item.id === 'btn-1') {
               audio.previewNote(60, 1.0);
               spawnPropagatingWave(btnEl, false);
