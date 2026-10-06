@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ear Training Intervalli | Marco Sartore</title>
-  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con drone continuo e configuratore docente avanzato.">
+  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con drone continuo e archivio lezioni docente.">
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👂</text></svg>">
@@ -99,7 +99,11 @@
       position: relative;
       align-self: center;
       justify-self: center;
-      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, opacity 0.25s ease, border-color 0.25s ease, filter 0.25s ease;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                  box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), 
+                  opacity 0.28s ease, 
+                  border-color 0.25s ease, 
+                  filter 0.28s ease;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
     }
 
@@ -125,7 +129,7 @@
     }
 
     /* ================================================================ */
-    /* STILI MODALITÀ CREAZIONE DOCENTE: ALONE LUMINESCENTE PERSISTENTE */
+    /* TRANSIZIONI FLUIDE E ALONE LUMINESCENTE DOCENTE                  */
     /* ================================================================ */
     body.creator-mode .round-note-btn:not(#btn-1) {
       opacity: 0.18;
@@ -160,6 +164,12 @@
     body.student-pro-mode .round-note-btn:not(.active-in-exercise):not(#btn-1),
     body.test-mode .round-note-btn:not(.active-in-exercise):not(#btn-1) {
       display: none !important;
+    }
+
+    /* Animazioni Barre Fluttuanti Docente */
+    .smooth-drawer {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: top;
     }
 
     /* Animazione Errore */
@@ -233,7 +243,7 @@
       </div>
 
       <!-- Pulsante Docente PRO (Nascosto per gli allievi) -->
-      <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all font-sans">
+      <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all duration-300 font-sans shadow-sm">
         PRO
       </button>
 
@@ -241,23 +251,41 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- BARRA SUPERIORE MODALITÀ DOCENTE (TITOLO) -->
+  <!-- BARRA SUPERIORE MODALITÀ DOCENTE (CON ANIMAZIONE FLUIDA) -->
   <!-- ========================================== -->
-  <div id="creator-top-bar" class="hidden shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-4 py-2.5 z-20">
+  <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-4 py-2.5 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">DOCENTE</span>
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
-        <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-64 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
+        <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
       </div>
-      <button id="creator-test-btn" class="self-end sm:self-auto px-4 py-1.5 rounded-xl bg-tealBand text-white font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all">
-        Prova Esercizio
-      </button>
+      <div class="flex items-center gap-2 self-end sm:self-auto">
+        <button id="creator-archive-btn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all">
+          Archivio
+        </button>
+        <button id="creator-test-btn" class="px-4 py-1.5 rounded-xl bg-tealBand text-white font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all">
+          Prova Esercizio
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANNELLO DRAWER ARCHIVIO LEZIONI SALVATE -->
+  <div id="lessons-archive-panel" class="hidden smooth-drawer bg-[#15232A] border-b border-white/15 px-4 py-3 z-20 shadow-2xl">
+    <div class="max-w-xl mx-auto">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-xs">
+        <span class="text-white/80 font-bold uppercase tracking-wider font-mono text-[11px]">Lezioni Salvate sul tuo dispositivo</span>
+        <button id="close-archive-btn" class="text-white/50 hover:text-white text-xs font-bold">Chiudi</button>
+      </div>
+      <div id="archive-list" class="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+        <!-- Generato dinamicamente -->
+      </div>
     </div>
   </div>
 
   <!-- BARRA MODALITÀ DI PROVA DOCENTE -->
-  <div id="test-mode-bar" class="hidden shrink-0 bg-tealBand/20 border-b border-tealBand/40 px-4 py-2 z-20">
+  <div id="test-mode-bar" class="hidden smooth-drawer shrink-0 bg-tealBand/20 border-b border-tealBand/40 px-4 py-2 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex items-center justify-between text-xs">
       <span class="text-tealBand font-bold flex items-center gap-1.5">
         <span class="w-2 h-2 rounded-full bg-tealBand animate-pulse"></span>
@@ -389,8 +417,8 @@
         </button>
       </div>
 
-      <!-- Row 14 Alternativo: Controlli in Modalità Creazione Docente -->
-      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden w-full flex-col items-center justify-center gap-2 pt-1">
+      <!-- Row 14 Alternativo: Controlli in Modalità Creazione Docente (Con Animazione) -->
+      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-2 pt-1 opacity-0 translate-y-2">
         <div class="flex items-center justify-center gap-2 text-xs w-full max-w-sm">
           <select id="creator-root-select" class="bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
             <option value="fixed-c">Nota Base: Do Fissa</option>
@@ -507,11 +535,12 @@
         <label class="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">Codice Licenza</label>
         <div class="flex gap-2">
           <input type="text" id="license-input" placeholder="es. PRO-MARCO-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-ochreBand font-mono uppercase">
-          <button id="activate-license-btn" class="px-4 py-2.5 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all">
-            Sblocca
+          <button id="activate-license-btn" class="px-4 py-2.5 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all flex items-center justify-center min-w-[80px]">
+            <span id="activate-btn-text">Sblocca</span>
+            <span id="activate-btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-appDark border-t-transparent rounded-full animate-spin"></span>
           </button>
         </div>
-        <p id="license-error-msg" class="text-xs text-coralBand font-medium mt-2 hidden">Codice non valido. Usa: PRO-MARCO-2026</p>
+        <p id="license-error-msg" class="text-xs text-coralBand font-medium mt-2 hidden">Codice non valido o non trovato nel database.</p>
       </div>
 
       <div class="pt-3 border-t border-white/10 text-center">
@@ -525,9 +554,23 @@
 
 
   <!-- ================================================================= -->
-  <!-- 7. JAVASCRIPT: LOGICA COMPLETA                                   -->
+  <!-- 7. JAVASCRIPT: LOGICA APPLICATIVA & ARCHIVIO LEZIONI             -->
   <!-- ================================================================= -->
   <script>
+    /* ================================================================ */
+    /* CONFIGURAZIONE URL GOOGLE APPS SCRIPT                            */
+    /* Incolla qui l'URL della Web App di Apps Script (termina in /exec) */
+    /* ================================================================ */
+    const LICENSE_API_URL = ""; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT QUANDO PRONTO
+
+    // Codici locali di emergenza/test funzionanti anche offline o prima di incollare l'URL
+    const FALLBACK_LICENSES = [
+      'PRO-MARCO-2026',
+      'DOCENTE-2026',
+      'SARTORE-PIANO',
+      'VIP-EAR-TRAIN'
+    ];
+
     /* ================================================================ */
     /* MODULO AUDIO                                                     */
     /* ================================================================ */
@@ -827,13 +870,6 @@
         document.addEventListener(evt, unlockAudioTouch, { once: true, passive: true });
       });
 
-      const VALID_LICENSES = [
-        'PRO-MARCO-2026',
-        'DOCENTE-2026',
-        'SARTORE-PIANO',
-        'VIP-EAR-TRAIN'
-      ];
-
       const intervalButtonsData = [
         { id: 'btn-8', degree: '8', semitones: 12, name: 'Ottava', order: 12 },
         { id: 'btn-7', degree: '7', semitones: 11, name: '7ª Maggiore', order: 11 },
@@ -957,6 +993,11 @@
       const creatorTopBar = document.getElementById('creator-top-bar');
       const creatorTitleInput = document.getElementById('creator-title-input');
       const creatorTestBtn = document.getElementById('creator-test-btn');
+      const creatorArchiveBtn = document.getElementById('creator-archive-btn');
+
+      const lessonsArchivePanel = document.getElementById('lessons-archive-panel');
+      const archiveList = document.getElementById('archive-list');
+      const closeArchiveBtn = document.getElementById('close-archive-btn');
 
       const testModeBar = document.getElementById('test-mode-bar');
       const testModeTitle = document.getElementById('test-mode-title');
@@ -987,6 +1028,8 @@
       const closeLicenseModal = document.getElementById('close-license-modal');
       const licenseInput = document.getElementById('license-input');
       const activateLicenseBtn = document.getElementById('activate-license-btn');
+      const activateBtnText = document.getElementById('activate-btn-text');
+      const activateBtnSpinner = document.getElementById('activate-btn-spinner');
       const licenseErrorMsg = document.getElementById('license-error-msg');
 
       let droneWaveEl = null;
@@ -1013,12 +1056,8 @@
         ripple.addEventListener('animationend', () => ripple.remove());
       }
 
-      /* AGGIORNAMENTO STATISTICHE REAL-TIME SENZA MAI SUPERARE IL 100% */
       function updateStatsUI() {
-        // Le domande completate finora sono esattamente pari a gameState.batchCurrentNote
         const questionsCompleted = gameState.batchCurrentNote;
-        
-        // La precisione in corso è calcolata sulle domande concluse finora
         const liveRatio = questionsCompleted > 0 ? (gameState.sessionFirstTryCorrectCount / questionsCompleted) : 1;
         const acc = Math.min(100, Math.max(0, Math.round(liveRatio * 100)));
         const perfColor = getPerformanceColor(liveRatio);
@@ -1031,9 +1070,113 @@
       }
 
       /* ================================================================ */
-      /* CONTROLLO LINK ALLIEVO PRO (PARAMETRI URL)                       */
+      /* GESTIONE ARCHIVIO LOCALE LEZIONI DEL DOCENTE                     */
       /* ================================================================ */
-      function checkUrlForProStudent() {
+      function getSavedLessons() {
+        try {
+          const raw = localStorage.getItem('ms_teacher_saved_lessons');
+          return raw ? JSON.parse(raw) : [];
+        } catch(e) {
+          return [];
+        }
+      }
+
+      function saveLessonToArchive(lessonData) {
+        try {
+          let list = getSavedLessons();
+          // Rimuove duplicato con stesso titolo se già esistente
+          list = list.filter(item => item.title.toLowerCase() !== lessonData.title.toLowerCase());
+          list.unshift(lessonData); // aggiunge in testa
+          if (list.length > 20) list = list.slice(0, 20); // max 20 lezioni in archivio
+          localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
+        } catch(e) {}
+      }
+
+      function renderArchiveUI() {
+        const lessons = getSavedLessons();
+        archiveList.innerHTML = '';
+        if (lessons.length === 0) {
+          archiveList.innerHTML = '<div class="text-xs text-white/40 text-center py-3">Nessuna lezione salvata ancora. Quando copi un link allievo, verrà salvata qui.</div>';
+          return;
+        }
+
+        lessons.forEach(l => {
+          const row = document.createElement('div');
+          row.className = 'flex items-center justify-between p-2 rounded-xl bg-[#0D171C] border border-white/5 hover:border-ochreBand/40 transition-colors text-xs';
+          row.innerHTML = `
+            <div class="flex-1 cursor-pointer truncate pr-2">
+              <span class="text-white font-bold block truncate">${l.title}</span>
+              <span class="text-[10px] text-white/40 font-mono">${l.notesCount} Note • ${l.date}</span>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button class="load-lesson-btn px-2 py-1 rounded bg-tealBand text-white font-bold text-[10px] hover:brightness-110">Carica</button>
+              <button class="delete-lesson-btn px-1.5 py-1 text-white/30 hover:text-coralBand text-xs">✕</button>
+            </div>
+          `;
+
+          // Carica lezione salvata sulla colonna con un click
+          row.querySelector('.load-lesson-btn').addEventListener('click', () => {
+            creatorTitleInput.value = l.title;
+            creatorRootSelect.value = l.rootMode || 'fixed-c';
+            creatorCountSelect.value = String(l.notesCount || 10);
+            teacherSelectedNoteIds = new Set(l.noteIds || []);
+            updateTeacherGridVisuals();
+            lessonsArchivePanel.classList.add('hidden');
+          });
+
+          // Elimina dall'archivio
+          row.querySelector('.delete-lesson-btn').addEventListener('click', () => {
+            let list = getSavedLessons().filter(item => item.id !== l.id);
+            localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
+            renderArchiveUI();
+          });
+
+          archiveList.appendChild(row);
+        });
+      }
+
+      creatorArchiveBtn.addEventListener('click', () => {
+        lessonsArchivePanel.classList.toggle('hidden');
+        if (!lessonsArchivePanel.classList.contains('hidden')) {
+          renderArchiveUI();
+        }
+      });
+      closeArchiveBtn.addEventListener('click', () => {
+        lessonsArchivePanel.classList.add('hidden');
+      });
+
+      /* ================================================================ */
+      /* VERIFICA LICENZA REMOTA (APPS SCRIPT) CON FALLBACK OFFLINE       */
+      /* ================================================================ */
+      async function verifyLicenseCode(code) {
+        code = code.trim().toUpperCase();
+
+        // 1. Se è configurato l'URL di Google Apps Script, chiedi al foglio remoto
+        if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
+          try {
+            const url = `${LICENSE_API_URL}?code=${encodeURIComponent(code)}`;
+            const res = await fetch(url);
+            if (res.ok) {
+              const data = await res.json();
+              return { valid: data.valid, teacher: data.teacher || 'Prof. Sartore' };
+            }
+          } catch(err) {
+            console.warn('Verifica remota fallita, controllo fallback locale...', err);
+          }
+        }
+
+        // 2. Controllo locale offline (per test o se Apps Script non è ancora collegato)
+        if (FALLBACK_LICENSES.includes(code)) {
+          return { valid: true, teacher: 'Prof. Marco Sartore' };
+        }
+
+        return { valid: false };
+      }
+
+      /* ================================================================ */
+      /* CONTROLLO LINK ALLIEVO PRO                                       */
+      /* ================================================================ */
+      async function checkUrlForProStudent() {
         const params = new URLSearchParams(window.location.search);
         const docenteParam = params.get('docente');
         const notesParam = params.get('notes');
@@ -1041,54 +1184,56 @@
         const rootParam = params.get('root');
         const countParam = params.get('count');
 
-        if (docenteParam && VALID_LICENSES.includes(docenteParam.toUpperCase())) {
-          gameState.isProStudent = true;
-          gameState.teacherCode = docenteParam;
-          document.body.classList.add('student-pro-mode');
+        if (docenteParam) {
+          const licCheck = await verifyLicenseCode(docenteParam);
+          if (licCheck.valid) {
+            gameState.isProStudent = true;
+            gameState.teacherCode = licCheck.teacher || docenteParam;
+            document.body.classList.add('student-pro-mode');
 
-          // NASCONDE IL TASTO PRO PER L'ALLIEVO
-          toggleProBtn.classList.add('hidden');
-          toggleProBtn.style.display = 'none';
+            toggleProBtn.classList.add('hidden');
+            toggleProBtn.style.display = 'none';
 
-          if (titleParam) {
-            gameState.exerciseTitle = decodeURIComponent(titleParam);
-            proExerciseTitle.textContent = gameState.exerciseTitle;
-          }
-          proTeacherId.textContent = `Docente: ${docenteParam}`;
-          proBanner.classList.remove('hidden');
-          freeNotice.classList.add('hidden');
-
-          if (rootParam === 'fixed-c') {
-            gameState.rootMode = 'fixed-c';
-          } else {
-            gameState.rootMode = 'random';
-          }
-
-          if (countParam) {
-            const parsedCount = parseInt(countParam, 10);
-            if (!isNaN(parsedCount) && parsedCount > 0) {
-              gameState.batchTotalNotes = parsedCount;
-              btnMainAction.textContent = `Inizia Serie (${parsedCount} note)`;
+            if (titleParam) {
+              gameState.exerciseTitle = decodeURIComponent(titleParam);
+              proExerciseTitle.textContent = gameState.exerciseTitle;
             }
-          }
+            proTeacherId.textContent = `${gameState.teacherCode}`;
+            proBanner.classList.remove('hidden');
+            freeNotice.classList.add('hidden');
 
-          gameState.allowedButtonIds = new Set();
-          gameState.allowedButtonIds.add('btn-1');
-          document.getElementById('btn-1').classList.add('active-in-exercise');
+            if (rootParam === 'fixed-c') {
+              gameState.rootMode = 'fixed-c';
+            } else {
+              gameState.rootMode = 'random';
+            }
 
-          if (notesParam) {
-            const rawTokens = notesParam.split(',').map(s => s.trim().toLowerCase());
-
-            intervalButtonsData.forEach(item => {
-              const el = document.getElementById(item.id);
-              const match = rawTokens.includes(item.id.toLowerCase()) || rawTokens.includes(item.degree.toLowerCase());
-              if (match || item.id === 'btn-1') {
-                gameState.allowedButtonIds.add(item.id);
-                if (el) el.classList.add('active-in-exercise');
-              } else {
-                if (el) el.classList.remove('active-in-exercise');
+            if (countParam) {
+              const parsedCount = parseInt(countParam, 10);
+              if (!isNaN(parsedCount) && parsedCount > 0) {
+                gameState.batchTotalNotes = parsedCount;
+                btnMainAction.textContent = `Inizia Serie (${parsedCount} note)`;
               }
-            });
+            }
+
+            gameState.allowedButtonIds = new Set();
+            gameState.allowedButtonIds.add('btn-1');
+            document.getElementById('btn-1').classList.add('active-in-exercise');
+
+            if (notesParam) {
+              const rawTokens = notesParam.split(',').map(s => s.trim().toLowerCase());
+
+              intervalButtonsData.forEach(item => {
+                const el = document.getElementById(item.id);
+                const match = rawTokens.includes(item.id.toLowerCase()) || rawTokens.includes(item.degree.toLowerCase());
+                if (match || item.id === 'btn-1') {
+                  gameState.allowedButtonIds.add(item.id);
+                  if (el) el.classList.add('active-in-exercise');
+                } else {
+                  if (el) el.classList.remove('active-in-exercise');
+                }
+              });
+            }
           }
         }
       }
@@ -1096,7 +1241,7 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* GESTIONE MODALITÀ                                                */
+      /* MODALITÀ CREAZIONE DOCENTE CON TRANSIZIONE MORBIDA               */
       /* ================================================================ */
       function updateTeacherGridVisuals() {
         intervalButtonsData.forEach(item => {
@@ -1121,10 +1266,17 @@
 
         freeNotice.classList.add('hidden');
         testModeBar.classList.add('hidden');
-        creatorTopBar.classList.remove('hidden');
         studentControlsRow.classList.add('hidden');
+
+        // Transizione fluida di comparsa
+        creatorTopBar.classList.remove('hidden');
         creatorControlsRow.classList.remove('hidden');
         creatorControlsRow.classList.add('flex');
+
+        requestAnimationFrame(() => {
+          creatorTopBar.classList.remove('opacity-0', '-translate-y-2');
+          creatorControlsRow.classList.remove('opacity-0', 'translate-y-2');
+        });
 
         toggleProBtn.classList.add('bg-ochreBand', 'text-appDark');
         toggleProBtn.textContent = 'CHIUDI';
@@ -1142,33 +1294,41 @@
 
         gameState.creatorMode = false;
         gameState.testMode = false;
-        document.body.classList.remove('creator-mode', 'test-mode');
 
-        testModeBar.classList.add('hidden');
-        creatorTopBar.classList.add('hidden');
-        creatorControlsRow.classList.add('hidden');
-        creatorControlsRow.classList.remove('flex');
-        studentControlsRow.classList.remove('hidden');
+        // Transizione fluida di chiusura
+        creatorTopBar.classList.add('opacity-0', '-translate-y-2');
+        creatorControlsRow.classList.add('opacity-0', 'translate-y-2');
+        testModeBar.classList.add('opacity-0', '-translate-y-2');
 
-        freeNotice.classList.remove('hidden');
+        setTimeout(() => {
+          creatorTopBar.classList.add('hidden');
+          testModeBar.classList.add('hidden');
+          creatorControlsRow.classList.add('hidden');
+          creatorControlsRow.classList.remove('flex');
+          lessonsArchivePanel.classList.add('hidden');
+          studentControlsRow.classList.remove('hidden');
 
-        toggleProBtn.classList.remove('bg-ochreBand', 'text-appDark');
-        toggleProBtn.textContent = 'PRO';
+          document.body.classList.remove('creator-mode', 'test-mode');
+          freeNotice.classList.remove('hidden');
 
-        intervalButtonsData.forEach(item => {
-          const el = document.getElementById(item.id);
-          if (el) {
-            el.classList.add('active-in-exercise');
-            el.classList.remove('teacher-selected');
-          }
-        });
+          toggleProBtn.classList.remove('bg-ochreBand', 'text-appDark');
+          toggleProBtn.textContent = 'PRO';
 
-        gameState.batchTotalNotes = 5;
-        btnMainAction.textContent = 'Inizia Serie (5 note)';
-        statScore.textContent = `0/5`;
-        statScore.style.color = '#379386';
-        statAcc.textContent = `100%`;
-        statAcc.style.color = '#379386';
+          intervalButtonsData.forEach(item => {
+            const el = document.getElementById(item.id);
+            if (el) {
+              el.classList.add('active-in-exercise');
+              el.classList.remove('teacher-selected');
+            }
+          });
+
+          gameState.batchTotalNotes = 5;
+          btnMainAction.textContent = 'Inizia Serie (5 note)';
+          statScore.textContent = `0/5`;
+          statScore.style.color = '#379386';
+          statAcc.textContent = `100%`;
+          statAcc.style.color = '#379386';
+        }, 250);
       }
 
       function enterTestMode() {
@@ -1186,8 +1346,13 @@
         creatorTopBar.classList.add('hidden');
         creatorControlsRow.classList.add('hidden');
         creatorControlsRow.classList.remove('flex');
+        lessonsArchivePanel.classList.add('hidden');
 
         testModeBar.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          testModeBar.classList.remove('opacity-0', '-translate-y-2');
+        });
+
         testModeTitle.textContent = creatorTitleInput.value.trim() || 'Esercizio Docente';
         studentControlsRow.classList.remove('hidden');
 
@@ -1220,7 +1385,7 @@
       backToEditBtn.addEventListener('click', enterCreatorMode);
       testCloseBtn.addEventListener('click', exitToNormalMode);
 
-      toggleProBtn.addEventListener('click', () => {
+      toggleProBtn.addEventListener('click', async () => {
         audio.ensureContextRunning();
         if (gameState.creatorMode || gameState.testMode) {
           exitToNormalMode();
@@ -1228,19 +1393,33 @@
         }
 
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
-        if (savedLic && VALID_LICENSES.includes(savedLic.toUpperCase())) {
-          enterCreatorMode();
-        } else {
-          licenseModal.classList.remove('hidden');
+        if (savedLic) {
+          const check = await verifyLicenseCode(savedLic);
+          if (check.valid) {
+            enterCreatorMode();
+            return;
+          }
         }
+        licenseModal.classList.remove('hidden');
       });
 
       closeLicenseModal.addEventListener('click', () => licenseModal.classList.add('hidden'));
 
-      activateLicenseBtn.addEventListener('click', () => {
+      activateLicenseBtn.addEventListener('click', async () => {
         audio.ensureContextRunning();
         const code = licenseInput.value.trim().toUpperCase();
-        if (VALID_LICENSES.includes(code)) {
+        if (!code) return;
+
+        activateBtnText.classList.add('hidden');
+        activateBtnSpinner.classList.remove('hidden');
+        licenseErrorMsg.classList.add('hidden');
+
+        const check = await verifyLicenseCode(code);
+
+        activateBtnText.classList.remove('hidden');
+        activateBtnSpinner.classList.add('hidden');
+
+        if (check.valid) {
           localStorage.setItem('ms_ear_trainer_teacher_license', code);
           licenseModal.classList.add('hidden');
           enterCreatorMode();
@@ -1270,6 +1449,16 @@
           alert('Seleziona almeno una nota sulla colonna per l\'esercizio.');
           return;
         }
+
+        // Salva automaticamente la lezione nell'archivio locale del browser
+        saveLessonToArchive({
+          id: 'les_' + Date.now(),
+          title: creatorTitleInput.value.trim() || 'Lezione',
+          date: new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
+          notesCount: parseInt(creatorCountSelect.value, 10) || 10,
+          rootMode: creatorRootSelect.value,
+          noteIds: Array.from(teacherSelectedNoteIds)
+        });
 
         const shareUrl = generateTeacherShareUrl();
         navigator.clipboard.writeText(shareUrl).then(() => {
@@ -1415,7 +1604,6 @@
         summaryAcc.textContent = `${acc}%`;
         summaryAcc.style.color = finalColor;
 
-        // Dettaglio intervalli al primo colpo
         summaryStatsByInterval.innerHTML = '';
         Object.keys(gameState.intervalStatsTracker).forEach(id => {
           const item = gameState.intervalStatsTracker[id];
@@ -1512,7 +1700,6 @@
                 }
               }
 
-              // Calcolo precisione esatto sul numero di note completate
               updateStatsUI();
 
               gameState.waitingForAnswer = false;
@@ -1563,14 +1750,17 @@
       promoCloseBtn.addEventListener('click', closeModalHandler);
       promoXBtn.addEventListener('click', closeModalHandler);
 
-      promoToTeacherBtn.addEventListener('click', () => {
+      promoToTeacherBtn.addEventListener('click', async () => {
         promoModal.classList.add('hidden');
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
-        if (savedLic && VALID_LICENSES.includes(savedLic.toUpperCase())) {
-          enterCreatorMode();
-        } else {
-          licenseModal.classList.remove('hidden');
+        if (savedLic) {
+          const check = await verifyLicenseCode(savedLic);
+          if (check.valid) {
+            enterCreatorMode();
+            return;
+          }
         }
+        licenseModal.classList.remove('hidden');
       });
 
     });
