@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ear Training Intervalli | Marco Sartore</title>
-  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con drone continuo e archivio lezioni docente.">
+  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con drone continuo e archivio cloud lezioni docente.">
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👂</text></svg>">
@@ -271,11 +271,14 @@
     </div>
   </div>
 
-  <!-- PANNELLO DRAWER ARCHIVIO LEZIONI SALVATE -->
+  <!-- PANNELLO DRAWER ARCHIVIO LEZIONI SALVATE (CON SINCRONIZZAZIONE SILENZIOSA) -->
   <div id="lessons-archive-panel" class="hidden smooth-drawer bg-[#15232A] border-b border-white/15 px-4 py-3 z-20 shadow-2xl">
     <div class="max-w-xl mx-auto">
       <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-xs">
-        <span class="text-white/80 font-bold uppercase tracking-wider font-mono text-[11px]">Lezioni Salvate sul tuo dispositivo</span>
+        <div class="flex items-center gap-2">
+          <span class="text-white/80 font-bold uppercase tracking-wider font-mono text-[11px]">Lezioni Salvate</span>
+          <span id="sync-status-indicator" class="text-[10px] text-tealBand font-mono hidden">Sincronizzato</span>
+        </div>
         <button id="close-archive-btn" class="text-white/50 hover:text-white text-xs font-bold">Chiudi</button>
       </div>
       <div id="archive-list" class="space-y-1.5 max-h-44 overflow-y-auto pr-1">
@@ -561,9 +564,8 @@
     /* CONFIGURAZIONE URL GOOGLE APPS SCRIPT                            */
     /* Incolla qui l'URL della Web App di Apps Script (termina in /exec) */
     /* ================================================================ */
-    const LICENSE_API_URL = ""; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT QUANDO PRONTO
+    const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec"; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT
 
-    // Codici locali di emergenza/test funzionanti anche offline o prima di incollare l'URL
     const FALLBACK_LICENSES = [
       'PRO-MARCO-2026',
       'DOCENTE-2026',
@@ -998,6 +1000,7 @@
       const lessonsArchivePanel = document.getElementById('lessons-archive-panel');
       const archiveList = document.getElementById('archive-list');
       const closeArchiveBtn = document.getElementById('close-archive-btn');
+      const syncStatusIndicator = document.getElementById('sync-status-indicator');
 
       const testModeBar = document.getElementById('test-mode-bar');
       const testModeTitle = document.getElementById('test-mode-title');
@@ -1070,7 +1073,7 @@
       }
 
       /* ================================================================ */
-      /* GESTIONE ARCHIVIO LOCALE LEZIONI DEL DOCENTE                     */
+      /* GESTIONE ARCHIVIO LOCALE + CLOUD SYNC IN BACKGROUND              */
       /* ================================================================ */
       function getSavedLessons() {
         try {
@@ -1084,12 +1087,42 @@
       function saveLessonToArchive(lessonData) {
         try {
           let list = getSavedLessons();
-          // Rimuove duplicato con stesso titolo se già esistente
           list = list.filter(item => item.title.toLowerCase() !== lessonData.title.toLowerCase());
-          list.unshift(lessonData); // aggiunge in testa
-          if (list.length > 20) list = list.slice(0, 20); // max 20 lezioni in archivio
+          list.unshift(lessonData);
+          if (list.length > 25) list = list.slice(0, 25);
           localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
         } catch(e) {}
+      }
+
+      // Sincronizzazione silenziosa all'accesso con Google Sheets
+      async function syncLessonsFromCloudSilently(teacherCode) {
+        if (!LICENSE_API_URL || !LICENSE_API_URL.startsWith('http')) return;
+        try {
+          const url = `${LICENSE_API_URL}?action=getLessons&code=${encodeURIComponent(teacherCode)}`;
+          const res = await fetch(url);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && Array.isArray(data.lessons)) {
+              let localList = getSavedLessons();
+              let titles = new Set(localList.map(l => l.title.toLowerCase()));
+
+              // Aggiunge le lezioni del cloud non ancora presenti in locale
+              data.lessons.forEach(cloudLesson => {
+                if (!titles.has(cloudLesson.title.toLowerCase())) {
+                  localList.push(cloudLesson);
+                  titles.add(cloudLesson.title.toLowerCase());
+                }
+              });
+
+              localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(localList));
+              renderArchiveUI();
+              syncStatusIndicator.classList.remove('hidden');
+              setTimeout(() => syncStatusIndicator.classList.add('hidden'), 3500);
+            }
+          }
+        } catch(e) {
+          console.warn('Sync silenzioso non riuscito, operatività locale garantita:', e);
+        }
       }
 
       function renderArchiveUI() {
@@ -1114,19 +1147,26 @@
             </div>
           `;
 
-          // Carica lezione salvata sulla colonna con un click
           row.querySelector('.load-lesson-btn').addEventListener('click', () => {
             creatorTitleInput.value = l.title;
             creatorRootSelect.value = l.rootMode || 'fixed-c';
             creatorCountSelect.value = String(l.notesCount || 10);
-            teacherSelectedNoteIds = new Set(l.noteIds || []);
+            
+            // Ripristina note selezionate sulla colonna
+            let ids = [];
+            if (Array.isArray(l.noteIds)) {
+              ids = l.noteIds.map(token => {
+                token = token.trim();
+                return token.startsWith('btn-') ? token : ('btn-' + token);
+              });
+            }
+            teacherSelectedNoteIds = new Set(ids);
             updateTeacherGridVisuals();
             lessonsArchivePanel.classList.add('hidden');
           });
 
-          // Elimina dall'archivio
           row.querySelector('.delete-lesson-btn').addEventListener('click', () => {
-            let list = getSavedLessons().filter(item => item.id !== l.id);
+            let list = getSavedLessons().filter(item => item.title !== l.title);
             localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
             renderArchiveUI();
           });
@@ -1146,15 +1186,14 @@
       });
 
       /* ================================================================ */
-      /* VERIFICA LICENZA REMOTA (APPS SCRIPT) CON FALLBACK OFFLINE       */
+      /* VERIFICA LICENZA REMOTA (APPS SCRIPT)                            */
       /* ================================================================ */
       async function verifyLicenseCode(code) {
         code = code.trim().toUpperCase();
 
-        // 1. Se è configurato l'URL di Google Apps Script, chiedi al foglio remoto
         if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
           try {
-            const url = `${LICENSE_API_URL}?code=${encodeURIComponent(code)}`;
+            const url = `${LICENSE_API_URL}?action=verify&code=${encodeURIComponent(code)}`;
             const res = await fetch(url);
             if (res.ok) {
               const data = await res.json();
@@ -1165,7 +1204,6 @@
           }
         }
 
-        // 2. Controllo locale offline (per test o se Apps Script non è ancora collegato)
         if (FALLBACK_LICENSES.includes(code)) {
           return { valid: true, teacher: 'Prof. Marco Sartore' };
         }
@@ -1268,7 +1306,7 @@
         testModeBar.classList.add('hidden');
         studentControlsRow.classList.add('hidden');
 
-        // Transizione fluida di comparsa
+        // Transizione fluida
         creatorTopBar.classList.remove('hidden');
         creatorControlsRow.classList.remove('hidden');
         creatorControlsRow.classList.add('flex');
@@ -1287,6 +1325,10 @@
         });
 
         updateTeacherGridVisuals();
+
+        // Sincronizzazione silenziosa in background all'accesso
+        const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
+        if (savedLic) syncLessonsFromCloudSilently(savedLic);
       }
 
       function exitToNormalMode() {
@@ -1295,7 +1337,6 @@
         gameState.creatorMode = false;
         gameState.testMode = false;
 
-        // Transizione fluida di chiusura
         creatorTopBar.classList.add('opacity-0', '-translate-y-2');
         creatorControlsRow.classList.add('opacity-0', 'translate-y-2');
         testModeBar.classList.add('opacity-0', '-translate-y-2');
@@ -1450,17 +1491,34 @@
           return;
         }
 
-        // Salva automaticamente la lezione nell'archivio locale del browser
+        const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
+        const titleStr = creatorTitleInput.value.trim() || 'Lezione';
+        const notesStr = Array.from(teacherSelectedNoteIds)
+          .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
+          .filter(Boolean)
+          .join(',');
+        const rootStr = creatorRootSelect.value;
+        const countNum = parseInt(creatorCountSelect.value, 10) || 10;
+        const shareUrl = generateTeacherShareUrl();
+
+        // 1. Salva subito in memoria locale (Zero attesa)
         saveLessonToArchive({
           id: 'les_' + Date.now(),
-          title: creatorTitleInput.value.trim() || 'Lezione',
+          title: titleStr,
           date: new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
-          notesCount: parseInt(creatorCountSelect.value, 10) || 10,
-          rootMode: creatorRootSelect.value,
-          noteIds: Array.from(teacherSelectedNoteIds)
+          notesCount: countNum,
+          rootMode: rootStr,
+          noteIds: Array.from(teacherSelectedNoteIds),
+          url: shareUrl
         });
 
-        const shareUrl = generateTeacherShareUrl();
+        // 2. Spedisce silenziosamente a Google Apps Script in background (Fire-and-forget)
+        if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
+          const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&title=${encodeURIComponent(titleStr)}&notes=${encodeURIComponent(notesStr)}&root=${encodeURIComponent(rootStr)}&count=${countNum}&url=${encodeURIComponent(shareUrl)}`;
+          fetch(cloudSaveUrl).catch(() => {});
+        }
+
+        // 3. Copia immediata negli appunti
         navigator.clipboard.writeText(shareUrl).then(() => {
           const originalText = creatorCopyLinkBtn.textContent;
           creatorCopyLinkBtn.textContent = 'Link Copiato!';
@@ -1668,7 +1726,7 @@
               return;
             }
 
-            // SUONA SOLO SE VIENE ACCESA (COLORATA), TACE SE VIENE SPENTA
+            // SUONA SOLO SE SI ACCENDE, TACE SE SI SPEGNE
             if (teacherSelectedNoteIds.has(item.id)) {
               teacherSelectedNoteIds.delete(item.id);
             } else {
