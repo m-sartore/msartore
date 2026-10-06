@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="it" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ear Training Intervalli | Marco Sartore</title>
+  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali. Metodo pratico per studenti e docenti di musica.">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👂</text></svg>">
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            ivory: {
+              DEFAULT: '#FAF8F5',
+              card: '#FFFFFF',
+              dark: '#F0ECE1',
+            },
+            petrol: {
+              DEFAULT: '#27434E',
+              light: '#375B69',
+              dark: '#1B313A',
+              deep: '#13232A',
+            },
+            tealBand: {
+              DEFAULT: '#379386',
+              light: '#48B2A3',
+              dark: '#276E64',
+            },
+            ochreBand: {
+              DEFAULT: '#E0C36F',
+              light: '#EDD68F',
+              dark: '#B89B45',
+            },
+            peachBand: {
+              DEFAULT: '#EBA066',
+              light: '#F3B88A',
+              dark: '#C77A40',
+            },
+            coralBand: {
+              DEFAULT: '#E37055',
+              light: '#EB8C76',
+              dark: '#BD5037',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #13232A;
+      color: #FAF8F5;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      min-height: 100vh;
+    }
+
+    /* Card Scure Editoriali in Stile Sartore */
+    .dark-card {
+      background: rgba(27, 49, 58, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4);
+    }
+
+    .dark-card-interactive {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dark-card-interactive:hover:not(:disabled) {
+      transform: translateY(-2px);
+      border-color: rgba(224, 195, 111, 0.4);
+      box-shadow: 0 18px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Animazione Pop Feedback */
+    @keyframes pulse-success {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+    .animate-success {
+      animation: pulse-success 0.35s ease-in-out;
+    }
+
+    @keyframes shake-error {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .animate-error {
+      animation: shake-error 0.4s ease-in-out;
+    }
+  </style>
+</head>
+<body class="selection:bg-ochreBand selection:text-petrol-deep relative flex flex-col justify-between">
+
+  <!-- ========================================== -->
+  <!-- BARRA DI NAVIGAZIONE SUPERIORE -->
+  <!-- ========================================== -->
+  <header class="sticky top-0 z-40 bg-petdr-deep/90 bg-[#13232A]/90 backdrop-blur-md border-b border-white/10 transition-all">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+      
+      <!-- Logo Sartore Brand -->
+      <div class="flex items-center gap-3">
+        <a href="#" class="group flex items-center gap-1.5 text-xl sm:text-2xl font-bold tracking-tight">
+          <span class="text-ivory transition-colors group-hover:text-tealBand">Marco</span>
+          <span class="text-coralBand transition-colors group-hover:text-ochreBand">Sartore</span>
+        </a>
+        <span class="hidden sm:inline-block text-xs font-mono uppercase tracking-widest text-white/30 border-l border-white/20 pl-3">Ear Training</span>
+      </div>
+
+      <!-- Badge Stato & Tasto Area Docente -->
+      <div class="flex items-center gap-3">
+        <div id="mode-badge" class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-white/10 text-ivory/80 border border-white/10 flex items-center gap-2">
+          <span id="mode-indicator-dot" class="w-2 h-2 rounded-full bg-peachBand"></span>
+          <span id="mode-badge-text">Modalità Free</span>
+        </div>
+
+        <button id="open-teacher-modal-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-petrol hover:bg-tealBand text-white border border-white/10 transition-all duration-200 shadow-md">
+          <svg class="w-4 h-4 text-ochreBand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+          </svg>
+          <span id="teacher-btn-label">Area Docente</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- MAIN CONTAINER -->
+  <!-- ========================================== -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full flex-1">
+
+    <!-- BANNER MODALITÀ PRO (Nascosto di default, visibile con URL docente) -->
+    <div id="pro-allievo-banner" class="hidden mb-8 p-5 sm:p-6 rounded-2xl dark-card border-l-8 border-l-tealBand flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-widest text-tealBand uppercase mb-1">
+          <span class="w-2 h-2 rounded-full bg-tealBand animate-pulse"></span>
+          Percorso Personalizzato Attivo
+        </div>
+        <h2 id="pro-exercise-title" class="text-xl sm:text-2xl font-extrabold text-ivory tracking-tight">Lezione Personalizzata</h2>
+        <p id="pro-exercise-meta" class="text-xs sm:text-sm text-ivory/70 mt-1">Configurazione preparata dal tuo insegnante.</p>
+      </div>
+      <a href="index.html" class="self-start sm:self-center px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold bg-white/10 hover:bg-white/20 text-ivory/80 transition-colors">
+        Esci da questa lezione ✕
+      </a>
+    </div>
+
+    <!-- BANNER PROMO FREE (Visibile solo in modalità Free) -->
+    <div id="free-notice-banner" class="mb-6 p-4 rounded-xl bg-petrol/40 border border-white/10 flex items-center justify-between gap-4 text-xs sm:text-sm text-ivory/80">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-ochreBand shrink-0"></span>
+        <span><strong>Versione Libera:</strong> Tutti i 12 intervalli attivi con tonica casuale.</span>
+      </div>
+      <button id="upgrade-hint-btn" class="text-xs font-bold text-ochreBand hover:underline shrink-0 hidden sm:inline">
+        Sei un docente? Crea link su misura &rarr;
+      </button>
+    </div>
+
+    <!-- DASHBOARD STATISTICHE -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
+      <div class="dark-card p-4 rounded-2xl border-l-4 border-l-petrol-light">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-ivory/50">Risposte Corrette</div>
+        <div id="stat-correct" class="text-2xl sm:text-3xl font-extrabold text-ivory mt-1">0</div>
+      </div>
+      <div class="dark-card p-4 rounded-2xl border-l-4 border-l-tealBand">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-ivory/50">Tentativi Totali</div>
+        <div id="stat-total" class="text-2xl sm:text-3xl font-extrabold text-ivory mt-1">0</div>
+      </div>
+      <div class="dark-card p-4 rounded-2xl border-l-4 border-l-ochreBand">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-ivory/50">Accuratezza</div>
+        <div id="stat-accuracy" class="text-2xl sm:text-3xl font-extrabold text-ochreBand mt-1">0%</div>
+      </div>
+      <div class="dark-card p-4 rounded-2xl border-l-4 border-l-coralBand">
+        <div class="text-[11px] font-mono uppercase tracking-wider text-ivory/50">Streak Positiva</div>
+        <div id="stat-streak" class="text-2xl sm:text-3xl font-extrabold text-coralBand mt-1">0 🔥</div>
+      </div>
+    </div>
+
+    <!-- AREA AUDIO PLAYER CENTRALE -->
+    <div class="dark-card p-6 sm:p-10 rounded-3xl border-t-8 border-t-ochreBand text-center mb-8 relative overflow-hidden">
+      
+      <!-- Info Direzione / Stato Domanda -->
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
+        <span id="current-direction-tag" class="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-white/10 text-ochreBand border border-white/10">
+          Ascendente ↗
+        </span>
+        <span id="current-root-tag" class="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-white/5 text-ivory/60 border border-white/5">
+          Tonica: Casuale
+        </span>
+      </div>
+
+      <!-- Pulsanti di Ascolto Principali -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+        <button id="play-interval-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-5 rounded-2xl text-lg font-extrabold text-white bg-coralBand hover:bg-peachBand shadow-xl hover:shadow-2xl transition-all duration-300 group">
+          <svg class="w-6 h-6 transition-transform group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <span id="play-btn-text">Ascolta Intervallo</span>
+        </button>
+
+        <button id="play-root-only-btn" class="w-full sm:w-auto px-5 py-5 rounded-2xl text-sm font-semibold text-ivory/90 bg-white/5 hover:bg-white/15 border border-white/10 transition-all flex items-center justify-center gap-2">
+          <span>Solo Tonica</span>
+        </button>
+
+        <button id="next-question-btn" class="w-full sm:w-auto px-6 py-5 rounded-2xl text-sm font-semibold text-ivory/70 hover:text-white bg-white/5 hover:bg-white/15 border border-white/10 transition-all">
+          Nuovo Suono ↷
+        </button>
+      </div>
+
+      <!-- Feedback Visivo Testuale -->
+      <div id="feedback-message" class="min-h-[28px] text-sm sm:text-base font-bold transition-all duration-200 text-ivory/40">
+        Premi "Ascolta Intervallo" o seleziona una risposta sotto
+      </div>
+
+    </div>
+
+    <!-- GRIGLIA DEI 12 INTERVALLI -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4 px-1">
+        <h3 class="text-sm font-mono uppercase tracking-widest text-ivory/60 font-semibold">
+          Scegli l'intervallo corrispondente
+        </h3>
+        <span id="active-intervals-count" class="text-xs font-mono text-tealBand">12 attivi</span>
+      </div>
+
+      <div id="intervals-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        <!-- Generato Dinamicamente via JavaScript con i 12 intervalli -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- FOOTER -->
+  <!-- ========================================== -->
+  <footer class="border-t border-white/10 bg-[#101c22] py-8 px-6 text-xs text-ivory/50">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <strong class="text-ivory/80">Marco Sartore</strong> • Didattica Pianistica & Armonia Funzionale
+      </div>
+      <div class="flex items-center gap-6">
+        <button id="footer-reset-stats-btn" class="hover:text-coralBand transition-colors">Resetta Statistiche</button>
+        <a href="https://calendar.google.com/calendar/appointments/schedules/placeholder" target="_blank" class="hover:text-ochreBand transition-colors">Prenota Lezione</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- MODALE UPSELL FREE (Ogni 5 Tentativi) -->
+  <!-- ========================================== -->
+  <div id="free-promo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="dark-card max-w-lg w-full p-8 rounded-3xl border-t-8 border-t-ochreBand text-center transform scale-95 transition-transform duration-300">
+      
+      <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-ochreBand/20 flex items-center justify-center text-ochreBand text-2xl font-bold">
+        💡
+      </div>
+
+      <span class="text-xs font-mono uppercase tracking-widest text-ochreBand font-bold">Consiglio Didattico</span>
+      <h3 class="text-2xl font-extrabold text-ivory mt-1 mb-3">Riconoscere tutti e 12 gli intervalli è troppo difficile?</h3>
+      
+      <p class="text-sm text-ivory/80 leading-relaxed mb-6 text-left">
+        In questa modalità dimostrativa la <strong>tonica cambia a ogni domanda</strong> e sono attivi tutti i 12 intervalli. Per progredire in modo solido è fondamentale isolarne pochi alla volta (es. solo 3ª Minore vs 3ª Maggiore).
+      </p>
+
+      <div class="p-4 rounded-xl bg-petrol/60 border border-white/10 text-xs text-ivory/90 text-left mb-6 space-y-2">
+        <div>🎓 <strong>Sei uno studente?</strong> Chiedi al tuo insegnante il link personalizzato per la tua lezione.</div>
+        <div>🎹 <strong>Sei un docente?</strong> Sblocca l'Area Docente con la tua licenza per creare link mirati in 1 click.</div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button id="promo-open-teacher-btn" class="flex-1 py-3 px-5 rounded-xl bg-ochreBand text-petrol-deep font-bold text-sm hover:bg-ochreBand-light transition-all">
+          Sblocca Area Docente
+        </button>
+        <button id="promo-dismiss-btn" class="flex-1 py-3 px-5 rounded-xl bg-white/10 hover:bg-white/15 text-ivory font-semibold text-sm transition-all">
+          Continua Allenamento Demo
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODALE / PANNELLO AREA DOCENTE -->
+  <!-- ========================================== -->
+  <div id="teacher-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 overflow-y-auto">
+    <div class="dark-card max-w-2xl w-full p-6 sm:p-8 rounded-3xl border-t-8 border-t-tealBand my-8 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Header Modale -->
+      <div class="flex items-start justify-between gap-4 border-b border-white/10 pb-4 mb-6">
+        <div>
+          <span class="text-xs font-mono uppercase tracking-widest text-tealBand font-bold">Pannello Insegnante</span>
+          <h3 class="text-2xl font-extrabold text-ivory mt-1">Area Docente & Generatore Esercizi</h3>
+        </div>
+        <button id="close-teacher-modal-btn" class="p-2 text-ivory/50 hover:text-white rounded-lg hover:bg-white/10 transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- SEZIONE 1: SBLOCCO LICENZA (Se non sbloccato) -->
+      <div id="teacher-lock-view" class="space-y-6">
+        <p class="text-sm text-ivory/80 leading-relaxed">
+          L'Area Docente permette di isolare specifici intervalli, scegliere la direzione e impostare toniche fisse, generando un link pronto da inviare ai tuoi allievi.
+        </p>
+
+        <div class="p-5 rounded-2xl bg-white/5 border border-white/10">
+          <label class="block text-xs font-mono uppercase text-ivory/70 mb-2 font-bold">Inserisci Codice Licenza Docente:</label>
+          <div class="flex gap-2">
+            <input id="license-input" type="text" placeholder="es. PRO-MARCO-2026" class="flex-1 px-4 py-3 rounded-xl bg-petrol-deep border border-white/20 text-ivory text-sm font-mono focus:outline-none focus:border-tealBand uppercase">
+            <button id="unlock-license-btn" class="px-6 py-3 rounded-xl bg-tealBand text-white font-bold text-sm hover:bg-tealBand-light transition-all">
+              Attiva
+            </button>
+          </div>
+          <div id="license-feedback" class="text-xs font-medium mt-2 min-h-[18px]"></div>
+        </div>
+
+        <!-- Box Acquisto Licenza Una-Tantum -->
+        <div class="p-5 rounded-2xl bg-petrol/40 border border-peachBand/30 space-y-3">
+          <div class="flex items-center gap-2 text-peachBand font-bold text-sm">
+            <span>✨</span> Non hai ancora una chiave docente?
+          </div>
+          <p class="text-xs text-ivory/70 leading-relaxed">
+            La licenza docente è una tantum (nessun abbonamento mensile). Permette di creare infiniti esercizi per tutti i tuoi studenti senza limiti.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="mailto:info@msartore.it?subject=Richiesta%20Codice%20Docente%20Ear%20Training&body=Ciao%20Marco,%20vorrei%20acquistare%20la%20licenza%20docente%20per%20la%20web%20app%20di%20Ear%20Training.%20Modalit%C3%A0%20preferita:%20Bonifico%20/%20Satispay." 
+               class="px-4 py-2 rounded-xl bg-coralBand hover:bg-peachBand text-white text-xs font-bold transition-all inline-flex items-center gap-1.5">
+              <span>✉</span> Richiedi Licenza via Email (Bonifico / Satispay)
+            </a>
+            <span class="text-[11px] text-ivory/40">Chiave demo per test: <code class="text-ochreBand">PRO-MARCO-2026</code></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEZIONE 2: CREATORE ESERCIZI (Se licenza valida) -->
+      <div id="teacher-builder-view" class="hidden space-y-6">
+        
+        <div class="flex items-center justify-between p-3 rounded-xl bg-tealBand/15 border border-tealBand/30 text-xs">
+          <div class="flex items-center gap-2 text-tealBand font-bold">
+            <span>✓</span> Licenza Docente Attiva (<span id="active-license-code">PRO</span>)
+          </div>
+          <button id="lock-teacher-btn" class="text-ivory/50 hover:text-coralBand transition-colors underline">Disconnetti</button>
+        </div>
+
+        <!-- Titolo Esercizio -->
+        <div>
+          <label class="block text-xs font-mono uppercase text-ivory/70 mb-1.5 font-bold">Titolo / Riferimento Lezione:</label>
+          <input id="builder-title" type="text" value="Lezione 3 - Riconoscimento Terze" class="w-full px-4 py-2.5 rounded-xl bg-petrol-deep border border-white/20 text-ivory text-sm focus:outline-none focus:border-tealBand">
+        </div>
+
+        <!-- Selezione Intervalli -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-mono uppercase text-ivory/70 font-bold">Intervalli Inclusi:</label>
+            <div class="flex items-center gap-2 text-xs">
+              <button id="builder-select-all" class="text-tealBand hover:underline">Tutti</button>
+              <span class="text-white/20">•</span>
+              <button id="builder-select-thirds" class="text-tealBand hover:underline">Solo 3e</button>
+              <span class="text-white/20">•</span>
+              <button id="builder-select-none" class="text-tealBand hover:underline">Deseleziona</button>
+            </div>
+          </div>
+          
+          <div id="builder-intervals-selector" class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <!-- Checkbox intervalli generati via JS -->
+          </div>
+        </div>
+
+        <!-- Direzione e Nota Base -->
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-mono uppercase text-ivory/70 mb-1.5 font-bold">Direzione Esecuzione:</label>
+            <select id="builder-direction" class="w-full px-3 py-2.5 rounded-xl bg-petrol-deep border border-white/20 text-ivory text-xs focus:outline-none focus:border-tealBand">
+              <option value="asc">Ascendente (Melodico ↗)</option>
+              <option value="desc">Discendente (Melodico ↘)</option>
+              <option value="harm">Armonica (Simultaneo ♫)</option>
+              <option value="rand">Casuale (Tutte le direzioni)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-mono uppercase text-ivory/70 mb-1.5 font-bold">Nota Base (Tonica):</label>
+            <select id="builder-root" class="w-full px-3 py-2.5 rounded-xl bg-petrol-deep border border-white/20 text-ivory text-xs focus:outline-none focus:border-tealBand">
+              <option value="rand">Casuale a ogni domanda</option>
+              <option value="60">Fissa su DO centrale (C4)</option>
+              <option value="57">Fissa su LA (A3)</option>
+              <option value="62">Fissa su RE (D4)</option>
+              <option value="65">Fissa su FA (F4)</option>
+              <option value="67">Fissa su SOL (G4)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Generazione Link e Salvataggio -->
+        <div class="pt-4 border-t border-white/10 space-y-3">
+          <button id="builder-generate-btn" class="w-full py-4 rounded-xl bg-coralBand hover:bg-peachBand text-white font-extrabold text-sm shadow-lg transition-all flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            <span>Genera & Copia Link Allievo Negli Appunti</span>
+          </button>
+          
+          <div id="copy-success-toast" class="hidden text-center text-xs font-bold text-tealBand bg-tealBand/15 py-2 rounded-lg border border-tealBand/30">
+            ✓ Link copiato negli appunti! Invialo via WhatsApp, Mail o Classroom al tuo studente.
+          </div>
+        </div>
+
+        <!-- Storico Preset Salvati Localmente -->
+        <div>
+          <div class="text-xs font-mono uppercase text-ivory/50 font-bold mb-2">I Miei Esercizi Salvati (Browser):</div>
+          <div id="teacher-presets-list" class="space-y-2 max-h-36 overflow-y-auto pr-1">
+            <!-- Preset da localStorage -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ================================================================= -->
+  <!-- SEZIONE AUDIO ENGINE: SINTESI WEB AUDIO API (MODULO ISOLATO)       -->
+  <!-- ================================================================= -->
+  <script id="audio-engine">
+    /**
+     * IntervalAudioEngine
+     * Sintetizzatore Web Audio puro. Produce un timbro caldo e organico simile
+     * a un pianoforte elettrico/acustico morbido con inviluppo esponenziale ADSR
+     * e filtro passa-basso dinamico anti-clipping.
+     */
+    class IntervalAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContextClass();
+          
+          this.masterGain = this.ctx.createGain();
+          this.masterGain.gain.setValueAtTime(0.35, this.ctx.currentTime);
+          this.masterGain.connect(this.ctx.destination);
+        }
+
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      midiToFreq(midi) {
+        return 440 * Math.pow(2, (midi - 69) / 12);
+      }
+
+      /**
+       * Riproduce una singola nota con armoniche sommate e inviluppo dolce
+       */
+      playNote(midiNote, startTime = 0, duration = 1.2) {
+        this.init();
+        const t = this.ctx.currentTime + startTime;
+        const freq = this.midiToFreq(midiNote);
+
+        // Sub-mix per la singola nota
+        const noteGain = this.ctx.createGain();
+        noteGain.connect(this.masterGain);
+
+        // Filtro dinamico passa-basso per smussare le frequenze alte
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(freq * 4.5, t);
+        filter.frequency.exponentialRampToValueAtTime(freq * 1.5, t + duration);
+        filter.connect(noteGain);
+
+        // 1. Fondamentale (Sine)
+        const osc1 = this.ctx.createOscillator();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(freq, t);
+
+        // 2. Seconda armonica (Triangle morbido a volume ridotto)
+        const osc2 = this.ctx.createOscillator();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(freq * 2, t);
+        const osc2Gain = this.ctx.createGain();
+        osc2Gain.gain.setValueAtTime(0.25, t);
+        osc2.connect(osc2Gain);
+        osc2Gain.connect(filter);
+
+        // Inviluppo ADSR
+        const attack = 0.015;
+        const decay = duration * 0.85;
+
+        noteGain.gain.setValueAtTime(0.0001, t);
+        noteGain.gain.exponentialRampToValueAtTime(0.9, t + attack);
+        noteGain.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
+
+        osc1.connect(filter);
+
+        osc1.start(t);
+        osc2.start(t);
+
+        osc1.stop(t + duration + 0.1);
+        osc2.stop(t + duration + 0.1);
+      }
+
+      /**
+       * Riproduce un intervallo melodico o armonico
+       */
+      playInterval(rootMidi, semitones, direction = 'asc') {
+        this.init();
+        const targetMidi = rootMidi + semitones;
+
+        if (direction === 'asc') {
+          // Nota 1 poi Nota 2 (salita)
+          this.playNote(rootMidi, 0, 0.9);
+          this.playNote(targetMidi, 0.45, 1.4);
+        } else if (direction === 'desc') {
+          // Nota 2 poi Nota 1 (discesa)
+          this.playNote(targetMidi, 0, 0.9);
+          this.playNote(rootMidi, 0.45, 1.4);
+        } else if (direction === 'harm') {
+          // Suonate simultaneamente
+          this.playNote(rootMidi, 0, 1.5);
+          this.playNote(targetMidi, 0, 1.5);
+        }
+      }
+
+      playRoot(rootMidi) {
+        this.init();
+        this.playNote(rootMidi, 0, 1.4);
+      }
+    }
+  </script>
+
+  <!-- ================================================================= -->
+  <!-- LOGICA DI BUSINESS, FREEMIUM, STATS E INTERFACCIA UTENTE           -->
+  <!-- ================================================================= -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      // 1. DATABASE INTERVALLI MUSICALI
+      const INTERVALS = [
+        { id: 1,  short: '2ª Min', full: 'Seconda Minore',    semitones: 1,  tag: '1 semitono' },
+        { id: 2,  short: '2ª Mag', full: 'Seconda Maggiore',  semitones: 2,  tag: '2 semitoni' },
+        { id: 3,  short: '3ª Min', full: 'Terza Minore',      semitones: 3,  tag: '3 semitoni' },
+        { id: 4,  short: '3ª Mag', full: 'Terza Maggiore',    semitones: 4,  tag: '4 semitoni' },
+        { id: 5,  short: '4ª Gius', full: 'Quarta Giusta',    semitones: 5,  tag: '5 semitoni' },
+        { id: 6,  short: 'Tritono', full: 'Tritono / 5ª Dim',  semitones: 6,  tag: '6 semitoni' },
+        { id: 7,  short: '5ª Gius', full: 'Quinta Giusta',    semitones: 7,  tag: '7 semitoni' },
+        { id: 8,  short: '6ª Min', full: 'Sesta Minore',      semitones: 8,  tag: '8 semitoni' },
+        { id: 9,  short: '6ª Mag', full: 'Sesta Maggiore',    semitones: 9,  tag: '9 semitoni' },
+        { id: 10, short: '7ª Min', full: 'Settima Minore',    semitones: 10, tag: '10 semitoni' },
+        { id: 11, short: '7ª Mag', full: 'Settima Maggiore',  semitones: 11, tag: '11 semitoni' },
+        { id: 12, short: '8ª Gius', full: 'Ottava Giusta',    semitones: 12, tag: '12 semitoni' }
+      ];
+
+      // Lista licenze valide per la validazione client-side
+      const VALID_LICENSES = ['PRO-MARCO-2026', 'DOCENTE2026', 'SARTORE-VIP', 'DEMO-PRO'];
+
+      // Istanza Motore Audio
+      const audio = new IntervalAudioEngine();
+
+      // Stato Applicazione
+      const state = {
+        isPro: false,
+        licenseCode: '',
+        exerciseTitle: '',
+        activeIntervalIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        directionMode: 'asc', // 'asc', 'desc', 'harm', 'rand'
+        rootMode: 'rand',      // 'rand' oppure MIDI number fisso es. 60
+        
+        currentQuestion: {
+          rootMidi: 60,
+          intervalId: null,
+          direction: 'asc'
+        },
+
+        stats: {
+          correct: 0,
+          total: 0,
+          streak: 0
+        },
+
+        freeAttemptCounter: 0,
+        hasAnsweredCurrent: false
+      };
+
+      // Elementi DOM
+      const grid = document.getElementById('intervals-grid');
+      const playBtn = document.getElementById('play-interval-btn');
+      const playRootBtn = document.getElementById('play-root-only-btn');
+      const nextBtn = document.getElementById('next-question-btn');
+      const feedbackMsg = document.getElementById('feedback-message');
+      const dirTag = document.getElementById('current-direction-tag');
+      const rootTag = document.getElementById('current-root-tag');
+      const activeCountLabel = document.getElementById('active-intervals-count');
+
+      // Statistiche DOM
+      const statCorrect = document.getElementById('stat-correct');
+      const statTotal = document.getElementById('stat-total');
+      const statAccuracy = document.getElementById('stat-accuracy');
+      const statStreak = document.getElementById('stat-streak');
+      const resetStatsBtn = document.getElementById('footer-reset-stats-btn');
+
+      // Modali & Banner
+      const proBanner = document.getElementById('pro-allievo-banner');
+      const proTitle = document.getElementById('pro-exercise-title');
+      const proMeta = document.getElementById('pro-exercise-meta');
+      const freeNotice = document.getElementById('free-notice-banner');
+      const modeBadgeText = document.getElementById('mode-badge-text');
+      const modeIndicatorDot = document.getElementById('mode-indicator-dot');
+      const freePromoModal = document.getElementById('free-promo-modal');
+      const promoDismissBtn = document.getElementById('promo-dismiss-btn');
+      const promoOpenTeacherBtn = document.getElementById('promo-open-teacher-btn');
+      const upgradeHintBtn = document.getElementById('upgrade-hint-btn');
+
+      // Modale Teacher
+      const teacherModal = document.getElementById('teacher-modal');
+      const openTeacherBtn = document.getElementById('open-teacher-modal-btn');
+      const closeTeacherBtn = document.getElementById('close-teacher-modal-btn');
+      const teacherLockView = document.getElementById('teacher-lock-view');
+      const teacherBuilderView = document.getElementById('teacher-builder-view');
+      const licenseInput = document.getElementById('license-input');
+      const unlockLicenseBtn = document.getElementById('unlock-license-btn');
+      const licenseFeedback = document.getElementById('license-feedback');
+      const lockTeacherBtn = document.getElementById('lock-teacher-btn');
+      const activeLicenseLabel = document.getElementById('active-license-code');
+
+      // Builder Controls
+      const builderTitle = document.getElementById('builder-title');
+      const builderIntervalsContainer = document.getElementById('builder-intervals-selector');
+      const builderDir = document.getElementById('builder-direction');
+      const builderRoot = document.getElementById('builder-root');
+      const builderGenBtn = document.getElementById('builder-generate-btn');
+      const copyToast = document.getElementById('copy-success-toast');
+      const presetsList = document.getElementById('teacher-presets-list');
+
+      // ==========================================
+      // GESTIONE PARAMETRI URL (ALLIEVO PRO)
+      // ==========================================
+      const initUrlParameters = () => {
+        const params = new URLSearchParams(window.location.search);
+        const docenteParam = params.get('docente');
+        const intervalsParam = params.get('intervals');
+        const titleParam = params.get('title');
+        const dirParam = params.get('dir');
+        const rootParam = params.get('root');
+
+        if (docenteParam && VALID_LICENSES.includes(docenteParam.toUpperCase())) {
+          state.isPro = true;
+          state.licenseCode = docenteParam.toUpperCase();
+          state.exerciseTitle = titleParam ? decodeURIComponent(titleParam) : 'Esercizio del Docente';
+
+          if (intervalsParam) {
+            const parsed = intervalsParam.split(',').map(n => parseInt(n, 10)).filter(n => n >= 1 && n <= 12);
+            if (parsed.length > 0) state.activeIntervalIds = parsed;
+          }
+
+          if (dirParam && ['asc', 'desc', 'harm', 'rand'].includes(dirParam)) {
+            state.directionMode = dirParam;
+          }
+
+          if (rootParam) {
+            state.rootMode = rootParam === 'rand' ? 'rand' : parseInt(rootParam, 10);
+          }
+
+          // Aggiorna UI per allievo Pro
+          proBanner.classList.remove('hidden');
+          proTitle.textContent = state.exerciseTitle;
+          proMeta.textContent = `Personalizzato da Docente Licenziato (${state.licenseCode}) • ${state.activeIntervalIds.length} intervalli in programma`;
+          freeNotice.classList.add('hidden');
+          
+          modeBadgeText.textContent = 'Allievo Pro';
+          modeBadgeText.classList.add('text-tealBand');
+          modeIndicatorDot.className = 'w-2 h-2 rounded-full bg-tealBand';
+        }
+      };
+
+      // ==========================================
+      // RENDERING GRIGLIA INTERVALLI
+      // ==========================================
+      const renderIntervalGrid = () => {
+        grid.innerHTML = '';
+        activeCountLabel.textContent = `${state.activeIntervalIds.length} attivi`;
+
+        INTERVALS.forEach(int => {
+          const isActive = state.activeIntervalIds.includes(int.id);
+          const btn = document.createElement('button');
+          btn.dataset.id = int.id;
+          
+          if (!isActive) {
+            // Intervallo disattivato dal docente
+            btn.className = 'dark-card p-4 rounded-2xl opacity-20 border border-white/5 cursor-not-allowed text-left select-none';
+            btn.disabled = true;
+            btn.innerHTML = `
+              <div class="text-xs font-mono text-ivory/30 uppercase font-semibold">${int.tag}</div>
+              <div class="text-lg font-bold text-ivory/30 mt-0.5">${int.short}</div>
+              <div class="text-[11px] text-ivory/20 truncate mt-1">${int.full}</div>
+            `;
+          } else {
+            // Intervallo giocabile
+            btn.className = 'interval-choice-btn dark-card dark-card-interactive p-4 sm:p-5 rounded-2xl border-l-4 border-l-petrol-light hover:border-l-ochreBand text-left select-none relative group';
+            btn.innerHTML = `
+              <div class="text-xs font-mono text-ivory/60 group-hover:text-ochreBand transition-colors uppercase font-semibold">${int.tag}</div>
+              <div class="text-xl sm:text-2xl font-extrabold text-ivory mt-0.5 tracking-tight">${int.short}</div>
+              <div class="text-[11px] sm:text-xs text-ivory/70 truncate mt-1">${int.full}</div>
+            `;
+
+            btn.addEventListener('click', () => handleGuess(int.id, btn));
+          }
+
+          grid.appendChild(btn);
+        });
+      };
+
+      // ==========================================
+      // GENERAZIONE NUOVA DOMANDA
+      // ==========================================
+      const generateNewQuestion = () => {
+        state.hasAnsweredCurrent = false;
+
+        // Reset bordi pulsanti
+        document.querySelectorAll('.interval-choice-btn').forEach(b => {
+          b.classList.remove('border-tealBand', 'bg-tealBand/20', 'border-coralBand', 'bg-coralBand/20', 'animate-success', 'animate-error');
+          b.classList.add('border-l-petrol-light');
+        });
+
+        // 1. Scegli Intervallo casuale tra quelli attivi
+        const randIndex = Math.floor(Math.random() * state.activeIntervalIds.length);
+        const intervalId = state.activeIntervalIds[randIndex];
+
+        // 2. Scegli Tonica (Base)
+        let root = 60; // DO centrale di default
+        if (state.rootMode === 'rand') {
+          // Range DO3 (MIDI 48) a SOL4 (MIDI 67) per evitare note troppo acute con l'ottava
+          root = Math.floor(Math.random() * (67 - 48 + 1)) + 48;
+        } else {
+          root = Number(state.rootMode);
+        }
+
+        // 3. Scegli Direzione
+        let dir = state.directionMode;
+        if (dir === 'rand') {
+          const dirs = ['asc', 'desc', 'harm'];
+          dir = dirs[Math.floor(Math.random() * dirs.length)];
+        }
+
+        state.currentQuestion = {
+          rootMidi: root,
+          intervalId: intervalId,
+          direction: dir
+        };
+
+        // Aggiorna indicatori visuali
+        const dirNames = { asc: 'Ascendente ↗', desc: 'Discendente ↘', harm: 'Armonico ♫' };
+        dirTag.textContent = dirNames[dir] || 'Ascendente';
+        rootTag.textContent = state.rootMode === 'rand' ? 'Tonica: Casuale' : `Tonica: MIDI ${root}`;
+
+        feedbackMsg.textContent = 'Ascolta il suono e indovina l\'intervallo.';
+        feedbackMsg.className = 'min-h-[28px] text-sm sm:text-base font-semibold text-ivory/70 transition-all';
+      };
+
+      // Riproduce la domanda corrente
+      const playCurrent = () => {
+        const { rootMidi, intervalId, direction } = state.currentQuestion;
+        const intervalObj = INTERVALS.find(i => i.id === intervalId);
+        if (!intervalObj) return;
+
+        audio.playInterval(rootMidi, intervalObj.semitones, direction);
+      };
+
+      // ==========================================
+      // VERIFICA RISPOSTA & MECCANISMO FREEMIUM
+      // ==========================================
+      const handleGuess = (guessedId, clickedBtn) => {
+        if (state.hasAnsweredCurrent) {
+          // Permetti di rigiocare l'audio dell'intervallo se già indovinato
+          const intervalObj = INTERVALS.find(i => i.id === guessedId);
+          audio.playInterval(state.currentQuestion.rootMidi, intervalObj.semitones, state.currentQuestion.direction);
+          return;
+        }
+
+        const isCorrect = guessedId === state.currentQuestion.intervalId;
+        const correctObj = INTERVALS.find(i => i.id === state.currentQuestion.intervalId);
+
+        state.stats.total += 1;
+
+        if (isCorrect) {
+          state.hasAnsweredCurrent = true;
+          state.stats.correct += 1;
+          state.stats.streak += 1;
+
+          clickedBtn.classList.add('border-tealBand', 'bg-tealBand/25', 'animate-success');
+          feedbackMsg.innerHTML = `<span class="text-tealBand">Esatto! ${correctObj.full} (${correctObj.short})</span>`;
+
+          // Suona conferma corretta
+          setTimeout(() => {
+            generateNewQuestion();
+            playCurrent();
+          }, 1100);
+
+        } else {
+          state.stats.streak = 0;
+          clickedBtn.classList.add('border-coralBand', 'bg-coralBand/25', 'animate-error');
+          feedbackMsg.innerHTML = `<span class="text-coralBand">Non è corretto. Riascolta o riprova!</span>`;
+        }
+
+        updateStatsUI();
+
+        // Controllo Freemium: Solo se NON è Pro e ogni 5 risposte date
+        if (!state.isPro) {
+          state.freeAttemptCounter += 1;
+          if (state.freeAttemptCounter % 5 === 0) {
+            setTimeout(openPromoModal, 600);
+          }
+        }
+      };
+
+      const updateStatsUI = () => {
+        statCorrect.textContent = state.stats.correct;
+        statTotal.textContent = state.stats.total;
+        
+        const perc = state.stats.total > 0 ? Math.round((state.stats.correct / state.stats.total) * 100) : 0;
+        statAccuracy.textContent = `${perc}%`;
+        statStreak.textContent = `${state.stats.streak} 🔥`;
+      };
+
+      const resetStats = () => {
+        state.stats = { correct: 0, total: 0, streak: 0 };
+        updateStatsUI();
+      };
+
+      // ==========================================
+      // EVENTI AUDIO PLAYER
+      // ==========================================
+      playBtn.addEventListener('click', () => {
+        playCurrent();
+      });
+
+      playRootBtn.addEventListener('click', () => {
+        audio.playRoot(state.currentQuestion.rootMidi);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        generateNewQuestion();
+        playCurrent();
+      });
+
+      resetStatsBtn.addEventListener('click', resetStats);
+
+      // ==========================================
+      // MODALE PROMO FREE
+      // ==========================================
+      const openPromoModal = () => {
+        freePromoModal.classList.remove('opacity-0', 'pointer-events-none');
+        freePromoModal.querySelector('div').classList.remove('scale-95');
+      };
+
+      const closePromoModal = () => {
+        freePromoModal.classList.add('opacity-0', 'pointer-events-none');
+        freePromoModal.querySelector('div').classList.add('scale-95');
+      };
+
+      promoDismissBtn.addEventListener('click', closePromoModal);
+      upgradeHintBtn.addEventListener('click', () => { openTeacherModal(); });
+      promoOpenTeacherBtn.addEventListener('click', () => {
+        closePromoModal();
+        openTeacherModal();
+      });
+
+      // ==========================================
+      // AREA DOCENTE: GESTIONE LICENZA & BUILDER
+      // ==========================================
+      const openTeacherModal = () => {
+        teacherModal.classList.remove('opacity-0', 'pointer-events-none');
+        teacherModal.querySelector('.dark-card').classList.remove('scale-95');
+        checkStoredLicense();
+      };
+
+      const closeTeacherModal = () => {
+        teacherModal.classList.add('opacity-0', 'pointer-events-none');
+        teacherModal.querySelector('.dark-card').classList.add('scale-95');
+      };
+
+      openTeacherBtn.addEventListener('click', openTeacherModal);
+      closeTeacherBtn.addEventListener('click', closeTeacherModal);
+
+      // Controllo Licenza salvata in LocalStorage per il Docente
+      const checkStoredLicense = () => {
+        const stored = localStorage.getItem('ms_ear_docente_key');
+        if (stored && VALID_LICENSES.includes(stored)) {
+          showTeacherBuilder(stored);
+        } else {
+          showTeacherLock();
+        }
+      };
+
+      const showTeacherLock = () => {
+        teacherLockView.classList.remove('hidden');
+        teacherBuilderView.classList.add('hidden');
+        licenseFeedback.textContent = '';
+      };
+
+      const showTeacherBuilder = (key) => {
+        teacherLockView.classList.add('hidden');
+        teacherBuilderView.classList.remove('hidden');
+        activeLicenseLabel.textContent = key;
+        renderBuilderCheckboxes();
+        loadSavedPresets();
+      };
+
+      unlockLicenseBtn.addEventListener('click', () => {
+        const key = licenseInput.value.trim().toUpperCase();
+        if (VALID_LICENSES.includes(key)) {
+          localStorage.setItem('ms_ear_docente_key', key);
+          licenseFeedback.className = 'text-xs font-bold text-tealBand mt-2';
+          licenseFeedback.textContent = '✓ Licenza verificata con successo!';
+          setTimeout(() => showTeacherBuilder(key), 400);
+        } else {
+          licenseFeedback.className = 'text-xs font-bold text-coralBand mt-2';
+          licenseFeedback.textContent = 'Chiave non valida. Controlla il codice o richiedi una licenza.';
+        }
+      });
+
+      lockTeacherBtn.addEventListener('click', () => {
+        localStorage.removeItem('ms_ear_docente_key');
+        showTeacherLock();
+      });
+
+      // ==========================================
+      // CREATORE ESERCIZI (DOCENTE BUILDER)
+      // ==========================================
+      const renderBuilderCheckboxes = () => {
+        builderIntervalsContainer.innerHTML = '';
+        INTERVALS.forEach(int => {
+          const wrapper = document.createElement('label');
+          wrapper.className = 'flex items-center gap-2.5 p-2 rounded-xl bg-petrol-deep/80 border border-white/10 hover:border-tealBand/40 cursor-pointer text-xs select-none';
+          wrapper.innerHTML = `
+            <input type="checkbox" value="${int.id}" class="builder-int-check rounded text-tealBand focus:ring-0 bg-petrol-dark border-white/30" checked>
+            <span class="font-bold text-ivory">${int.short}</span>
+          `;
+          builderIntervalsContainer.appendChild(wrapper);
+        });
+      };
+
+      // Filtri veloci intervalli nel builder
+      document.getElementById('builder-select-all').addEventListener('click', () => {
+        document.querySelectorAll('.builder-int-check').forEach(c => c.checked = true);
+      });
+      document.getElementById('builder-select-none').addEventListener('click', () => {
+        document.querySelectorAll('.builder-int-check').forEach(c => c.checked = false);
+      });
+      document.getElementById('builder-select-thirds').addEventListener('click', () => {
+        document.querySelectorAll('.builder-int-check').forEach(c => {
+          c.checked = (c.value === '3' || c.value === '4'); // Solo 3a min e 3a mag
+        });
+      });
+
+      // Generazione e copia del link allievo
+      builderGenBtn.addEventListener('click', () => {
+        const checked = Array.from(document.querySelectorAll('.builder-int-check:checked')).map(c => c.value);
+        if (checked.length === 0) {
+          alert('Seleziona almeno un intervallo per la lezione!');
+          return;
+        }
+
+        const title = builderTitle.value.trim() || 'Lezione Intervalli';
+        const dir = builderDir.value;
+        const root = builderRoot.value;
+        const license = localStorage.getItem('ms_ear_docente_key') || 'PRO-MARCO-2026';
+
+        // Costruzione URL con parametri
+        const baseUrl = window.location.origin + window.location.pathname;
+        const shareUrl = `${baseUrl}?docente=${encodeURIComponent(license)}&intervals=${checked.join(',')}&title=${encodeURIComponent(title)}&dir=${dir}&root=${root}`;
+
+        // Copia negli appunti
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          copyToast.classList.remove('hidden');
+          setTimeout(() => copyToast.classList.add('hidden'), 4000);
+        }).catch(() => {
+          prompt('Copia il link allievo qui sotto:', shareUrl);
+        });
+
+        // Salva nei preset locali
+        savePresetLocally({ title, intervals: checked, dir, root, url: shareUrl });
+      });
+
+      // Salvataggio Preset nel LocalStorage
+      const savePresetLocally = (preset) => {
+        let saved = JSON.parse(localStorage.getItem('ms_ear_presets') || '[]');
+        saved = saved.filter(p => p.title !== preset.title);
+        saved.unshift(preset);
+        if (saved.length > 5) saved.pop();
+        localStorage.setItem('ms_ear_presets', JSON.stringify(saved));
+        loadSavedPresets();
+      };
+
+      const loadSavedPresets = () => {
+        const saved = JSON.parse(localStorage.getItem('ms_ear_presets') || '[]');
+        presetsList.innerHTML = '';
+        if (saved.length === 0) {
+          presetsList.innerHTML = '<div class="text-xs text-ivory/30 italic">Nessun esercizio salvato di recente.</div>';
+          return;
+        }
+
+        saved.forEach(p => {
+          const item = document.createElement('div');
+          item.className = 'flex items-center justify-between p-2.5 rounded-xl bg-petrol-deep/60 border border-white/5 text-xs';
+          item.innerHTML = `
+            <div>
+              <strong class="text-ivory">${p.title}</strong>
+              <div class="text-[10px] text-ivory/50">${p.intervals.length} intervalli • Dir: ${p.dir}</div>
+            </div>
+            <button class="px-2.5 py-1 rounded bg-white/10 hover:bg-tealBand text-white text-[11px] font-bold transition-colors">
+              Copia Link
+            </button>
+          `;
+          item.querySelector('button').addEventListener('click', () => {
+            navigator.clipboard.writeText(p.url);
+            copyToast.classList.remove('hidden');
+            setTimeout(() => copyToast.classList.add('hidden'), 3000);
+          });
+          presetsList.appendChild(item);
+        });
+      };
+
+      // ==========================================
+      // INIZIALIZZAZIONE RUNTIME
+      // ==========================================
+      initUrlParameters();
+      renderIntervalGrid();
+      generateNewQuestion();
+
+      // Sblocco audio al primo click dell'utente ovunque nella pagina
+      const unlockAudioContextOnUserGesture = () => {
+        audio.init();
+        document.removeEventListener('click', unlockAudioContextOnUserGesture);
+        document.removeEventListener('keydown', unlockAudioContextOnUserGesture);
+      };
+      document.addEventListener('click', unlockAudioContextOnUserGesture);
+      document.addEventListener('keydown', unlockAudioContextOnUserGesture);
+
+    });
+  </script>
+</body>
+</html>
