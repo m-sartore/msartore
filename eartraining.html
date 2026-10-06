@@ -219,20 +219,20 @@
         </div>
       </div>
 
-      <!-- Statistiche (Precisione % e Punteggio) -->
+      <!-- Statistiche (Punteggio a Sinistra, Precisione a Destra) -->
       <div id="header-stats" class="flex items-center gap-4 text-xs font-mono">
+        <div class="text-center">
+          <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Punteggio</span>
+          <span id="stat-score" class="font-extrabold text-ochreBand text-sm">0/5</span>
+        </div>
+        <div class="w-[1px] h-5 bg-white/10"></div>
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Precisione</span>
           <span id="stat-acc" class="font-extrabold text-tealBand text-sm">100%</span>
         </div>
-        <div class="w-[1px] h-5 bg-white/10"></div>
-        <div class="text-center">
-          <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Punteggio</span>
-          <span id="stat-score" class="font-extrabold text-ochreBand text-sm">0/0</span>
-        </div>
       </div>
 
-      <!-- Pulsante Docente PRO (Nascosto per gli allievi che aprono il link) -->
+      <!-- Pulsante Docente PRO (Nascosto per gli allievi) -->
       <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all font-sans">
         PRO
       </button>
@@ -425,7 +425,7 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- 4. MODALE SCHEDA DI RIEPILOGO ALLIEVO (SCREENSHOT DOCENTE) -->
+  <!-- 4. MODALE SCHEDA DI RIEPILOGO ALLIEVO -->
   <!-- ========================================== -->
   <div id="student-summary-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden overflow-y-auto">
     <div class="bg-appCard border border-tealBand/40 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative my-auto">
@@ -439,11 +439,11 @@
         <p id="summary-teacher" class="text-xs text-white/60 font-mono mt-0.5">Prof. Marco Sartore</p>
       </div>
 
-      <!-- Score Box Principale -->
+      <!-- Score Box: Punteggio a SINISTRA, Precisione a DESTRA -->
       <div class="grid grid-cols-2 gap-3 mb-6">
         <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Punteggio</span>
-          <span id="summary-score" class="text-2xl font-black text-ochreBand">10/10</span>
+          <span id="summary-score" class="text-2xl font-black text-ochreBand">5/5</span>
         </div>
         <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Precisione</span>
@@ -451,17 +451,20 @@
         </div>
       </div>
 
-      <!-- Elenco Note Indovinate in Sequenza -->
-      <div class="mb-6">
-        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Sequenza Note Completate:</span>
-        <div id="summary-notes-list" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto p-1 bg-[#0D171C]/60 rounded-xl border border-white/5">
-          <!-- Popolato dinamicamente -->
+      <!-- Dettaglio Intervalli al 1° Colpo Senza Errori -->
+      <div class="mb-5">
+        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli indovinati al primo colpo:</span>
+        <div id="summary-stats-by-interval" class="space-y-1.5 mb-4">
+          <!-- Popolato dinamicamente con es. 3ª Min (3b): 2/2 al 1° colpo -->
         </div>
       </div>
 
-      <!-- Invito allo Screenshot -->
-      <div class="p-3 rounded-xl bg-ochreBand/10 border border-ochreBand/30 text-center text-xs text-ochreBand mb-5 leading-relaxed font-medium">
-        Fai uno screenshot di questa schermata per inviarla al tuo insegnante come attestato dell'esercizio svolto.
+      <!-- Sequenza Intervalli Completati -->
+      <div class="mb-6">
+        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Sequenza intervalli completati:</span>
+        <div id="summary-notes-list" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-1.5 bg-[#0D171C]/60 rounded-xl border border-white/5">
+          <!-- Popolato dinamicamente con i badge colorati -->
+        </div>
       </div>
 
       <button id="summary-close-btn" class="w-full py-3.5 rounded-xl bg-tealBand text-white font-extrabold text-sm hover:brightness-110 active:scale-95 transition-all shadow-md">
@@ -535,11 +538,11 @@
 
 
   <!-- ================================================================= -->
-  <!-- 7. JAVASCRIPT: AUDIO SINCRONO ROBUSTO + LOGICA DOCENTE RIFINITA  -->
+  <!-- 7. JAVASCRIPT: AUDIO SINCRONO + CONTROLLO ERRORI E RIEPILOGO     -->
   <!-- ================================================================= -->
   <script>
     /* ================================================================ */
-    /* MODULO AUDIO (GESTIONE STATO 'INTERRUPTED' PER IPAD/CHROME)      */
+    /* MODULO AUDIO (GESTIONE STATO 'INTERRUPTED' PER IPAD / CHROME)    */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -556,7 +559,6 @@
         if (!this.ctx || this.ctx.state === 'closed') {
           this.ctx = new AudioContextClass();
         }
-        // Risoluzione specifica per iPad: WebKit sospende l'audio durante la digitazione su tastiera
         if (this.ctx.state === 'suspended' || this.ctx.state === 'interrupted') {
           this.ctx.resume().catch(() => {});
         }
@@ -831,7 +833,6 @@
 
       const audio = new AudioEngine();
 
-      // Sblocco audio Safari iOS immediato
       const unlockAudioTouch = () => {
         audio.ensureContextRunning();
       };
@@ -930,14 +931,19 @@
         targetItem: null,
         batchCurrentNote: 0,
         batchTotalNotes: 5,
-        totalAttempts: 0,
-        correctCount: 0,
+        
+        // Tracciamento sessione corrente (azzera a inizio serie)
+        sessionFirstTryCorrectCount: 0, // Note azzeccate al 1° colpo senza errori
+        currentQuestionHasMistake: false, // Flag se per la domanda corrente c'è stato un errore
+        
         isProStudent: false,
         allowedButtonIds: new Set(),
         rootMode: 'random',
         exerciseTitle: 'Esercizio Intervalli',
         teacherCode: 'Prof. Marco Sartore',
-        completedNotesHistory: [] // Registro note azzeccate per il riepilogo
+        
+        completedNotesHistory: [], // Sequenza temporale note completate
+        intervalStatsTracker: {}   // Statistiche per intervallo { id: { name, degree, totalProposed, firstTrySuccess, color } }
       };
 
       // Set delle note selezionate dal docente sulla griglia
@@ -979,6 +985,7 @@
       const summaryTeacher = document.getElementById('summary-teacher');
       const summaryScore = document.getElementById('summary-score');
       const summaryAcc = document.getElementById('summary-acc');
+      const summaryStatsByInterval = document.getElementById('summary-stats-by-interval');
       const summaryNotesList = document.getElementById('summary-notes-list');
       const summaryCloseBtn = document.getElementById('summary-close-btn');
 
@@ -995,7 +1002,6 @@
 
       let droneWaveEl = null;
 
-      // Ripristino audio sicuro quando si tocca l'input del titolo su iPad
       creatorTitleInput.addEventListener('blur', () => audio.ensureContextRunning());
       creatorTitleInput.addEventListener('focus', () => audio.ensureContextRunning());
 
@@ -1019,9 +1025,9 @@
       }
 
       function updateStatsUI() {
-        statScore.textContent = `${gameState.correctCount}/${gameState.totalAttempts}`;
-        const acc = gameState.totalAttempts > 0 
-          ? Math.round((gameState.correctCount / gameState.totalAttempts) * 100) 
+        statScore.textContent = `${gameState.sessionFirstTryCorrectCount}/${gameState.batchTotalNotes}`;
+        const acc = gameState.batchCurrentNote > 1 
+          ? Math.round((gameState.sessionFirstTryCorrectCount / (gameState.batchCurrentNote - 1)) * 100) 
           : 100;
         statAcc.textContent = `${acc}%`;
       }
@@ -1125,7 +1131,7 @@
         toggleProBtn.classList.add('bg-ochreBand', 'text-appDark');
         toggleProBtn.textContent = 'CHIUDI';
 
-        // Ripristina tutti i bottoni visibili per la selezione
+        // Tutti i bottoni visibili per la selezione
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
           if (el) el.classList.add('active-in-exercise');
@@ -1162,6 +1168,8 @@
 
         gameState.batchTotalNotes = 5;
         btnMainAction.textContent = 'Inizia Serie (5 note)';
+        statScore.textContent = `0/5`;
+        statAcc.textContent = `100%`;
       }
 
       /* MODALITÀ DI PROVA ESERCIZIO (SOLO NOTE SCELTE DAL DOCENTE) */
@@ -1204,9 +1212,10 @@
         });
 
         btnMainAction.textContent = `Inizia Serie (${gameState.batchTotalNotes} note)`;
+        statScore.textContent = `0/${gameState.batchTotalNotes}`;
+        statAcc.textContent = `100%`;
       }
 
-      // Event Listeners di Navigazione
       creatorTestBtn.addEventListener('click', enterTestMode);
       backToEditBtn.addEventListener('click', enterCreatorMode);
       creatorCloseBtn.addEventListener('click', exitToNormalMode);
@@ -1285,7 +1294,31 @@
         audio.ensureContextRunning();
         gameState.active = true;
         gameState.batchCurrentNote = 1;
-        gameState.completedNotesHistory = []; // Reset sequenza per la scheda
+        
+        // AZZERA STATISTICHE PER LA SERIE CORRENTE
+        gameState.sessionFirstTryCorrectCount = 0;
+        gameState.currentQuestionHasMistake = false;
+        gameState.completedNotesHistory = [];
+        gameState.intervalStatsTracker = {};
+
+        // Inizializza il tracker per tutti gli intervalli candidati della prova
+        let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
+        if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
+          candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
+        }
+
+        candidateItems.forEach(item => {
+          gameState.intervalStatsTracker[item.id] = {
+            name: item.name,
+            degree: item.degree,
+            color: item.color.rgb,
+            totalProposed: 0,
+            firstTrySuccess: 0
+          };
+        });
+
+        statScore.textContent = `0/${gameState.batchTotalNotes}`;
+        statAcc.textContent = `100%`;
 
         batchBadge.classList.remove('hidden');
         batchBadge.classList.add('flex');
@@ -1313,6 +1346,8 @@
         if (!gameState.active) return;
 
         gameState.waitingForAnswer = true;
+        gameState.currentQuestionHasMistake = false; // Reset errore per la nuova domanda
+
         btnMainAction.textContent = `Ascolta... (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
         btnMainAction.classList.remove('bg-tealBand');
         btnMainAction.classList.add('bg-coralBand');
@@ -1332,6 +1367,11 @@
 
         const pickedItem = candidateItems[Math.floor(Math.random() * candidateItems.length)];
         gameState.targetItem = pickedItem;
+
+        // Traccia la proposta per questo intervallo
+        if (gameState.intervalStatsTracker[pickedItem.id]) {
+          gameState.intervalStatsTracker[pickedItem.id].totalProposed++;
+        }
 
         const secretNoteMidi = gameState.currentRootMidi + pickedItem.semitones;
 
@@ -1367,20 +1407,48 @@
       function showStudentSummaryReport() {
         summaryTitle.textContent = gameState.exerciseTitle;
         summaryTeacher.textContent = gameState.isProStudent ? `Prof. ${gameState.teacherCode}` : 'Esercizio Docente';
-        summaryScore.textContent = `${gameState.correctCount}/${gameState.totalAttempts}`;
-        const acc = gameState.totalAttempts > 0 
-          ? Math.round((gameState.correctCount / gameState.totalAttempts) * 100) 
-          : 100;
+        
+        // Punteggio: esattamente su quanti esercizi c'erano nella prova (es. 4/5)
+        summaryScore.textContent = `${gameState.sessionFirstTryCorrectCount}/${gameState.batchTotalNotes}`;
+        
+        // Precisione: percentuale su base serie
+        const acc = Math.round((gameState.sessionFirstTryCorrectCount / gameState.batchTotalNotes) * 100);
         summaryAcc.textContent = `${acc}%`;
 
-        // Genera i badge con le note azzeccate in sequenza
+        // 1. Dettaglio per ogni intervallo presente nella prova: quante volte azzeccato al 1° colpo senza errori
+        summaryStatsByInterval.innerHTML = '';
+        Object.keys(gameState.intervalStatsTracker).forEach(id => {
+          const item = gameState.intervalStatsTracker[id];
+          if (item.totalProposed > 0) {
+            const row = document.createElement('div');
+            row.className = 'flex items-center justify-between text-xs px-3 py-1.5 rounded-lg bg-[#0D171C] border border-white/5 font-mono';
+            
+            const isPerfect = item.firstTrySuccess === item.totalProposed;
+            row.innerHTML = `
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${item.color}"></span>
+                <span class="text-white font-bold">${item.name} (${item.degree})</span>
+              </div>
+              <div class="font-bold ${isPerfect ? 'text-tealBand' : (item.firstTrySuccess > 0 ? 'text-ochreBand' : 'text-coralBand')}">
+                ${item.firstTrySuccess}/${item.totalProposed} al 1° colpo
+              </div>
+            `;
+            summaryStatsByInterval.appendChild(row);
+          }
+        });
+
+        // 2. Sequenza intervalli completati
         summaryNotesList.innerHTML = '';
         gameState.completedNotesHistory.forEach((note, idx) => {
           const pill = document.createElement('div');
           pill.className = 'px-2.5 py-1 rounded-lg text-xs font-bold font-mono flex items-center gap-1.5 border border-white/10';
           pill.style.backgroundColor = '#15232A';
           pill.style.color = note.color;
-          pill.innerHTML = `<span class="text-white/40 text-[10px]">${idx + 1}.</span> <span>${note.name} (${note.degree})</span>`;
+          pill.innerHTML = `
+            <span class="text-white/40 text-[10px]">${idx + 1}.</span> 
+            <span>${note.name} (${note.degree})</span>
+            ${note.wasFirstTry ? '<span class="text-tealBand text-[10px]">✓</span>' : '<span class="text-coralBand text-[10px]">✕</span>'}
+          `;
           summaryNotesList.appendChild(pill);
         });
 
@@ -1426,7 +1494,7 @@
               return;
             }
 
-            // SUONA SOLO SE VIENE INCLUSA (COLORATA), TACE SE VIENE SPENTA
+            // SUONA SOLO SE VIENE ACCESA (COLORATA), TACE SE VIENE SPENTA
             if (teacherSelectedNoteIds.has(item.id)) {
               // Si spegne: nessun suono!
               teacherSelectedNoteIds.delete(item.id);
@@ -1449,19 +1517,26 @@
               return;
             }
 
-            gameState.totalAttempts++;
-
             const isCorrect = (item.semitones === gameState.targetItem.semitones);
 
             if (isCorrect) {
-              gameState.correctCount++;
+              // Verifica se è stato azzeccato senza errori precedenti su questa domanda
+              const wasFirstTry = !gameState.currentQuestionHasMistake;
+              if (wasFirstTry) {
+                gameState.sessionFirstTryCorrectCount++;
+                if (gameState.intervalStatsTracker[gameState.targetItem.id]) {
+                  gameState.intervalStatsTracker[gameState.targetItem.id].firstTrySuccess++;
+                }
+              }
+
               updateStatsUI();
 
-              // Registra la nota azzeccata nella sequenza
+              // Registra nella sequenza storica
               gameState.completedNotesHistory.push({
                 degree: item.degree,
                 name: item.name,
-                color: item.color.rgb
+                color: item.color.rgb,
+                wasFirstTry: wasFirstTry
               });
 
               gameState.waitingForAnswer = false;
@@ -1482,7 +1557,7 @@
                 
                 setTimeout(() => {
                   stopGame();
-                  // Se allievo PRO o prova docente: SCHEDA DI RIEPILOGO DA SCREENSHOTTARE
+                  // Se allievo PRO o prova docente: mostra la Scheda di Riepilogo
                   if (gameState.isProStudent || gameState.testMode) {
                     showStudentSummaryReport();
                   } else {
@@ -1492,7 +1567,8 @@
               }
 
             } else {
-              updateStatsUI();
+              // ERRORE: la domanda corrente non è più al primo colpo
+              gameState.currentQuestionHasMistake = true;
               btnEl.classList.add('shake-anim');
               btnEl.addEventListener('animationend', () => {
                 btnEl.classList.remove('shake-anim');
