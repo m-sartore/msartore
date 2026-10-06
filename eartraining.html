@@ -90,10 +90,10 @@
       overflow: hidden;
     }
 
-    /* Griglia a colonna verticale proporzionata */
+    /* Griglia a colonna simmetrica: traccia 1 e traccia 3 perfettamente uguali */
     .ear-grid {
       display: grid;
-      grid-template-columns: 1fr 1.25fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
       grid-template-rows: repeat(13, minmax(0, 1fr)) auto;
       width: 100%;
       height: 100%;
@@ -135,6 +135,14 @@
       transform: scale(0.92);
     }
 
+    /* Colonna centrale delle note naturali (1-8): RIGOROSAMENTE al centro orizzontale */
+    .round-note-btn:not(.accidental) {
+      grid-column: 2 !important;
+      justify-self: center !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
     /* Note alterate laterali */
     .round-note-btn.accidental {
       height: min(80%, 40px);
@@ -144,11 +152,13 @@
     }
 
     .round-note-btn.accidental.flat-col {
-      justify-self: end;
+      grid-column: 1 !important;
+      justify-self: end !important;
       margin-right: 5px;
     }
     .round-note-btn.accidental.sharp-col {
-      justify-self: start;
+      grid-column: 3 !important;
+      justify-self: start !important;
       margin-left: 5px;
     }
 
@@ -299,13 +309,14 @@
   <!-- ========================================== -->
   <!-- BARRA SUPERIORE MODALITÀ DOCENTE           -->
   <!-- ========================================== -->
-  <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-3 py-1.5 z-20 opacity-0 -translate-y-2">
-    <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-      <div class="flex items-center gap-2 w-full sm:w-auto">
+  <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-3 py-2 z-20 opacity-0 -translate-y-2">
+    <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
         <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
       </div>
-      <div class="flex items-center gap-2 self-end sm:self-auto">
+      <!-- Pulsanti centrati quando vanno a capo su mobile (justify-center w-full) -->
+      <div class="flex items-center justify-center gap-2 w-full sm:w-auto">
         <button id="creator-archive-btn" class="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all">
           Archivio
         </button>
@@ -743,7 +754,7 @@
     };
 
     /* ================================================================ */
-    /* MOTORE AUDIO CALIBRATO                                           */
+    /* MOTORE AUDIO CALIBRATO CON FADE-OUT NATURALE                     */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -821,17 +832,20 @@
           filter,
           oscillators,
           subGains,
-          stopAndDispose: (fadeSec = 0.06) => {
+          // Rilascio esponenziale morbido che evita interruzioni nette
+          stopAndDispose: (fadeSec = 0.25) => {
             const t = Math.max(0, this.ctx.currentTime);
             try {
               if (masterGain.gain.cancelAndHoldAtTime) {
                 masterGain.gain.cancelAndHoldAtTime(t);
               } else {
                 masterGain.gain.cancelScheduledValues(t);
-                masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+                masterGain.gain.setValueAtTime(Math.max(0.0001, masterGain.gain.value), t);
               }
-              masterGain.gain.linearRampToValueAtTime(0.0001, t + fadeSec);
-            } catch(e) {}
+              masterGain.gain.exponentialRampToValueAtTime(0.0001, t + fadeSec);
+            } catch(e) {
+              try { masterGain.gain.linearRampToValueAtTime(0.0001, t + fadeSec); } catch(err){}
+            }
 
             setTimeout(() => {
               oscillators.forEach(osc => {
@@ -842,14 +856,14 @@
               });
               try { filter.disconnect(); } catch(e){}
               try { masterGain.disconnect(); } catch(e){}
-            }, (fadeSec * 1000) + 70);
+            }, (fadeSec * 1000) + 80);
           }
         };
       }
 
       startDrone(midiNote) {
         this.ensureContextRunning();
-        this.stopDrone(0.04);
+        this.stopDrone(0.25);
 
         const freq = this.midiToFreq(midiNote);
         const now = Math.max(0, this.ctx.currentTime) + 0.01;
@@ -861,7 +875,7 @@
         this.isDronePlaying = true;
       }
 
-      stopDrone(fadeSeconds = 0.25) {
+      stopDrone(fadeSeconds = 0.35) {
         if (!this.droneVoice || !this.isDronePlaying) return;
         this.droneVoice.stopAndDispose(fadeSeconds);
         this.droneVoice = null;
@@ -870,7 +884,7 @@
 
       playSecretNote(midiNote, durationSeconds = 3.6) {
         this.ensureContextRunning();
-        this.stopSecretNoteImmediate();
+        this.stopSecretNoteImmediate(0.25);
 
         const freq = this.midiToFreq(midiNote);
         const now = Math.max(0, this.ctx.currentTime) + 0.01;
@@ -879,7 +893,7 @@
         this.secretVoice.masterGain.gain.setValueAtTime(0, now);
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.38, now + 0.12);
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.26, now + 1.2);
-        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.0001, now + durationSeconds);
+        this.secretVoice.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + durationSeconds);
 
         this.secretVoice.oscillators.forEach(osc => {
           osc.start(now);
@@ -889,24 +903,24 @@
         const currentRef = this.secretVoice;
         this.secretTimeoutId = setTimeout(() => {
           if (this.secretVoice === currentRef) {
-            this.secretVoice.stopAndDispose(0.05);
+            this.secretVoice.stopAndDispose(0.25);
             this.secretVoice = null;
           }
         }, (durationSeconds + 0.15) * 1000);
       }
 
-      stopSecretNoteImmediate() {
+      stopSecretNoteImmediate(fadeSeconds = 0.25) {
         if (this.secretTimeoutId) {
           clearTimeout(this.secretTimeoutId);
           this.secretTimeoutId = null;
         }
         if (this.secretVoice) {
-          this.secretVoice.stopAndDispose(0.03);
+          this.secretVoice.stopAndDispose(fadeSeconds);
           this.secretVoice = null;
         }
       }
 
-      fadeSecretNote(fadeSeconds = 0.3) {
+      fadeSecretNote(fadeSeconds = 0.35) {
         if (this.secretTimeoutId) {
           clearTimeout(this.secretTimeoutId);
           this.secretTimeoutId = null;
@@ -925,14 +939,14 @@
         const voice = this.createVoiceGroup(freq, 0.32);
         voice.masterGain.gain.setValueAtTime(0, now);
         voice.masterGain.gain.linearRampToValueAtTime(0.32, now + 0.06);
-        voice.masterGain.gain.linearRampToValueAtTime(0.0001, now + duration);
+        voice.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
         voice.oscillators.forEach(osc => {
           osc.start(now);
           osc.stop(now + duration + 0.08);
         });
 
-        setTimeout(() => voice.stopAndDispose(0.05), (duration + 0.1) * 1000);
+        setTimeout(() => voice.stopAndDispose(0.25), (duration + 0.1) * 1000);
       }
     }
 
@@ -1226,7 +1240,6 @@
       let teacherDroneNoteIds = new Set(['btn-1']);
       const creatorDroneWaves = new Map();
 
-      // Funzione di calcolo ottava: da Sol in poi (MIDI >= 67) scala di -12 semitoni
       function getEffectiveKeyRoot(keyVal) {
         let midi = 60;
         if (keyVal === 'random') {
@@ -1369,7 +1382,7 @@
       });
 
       /* ================================================================ */
-      /* SISTEMA DI RIDISTRIBUZIONE SPAZIALE VERTICALE (GRID ELASTICA)    */
+      /* SISTEMA DI RIDISTRIBUZIONE VERTICALE (COLONNA CENTRALE FISSA)   */
       /* ================================================================ */
       function resetDefaultGridLayout() {
         const grid = document.querySelector('.ear-grid');
@@ -1382,6 +1395,11 @@
           const el = document.getElementById(id);
           if (el) {
             el.style.gridRow = String(row);
+            // Ripristina colonna fissa esatta
+            if (id.includes('b')) el.style.gridColumn = '1';
+            else if (id.includes('sharp')) el.style.gridColumn = '3';
+            else el.style.gridColumn = '2';
+
             el.style.height = '';
             el.style.fontSize = '';
           }
@@ -1406,7 +1424,7 @@
         const activeItems = intervalButtonsData.filter(i => gameState.allowedButtonIds.has(i.id));
         if (activeItems.length === 0) return;
 
-        // Raggruppa per semitoni dal più acuto al più grave (la tonica sempre in fondo)
+        // Ordina per semitoni dal più acuto al più grave
         const uniqueSemitones = Array.from(new Set(activeItems.map(i => i.semitones))).sort((a, b) => b - a);
         const numLevels = uniqueSemitones.length;
 
@@ -1444,6 +1462,16 @@
             const el = document.getElementById(item.id);
             if (el) {
               el.style.gridRow = String(assignedRow);
+              
+              // Blocco rigoroso delle colonne: i naturali (1-8) STANNO SEMPRE NELLA COLONNA 2
+              if (item.degree.includes('b')) {
+                el.style.gridColumn = '1';
+              } else if (item.degree.includes('#')) {
+                el.style.gridColumn = '3';
+              } else {
+                el.style.gridColumn = '2';
+              }
+
               if (item.degree.includes('b') || item.degree.includes('#')) {
                 if (accidentalHeight) el.style.height = accidentalHeight;
                 if (accidentalFont) el.style.fontSize = accidentalFont;
@@ -1917,7 +1945,6 @@
 
         clearAllCreatorDroneWaves();
 
-        // Ripristina statistiche in alto e nasconde badge docente
         headerTeacherBadge.classList.add('hidden');
         headerTeacherBadge.classList.remove('flex');
         headerStats.classList.remove('hidden');
@@ -1977,7 +2004,6 @@
 
         clearAllCreatorDroneWaves();
 
-        // In prova esercizio mostra i punteggi per testare
         headerTeacherBadge.classList.add('hidden');
         headerTeacherBadge.classList.remove('flex');
         headerStats.classList.remove('hidden');
@@ -2312,11 +2338,14 @@
 
         const secretNoteMidi = gameState.keyRootMidi + pickedItem.semitones;
 
+        // Se il drone è identico, la nota segreta arriva molto prima (400ms invece di 1000ms)
+        const secretNoteDelay = isSameDroneAsBefore ? 400 : 1000;
+
         setAppTimeout(() => {
           if (!gameState.active || !gameState.waitingForAnswer) return;
           audio.playSecretNote(secretNoteMidi, 3.6);
           btnMainAction.textContent = `Indovina! (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
-        }, 1100);
+        }, secretNoteDelay);
       }
 
       function stopGame() {
@@ -2325,8 +2354,9 @@
         gameState.isTransitioning = false;
         clearAppTimeouts();
 
-        audio.stopDrone(0.2);
-        audio.stopSecretNoteImmediate();
+        // Fade out morbido invece di interruzione netta
+        audio.stopDrone(0.35);
+        audio.fadeSecretNote(0.35);
 
         if (gameDroneWaveEl) {
           try { gameDroneWaveEl.remove(); } catch(e){}
@@ -2491,9 +2521,13 @@
                 btnMainAction.textContent = `Esatto! (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
                 gameState.batchCurrentNote++;
 
+                // Se il drone non cambia, transizione rapida (750ms anziché 1500ms)
+                const willLikelyKeepDrone = !gameState.isRandomKeyMode && (teacherDroneNoteIds.size <= 1);
+                const transitionDelay = willLikelyKeepDrone ? 750 : 1300;
+
                 setAppTimeout(() => {
                   if (gameState.active) playQuestionInBatch();
-                }, 1700);
+                }, transitionDelay);
 
               } else {
                 btnMainAction.textContent = `Serie Conclusa!`;
@@ -2505,7 +2539,7 @@
                   } else {
                     promoModal.classList.remove('hidden');
                   }
-                }, 1600);
+                }, 1400);
               }
 
             } else {
