@@ -40,10 +40,14 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     
-    body {
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
       background-color: #0D171C;
       color: #FAF8F5;
-      overflow-x: hidden;
+      overflow: hidden;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
@@ -56,7 +60,7 @@
       right: 0;
       top: 50%;
       transform: translateY(-50%);
-      height: 60px;
+      height: 50px;
       z-index: 1;
       pointer-events: none;
     }
@@ -68,15 +72,15 @@
       overflow: hidden;
     }
 
-    /* Griglia a colonna verticale a 3 tracce con riga controlli flessibile */
+    /* Griglia a colonna verticale a 3 tracce proporzionata alla viewport */
     .ear-grid {
       display: grid;
-      grid-template-columns: 1fr 1.3fr 1fr;
+      grid-template-columns: 1fr 1.25fr 1fr;
       grid-template-rows: repeat(13, minmax(0, 1fr)) auto;
       width: 100%;
       height: 100%;
-      max-width: 480px;
-      gap: 3px;
+      max-width: 440px;
+      gap: 2px;
       z-index: 10;
       align-items: center;
       justify-items: center;
@@ -84,13 +88,13 @@
 
     /* Pulsanti PERFETTAMENTE ROTONDI */
     .round-note-btn {
-      height: min(90%, 54px);
+      height: min(92%, 48px);
       width: auto;
       aspect-ratio: 1 / 1;
       border-radius: 9999px;
       border: 2.5px solid rgba(255, 255, 255, 0.16);
       font-weight: 800;
-      font-size: clamp(1.05rem, 2.9vh, 1.4rem);
+      font-size: clamp(0.95rem, 2.5vh, 1.25rem);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -99,12 +103,11 @@
       position: relative;
       align-self: center;
       justify-self: center;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+      transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
                   box-shadow 0.2s ease, 
                   opacity 0.25s ease, 
-                  border-color 0.25s ease, 
                   filter 0.25s ease;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
     }
 
     .round-note-btn:active {
@@ -113,60 +116,31 @@
 
     /* Note alterate laterali */
     .round-note-btn.accidental {
-      height: min(78%, 44px);
-      font-size: clamp(0.8rem, 2.1vh, 1.05rem);
+      height: min(80%, 40px);
+      font-size: clamp(0.75rem, 1.9vh, 0.95rem);
       border-style: dashed;
       border-width: 2px;
     }
 
     .round-note-btn.accidental.flat-col {
       justify-self: end;
-      margin-right: 6px;
+      margin-right: 5px;
     }
     .round-note-btn.accidental.sharp-col {
       justify-self: start;
-      margin-left: 6px;
+      margin-left: 5px;
     }
 
     /* ================================================================ */
-    /* GRAFICA PULITA MODALITÀ CREAZIONE DOCENTE (SENZA ALONI NEON)     */
+    /* GRAFICA MODALITÀ CREAZIONE DOCENTE                               */
+    /* Le note spente vanno in penombra. Quelle selezionate mantengono  */
+    /* ESATTAMENTE i colori, ombre e bordi della schermata iniziale.    */
     /* ================================================================ */
-    body.creator-mode .round-note-btn {
-      opacity: 0.22;
-      filter: grayscale(100%);
+    body.creator-mode .round-note-btn:not(.teacher-selected):not(.drone-note) {
+      opacity: 0.20 !important;
+      filter: grayscale(100%) !important;
       box-shadow: none !important;
       border-color: rgba(255, 255, 255, 0.1) !important;
-    }
-
-    /* Note selezionate da indovinare: identiche alla pagina iniziale */
-    body.creator-mode .round-note-btn.teacher-selected {
-      opacity: 1 !important;
-      filter: none !important;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
-    }
-
-    body.creator-mode .round-note-btn.teacher-selected:not(.accidental) {
-      border-color: rgba(255, 255, 255, 0.25) !important;
-    }
-
-    /* Note alterate selezionate: riga tratteggiata del colore della palette */
-    body.creator-mode .round-note-btn.accidental.teacher-selected {
-      border-color: var(--btn-color) !important;
-      border-style: dashed !important;
-      border-width: 2px !important;
-    }
-
-    /* Note Drone: visibili, pulite, SENZA ALONI O BORDI GIALLI ARTIFICIALI (è l'onda che parla) */
-    body.creator-mode .round-note-btn.drone-note {
-      opacity: 1 !important;
-      filter: none !important;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
-    }
-
-    body.creator-mode .round-note-btn.accidental.drone-note {
-      border-color: var(--btn-color) !important;
-      border-style: dashed !important;
-      border-width: 2px !important;
     }
 
     /* In Prova Esercizio o Allievo Pro: le note escluse spariscono */
@@ -186,9 +160,9 @@
       border-top-color: transparent;
     }
 
-    /* Animazioni Barre Fluttuanti Docente */
+    /* Animazioni Barre */
     .smooth-drawer {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       transform-origin: top;
     }
 
@@ -202,7 +176,7 @@
       animation: shakeNote 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     }
 
-    /* Cerchio radiale corretto */
+    /* Cerchio radiale risposta corretta */
     @keyframes rippleExpand {
       0% {
         transform: translate(-50%, -50%) scale(0.2);
@@ -233,13 +207,13 @@
 <body class="h-full flex flex-col justify-between relative selection:bg-ochreBand selection:text-appDark">
 
   <!-- ========================================== -->
-  <!-- 1. HEADER (NORMALE & MODALITÀ CREAZIONE) -->
+  <!-- 1. HEADER                                  -->
   <!-- ========================================== -->
-  <header class="w-full shrink-0 z-30 bg-[#111D23]/95 backdrop-blur-md border-b border-white/10 px-4 py-2.5">
+  <header class="w-full shrink-0 z-30 bg-[#111D23]/95 backdrop-blur-md border-b border-white/10 px-3 py-2">
     <div class="max-w-2xl mx-auto flex items-center justify-between gap-3">
       
       <!-- Brand & Badge Serie -->
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2">
         <a href="#" class="font-extrabold text-base tracking-tight text-white flex items-center gap-1 font-sans">
           <span class="text-tealBand">Ear</span><span class="text-ochreBand">Train</span>
         </a>
@@ -250,19 +224,19 @@
       </div>
 
       <!-- Statistiche (Punteggio a Sinistra, Precisione a Destra) -->
-      <div id="header-stats" class="flex items-center gap-4 text-xs font-mono">
+      <div id="header-stats" class="flex items-center gap-3 text-xs font-mono">
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Punteggio</span>
           <span id="stat-score" class="font-extrabold text-tealBand text-sm transition-colors">0/5</span>
         </div>
-        <div class="w-[1px] h-5 bg-white/10"></div>
+        <div class="w-[1px] h-4 bg-white/10"></div>
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Precisione</span>
           <span id="stat-acc" class="font-extrabold text-tealBand text-sm transition-colors">100%</span>
         </div>
       </div>
 
-      <!-- Pulsante Docente PRO con Spinner reattivo all'hover -->
+      <!-- Pulsante Docente PRO -->
       <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all duration-300 font-sans shadow-sm flex items-center justify-center min-w-[55px]">
         <span id="pro-btn-text">PRO</span>
         <span id="pro-btn-spinner" class="hidden w-3 h-3 border-2 rounded-full animate-spin"></span>
@@ -272,42 +246,52 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- BARRA SUPERIORE MODALITÀ DOCENTE (FLUIDA) -->
+  <!-- BARRA SUPERIORE MODALITÀ DOCENTE           -->
   <!-- ========================================== -->
-  <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-4 py-2.5 z-20 opacity-0 -translate-y-2">
-    <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
+  <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-3 py-2 z-20 opacity-0 -translate-y-2">
+    <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">DOCENTE</span>
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
         <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
       </div>
       <div class="flex items-center gap-2 self-end sm:self-auto">
-        <button id="creator-archive-btn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all">
+        <button id="creator-archive-btn" class="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all">
           Archivio
         </button>
-        <button id="creator-test-btn" class="px-4 py-1.5 rounded-xl bg-tealBand text-white font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all">
+        <button id="creator-test-btn" class="px-3.5 py-1 rounded-xl bg-tealBand text-white font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all">
           Prova Esercizio
         </button>
       </div>
     </div>
   </div>
 
-  <!-- PANNELLO ARCHIVIO LEZIONI SALVATE -->
-  <div id="lessons-archive-panel" class="hidden smooth-drawer bg-[#15232A] border-b border-white/15 px-4 py-3 z-20 shadow-2xl">
-    <div class="max-w-xl mx-auto">
-      <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-xs">
-        <div class="flex items-center gap-2">
-          <span class="text-white/80 font-bold uppercase tracking-wider font-mono text-[11px]">Lezioni Salvate</span>
+  <!-- ========================================== -->
+  <!-- PANNELLO ARCHIVIO LEZIONI (A TUTTO SCHERMO)-->
+  <!-- ========================================== -->
+  <div id="lessons-archive-panel" class="hidden fixed inset-0 z-50 bg-[#0D171C]/98 backdrop-blur-md flex flex-col p-4 sm:p-6 overflow-hidden">
+    <div class="max-w-xl w-full mx-auto flex flex-col h-full">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/15 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">ARCHIVIO</span>
+          <h2 class="text-sm font-extrabold text-white tracking-wide uppercase font-mono">Lezioni Salvate</h2>
           <span id="sync-status-indicator" class="text-[10px] text-tealBand font-mono hidden">Sincronizzato</span>
         </div>
-        <button id="close-archive-btn" class="text-white/50 hover:text-white text-xs font-bold">Chiudi</button>
+        <button id="close-archive-btn" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all">
+          Chiudi ✕
+        </button>
       </div>
-      <div id="archive-list" class="space-y-1.5 max-h-44 overflow-y-auto pr-1"></div>
+      
+      <p class="text-xs text-white/50 mb-3 shrink-0">
+        Carica un esercizio precedentemente salvato o elimina le lezioni non più necessarie.
+      </p>
+
+      <div id="archive-list" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
     </div>
   </div>
 
   <!-- BARRA MODALITÀ DI PROVA DOCENTE -->
-  <div id="test-mode-bar" class="hidden smooth-drawer shrink-0 bg-tealBand/20 border-b border-tealBand/40 px-4 py-2 z-20 opacity-0 -translate-y-2">
+  <div id="test-mode-bar" class="hidden smooth-drawer shrink-0 bg-tealBand/20 border-b border-tealBand/40 px-3 py-1.5 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex items-center justify-between text-xs">
       <span class="text-tealBand font-bold flex items-center gap-1.5">
         <span class="w-2 h-2 rounded-full bg-tealBand animate-pulse"></span>
@@ -320,7 +304,7 @@
   </div>
 
   <!-- Banner Allievo PRO -->
-  <div id="pro-banner" class="hidden shrink-0 bg-gradient-to-r from-tealBand/25 via-tealBand/15 to-transparent border-b border-tealBand/30 px-4 py-2 z-20">
+  <div id="pro-banner" class="hidden shrink-0 bg-gradient-to-r from-tealBand/25 via-tealBand/15 to-transparent border-b border-tealBand/30 px-3 py-1.5 z-20">
     <div class="max-w-2xl mx-auto flex items-center justify-between text-xs">
       <div class="flex items-center gap-2 text-tealBand font-medium">
         <span class="inline-block w-2 h-2 rounded-full bg-tealBand animate-pulse"></span>
@@ -330,15 +314,15 @@
     </div>
   </div>
 
-  <!-- Banner Modalità Free (SOLO SCHERMATA INIZIALE) -->
-  <div id="free-notice" class="shrink-0 bg-petrol/20 border-b border-white/5 px-4 py-1 text-center text-[11px] text-white/60 font-medium">
+  <!-- Banner Modalità Free -->
+  <div id="free-notice" class="shrink-0 bg-petrol/20 border-b border-white/5 px-3 py-1 text-center text-[11px] text-white/60 font-medium">
     Modalità Libera: 5 note consecutive con la stessa base. Suona i tasti liberamente tra le serie!
   </div>
 
   <!-- ========================================== -->
-  <!-- 2. STAGE CENTRALE (GRIGLIA A COLONNA) -->
+  <!-- 2. STAGE CENTRALE (GRIGLIA A COLONNA)     -->
   <!-- ========================================== -->
-  <main id="game-stage" class="relative flex-1 flex items-center justify-center px-3 py-2 w-full overflow-hidden">
+  <main id="game-stage" class="relative flex-1 flex items-center justify-center px-2 py-1 w-full overflow-hidden">
     
     <div class="ear-grid">
 
@@ -417,31 +401,30 @@
         <span>1#</span>
       </button>
 
-      <!-- Row 13: Tonica / Grado 1 (Senza cerchio giallo, solo l'onda attiva) -->
+      <!-- Row 13: Tonica / Grado 1 -->
       <button id="btn-1" data-degree="1" data-semitones="0" class="round-note-btn text-white active-in-exercise" style="grid-row: 13; grid-column: 2;" type="button" aria-label="Tonica / Grado 1">
         <span>1</span>
       </button>
 
       <!-- Row 14: Controlli Standard di Gioco -->
-      <div id="student-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-3 pt-3">
-        <button id="btn-main-action" class="flex-1 max-w-[260px] py-3.5 px-6 rounded-2xl bg-tealBand text-white font-extrabold text-sm tracking-wider uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">
+      <div id="student-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-2 pt-1.5">
+        <button id="btn-main-action" class="flex-1 max-w-[260px] py-2.5 px-5 rounded-2xl bg-tealBand text-white font-extrabold text-xs sm:text-sm tracking-wider uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">
           Inizia Serie (5 note)
         </button>
-        <button id="btn-replay" class="hidden p-3.5 rounded-2xl bg-white/10 text-white font-bold text-sm hover:bg-white/20 active:scale-95 transition-all" title="Riascolta Nota">
+        <button id="btn-replay" class="hidden p-2.5 rounded-2xl bg-white/10 text-white font-bold hover:bg-white/20 active:scale-95 transition-all" title="Riascolta Nota">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         </button>
       </div>
 
-      <!-- Row 14 Alternativo: Controlli Docente BEN SEPARATI con Tono Iniziale e Tasto Droni Pulito -->
-      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-2 pt-3 opacity-0 translate-y-2">
+      <!-- Row 14 Alternativo: Controlli Docente -->
+      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-1.5 pt-1.5 opacity-0 translate-y-2">
         
-        <!-- RIGA 1: TONALITÀ + NUMERO NOTE + PULSANTE DRONI (SENZA SPUNTE) -->
-        <div class="flex items-center justify-between gap-2 text-xs w-full max-w-sm">
+        <!-- RIGA 1: TONALITÀ + NUMERO NOTE + PULSANTE DRONI -->
+        <div class="flex items-center justify-between gap-1.5 text-xs w-full max-w-sm">
           
-          <!-- Tono Iniziale (Tonalità della nota 1) -->
-          <select id="creator-key-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+          <select id="creator-key-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2 py-1.5 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
             <option value="60">Tonalità: Do</option>
             <option value="61">Tonalità: Do♯ / Re♭</option>
             <option value="62">Tonalità: Re</option>
@@ -457,8 +440,7 @@
             <option value="random">Tonalità: Casuale</option>
           </select>
 
-          <!-- Numero Note da 1 a 20 -->
-          <select id="creator-count-select" class="w-24 bg-[#15232A] border border-white/20 rounded-xl px-2 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+          <select id="creator-count-select" class="w-24 bg-[#15232A] border border-white/20 rounded-xl px-2 py-1.5 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
             <option value="1">1 Nota</option>
             <option value="2">2 Note</option>
             <option value="3">3 Note</option>
@@ -469,33 +451,25 @@
             <option value="8">8 Note</option>
             <option value="9">9 Note</option>
             <option value="10" selected>10 Note</option>
-            <option value="11">11 Note</option>
             <option value="12">12 Note</option>
-            <option value="13">13 Note</option>
-            <option value="14">14 Note</option>
             <option value="15">15 Note</option>
-            <option value="16">16 Note</option>
-            <option value="17">17 Note</option>
-            <option value="18">18 Note</option>
-            <option value="19">19 Note</option>
             <option value="20">20 Note</option>
           </select>
 
-          <!-- Pulsante Droni (Senza spunte, diventa giallo al click) -->
-          <button type="button" id="creator-drone-btn" class="px-3.5 py-2 rounded-xl bg-[#15232A] border border-white/20 text-white/80 font-bold text-xs transition-all hover:border-ochreBand select-none whitespace-nowrap">
+          <button type="button" id="creator-drone-btn" class="px-3 py-1.5 rounded-xl bg-[#15232A] border border-white/20 text-white/80 font-bold text-xs transition-all hover:border-ochreBand select-none whitespace-nowrap">
             Droni
           </button>
 
         </div>
 
-        <!-- RIGA 2: PULSANTE SALVATAGGIO SEMPRE PERFETTAMENTE VISIBILE -->
+        <!-- RIGA 2: PULSANTE SALVATAGGIO -->
         <div class="w-full max-w-sm">
-          <button id="creator-copy-link-btn" class="w-full py-2.5 px-4 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md text-center">
+          <button id="creator-copy-link-btn" class="w-full py-2 px-3 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md text-center">
             Copia link e salva lezione
           </button>
         </div>
 
-        <p id="creator-helper-text" class="text-[10px] text-white/50 text-center mt-0.5">
+        <p id="creator-helper-text" class="text-[10px] text-white/50 text-center">
           Tocca i cerchi per includere le note da indovinare.
         </p>
       </div>
@@ -504,43 +478,43 @@
   </main>
 
   <!-- ========================================== -->
-  <!-- 3. FOOTER MINIMALE: SOLO LINK CENTRATO    -->
+  <!-- 3. FOOTER MINIMALE                         -->
   <!-- ========================================== -->
-  <footer class="w-full shrink-0 py-2.5 px-4 text-center text-xs border-t border-white/5 bg-[#0D171C]">
+  <footer class="w-full shrink-0 py-1.5 px-4 text-center text-xs border-t border-white/5 bg-[#0D171C]">
     <a href="https://msartore.it" target="_blank" rel="noopener noreferrer" class="text-ochreBand/70 hover:text-ochreBand hover:underline font-mono text-[11px] transition-colors">msartore.it</a>
   </footer>
 
   <!-- ========================================== -->
-  <!-- 4. MODALE SCHEDA DI RIEPILOGO ALLIEVO -->
+  <!-- 4. MODALE SCHEDA DI RIEPILOGO ALLIEVO      -->
   <!-- ========================================== -->
   <div id="student-summary-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden overflow-y-auto">
-    <div class="bg-appCard border border-tealBand/40 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative my-auto">
+    <div class="bg-appCard border border-tealBand/40 rounded-3xl p-5 sm:p-7 max-w-md w-full shadow-2xl relative my-auto">
       
-      <div class="text-center pb-4 border-b border-white/10 mb-5">
-        <span class="inline-block px-2.5 py-0.5 rounded-full bg-tealBand/20 text-tealBand font-mono text-[10px] font-extrabold uppercase tracking-wider mb-2">
+      <div class="text-center pb-3 border-b border-white/10 mb-4">
+        <span class="inline-block px-2.5 py-0.5 rounded-full bg-tealBand/20 text-tealBand font-mono text-[10px] font-extrabold uppercase tracking-wider mb-1.5">
           Scheda Esercizio Completato
         </span>
         <h3 id="summary-title" class="text-xl font-extrabold text-white">Lezione</h3>
         <p id="summary-teacher" class="text-xs text-white/60 font-mono mt-0.5">Prof. Marco Sartore</p>
       </div>
 
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
+      <div class="grid grid-cols-2 gap-2.5 mb-4">
+        <div class="p-3 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Punteggio</span>
           <span id="summary-score" class="text-2xl font-black transition-colors">5/5</span>
         </div>
-        <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
+        <div class="p-3 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Precisione</span>
           <span id="summary-acc" class="text-2xl font-black transition-colors">100%</span>
         </div>
       </div>
 
-      <div class="mb-6">
+      <div class="mb-5">
         <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli al primo colpo:</span>
-        <div id="summary-stats-by-interval" class="space-y-1.5"></div>
+        <div id="summary-stats-by-interval" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
       </div>
 
-      <button id="summary-close-btn" class="w-full py-3.5 rounded-xl bg-tealBand text-white font-extrabold text-sm hover:brightness-110 active:scale-95 transition-all shadow-md">
+      <button id="summary-close-btn" class="w-full py-3 rounded-xl bg-tealBand text-white font-extrabold text-sm hover:brightness-110 active:scale-95 transition-all shadow-md">
         Chiudi
       </button>
 
@@ -548,7 +522,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 5. MODALE CONFERMA ELIMINAZIONE LEZIONE -->
+  <!-- 5. MODALE CONFERMA ELIMINAZIONE LEZIONE    -->
   <!-- ========================================== -->
   <div id="delete-confirm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-coralBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center">
@@ -571,7 +545,7 @@
   <!-- 6. MODALE SOVRASCRITTURA LEZIONE ESISTENTE -->
   <!-- ========================================== -->
   <div id="overwrite-confirm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center">
+    <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center relative">
       <h3 class="text-lg font-extrabold text-white mb-2">Lezione Esistente</h3>
       <p id="overwrite-confirm-msg" class="text-xs text-white/70 leading-relaxed mb-6">
         Esiste già una lezione salvata con questo titolo. Vuoi aggiornarla con le modifiche correnti o cambiare titolo?
@@ -588,7 +562,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 7. MODALE PROMO (SOLO UTENTE FREE) -->
+  <!-- 7. MODALE PROMO (UTENTE FREE)              -->
   <!-- ========================================== -->
   <div id="promo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-center">
@@ -600,7 +574,7 @@
       </p>
       
       <div class="flex flex-col gap-2.5">
-        <button id="promo-close-btn" class="w-full py-3.5 rounded-xl bg-tealBand text-white font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-md font-sans">
+        <button id="promo-close-btn" class="w-full py-3 rounded-xl bg-tealBand text-white font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-md font-sans">
           Chiudi
         </button>
         <button id="promo-to-teacher-btn" class="text-xs text-ochreBand hover:underline py-1 font-sans">
@@ -611,7 +585,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 8. MODALE DI SBLOCCO LICENZA DOCENTE -->
+  <!-- 8. MODALE DI SBLOCCO LICENZA DOCENTE       -->
   <!-- ========================================== -->
   <div id="license-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-white/15 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
@@ -630,8 +604,8 @@
       <div class="mb-4">
         <label class="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">Codice Licenza</label>
         <div class="flex gap-2">
-          <input type="text" id="license-input" placeholder="es. PRO-MARCO-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-ochreBand font-mono uppercase">
-          <button id="activate-license-btn" class="px-4 py-2.5 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all flex items-center justify-center min-w-[80px]">
+          <input type="text" id="license-input" placeholder="es. PRO-MARCO-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-ochreBand font-mono uppercase">
+          <button id="activate-license-btn" class="px-4 py-2 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all flex items-center justify-center min-w-[80px]">
             <span id="activate-btn-text">Sblocca</span>
             <span id="activate-btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-appDark border-t-transparent rounded-full animate-spin"></span>
           </button>
@@ -652,9 +626,6 @@
   <!-- 9. JAVASCRIPT: LOGICA APPLICATIVA COMPLETA                        -->
   <!-- ================================================================= -->
   <script>
-    /* ================================================================ */
-    /* CONFIGURAZIONE URL GOOGLE APPS SCRIPT                            */
-    /* ================================================================ */
     const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec";
 
     const FALLBACK_LICENSES = [
@@ -665,15 +636,14 @@
     ];
 
     /* ================================================================ */
-    /* MOTORE AUDIO NATIVO                                              */
+    /* MOTORE AUDIO NATIVO OTTIMIZZATO                                  */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
         this.ctx = null;
-        this.droneOscs = [];
-        this.droneGain = null;
-        this.secretOscs = [];
-        this.secretGain = null;
+        this.compressor = null;
+        this.droneVoice = null;
+        this.secretVoice = null;
         this.isDronePlaying = false;
       }
 
@@ -681,85 +651,112 @@
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         if (!this.ctx || this.ctx.state === 'closed') {
           this.ctx = new AudioContextClass();
+          this.initLimiter();
         }
         if (this.ctx.state === 'suspended' || this.ctx.state === 'interrupted') {
           this.ctx.resume().catch(() => {});
         }
-        if (this.ctx.state === 'interrupted') {
-          try { this.ctx.close(); } catch(e){}
-          this.ctx = new AudioContextClass();
-        }
         return this.ctx;
+      }
+
+      initLimiter() {
+        if (!this.ctx) return;
+        this.compressor = this.ctx.createDynamicsCompressor();
+        this.compressor.threshold.setValueAtTime(-2, this.ctx.currentTime);
+        this.compressor.knee.setValueAtTime(4, this.ctx.currentTime);
+        this.compressor.ratio.setValueAtTime(14, this.ctx.currentTime);
+        this.compressor.attack.setValueAtTime(0.003, this.ctx.currentTime);
+        this.compressor.release.setValueAtTime(0.12, this.ctx.currentTime);
+        this.compressor.connect(this.ctx.destination);
       }
 
       midiToFreq(midi) {
         return 440 * Math.pow(2, (midi - 69) / 12);
       }
 
-      createVoices(freq, masterGainNode) {
+      // Crea un gruppo vocale completo che può essere distrutto e ripulito
+      createVoiceGroup(freq, masterGainVal = 0.5) {
+        const now = Math.max(0, this.ctx.currentTime);
+        const masterGain = this.ctx.createGain();
+        masterGain.gain.setValueAtTime(0, now);
+        masterGain.connect(this.compressor || this.ctx.destination);
+
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(Math.min(freq * 4.2, 11000), now);
+        filter.Q.setValueAtTime(0.7, now);
+        filter.connect(masterGain);
+
         const partials = [
-          { mult: 1.0, gain: 0.70 },
-          { mult: 2.0, gain: 0.25 },
-          { mult: 3.0, gain: 0.12 },
-          { mult: 4.0, gain: 0.04 }
+          { mult: 1.0, gain: 0.65 },
+          { mult: 2.0, gain: 0.22 },
+          { mult: 3.0, gain: 0.09 },
+          { mult: 4.0, gain: 0.03 }
         ];
 
         const oscillators = [];
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(Math.min(freq * 4.2, 12000), this.ctx.currentTime);
-        filter.Q.setValueAtTime(0.7, this.ctx.currentTime);
-        filter.connect(masterGainNode);
+        const subGains = [];
 
         partials.forEach(p => {
           const osc = this.ctx.createOscillator();
           const pGain = this.ctx.createGain();
-
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq * p.mult, this.ctx.currentTime);
-          pGain.gain.setValueAtTime(p.gain, this.ctx.currentTime);
-
+          osc.frequency.setValueAtTime(freq * p.mult, now);
+          pGain.gain.setValueAtTime(p.gain, now);
           osc.connect(pGain);
           pGain.connect(filter);
           oscillators.push(osc);
+          subGains.push(pGain);
         });
 
-        return oscillators;
+        const voice = {
+          masterGain,
+          filter,
+          oscillators,
+          subGains,
+          stopAndDispose: (fadeSec = 0.05) => {
+            const t = Math.max(0, this.ctx.currentTime);
+            try {
+              masterGain.gain.cancelScheduledValues(t);
+              masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+              masterGain.gain.linearRampToValueAtTime(0, t + fadeSec);
+            } catch(e) {}
+
+            setTimeout(() => {
+              oscillators.forEach(osc => {
+                try { osc.stop(); osc.disconnect(); } catch(e){}
+              });
+              subGains.forEach(g => {
+                try { g.disconnect(); } catch(e){}
+              });
+              try { filter.disconnect(); } catch(e){}
+              try { masterGain.disconnect(); } catch(e){}
+            }, (fadeSec * 1000) + 60);
+          }
+        };
+
+        return voice;
       }
 
       startDrone(midiNote) {
         this.ensureContextRunning();
-        this.stopDrone(0.05);
+        this.stopDrone(0.04);
 
         const freq = this.midiToFreq(midiNote);
-        const now = this.ctx.currentTime + 0.01;
+        const now = Math.max(0, this.ctx.currentTime) + 0.01;
 
-        this.droneGain = this.ctx.createGain();
-        this.droneGain.gain.setValueAtTime(0, now);
-        this.droneGain.gain.linearRampToValueAtTime(0.24, now + 0.5);
-        this.droneGain.connect(this.ctx.destination);
-
-        this.droneOscs = this.createVoices(freq, this.droneGain);
-        this.droneOscs.forEach(osc => osc.start(now));
+        this.droneVoice = this.createVoiceGroup(freq, 0.24);
+        this.droneVoice.masterGain.gain.setValueAtTime(0, now);
+        this.droneVoice.masterGain.gain.linearRampToValueAtTime(0.24, now + 0.4);
+        this.droneVoice.oscillators.forEach(osc => osc.start(now));
         this.isDronePlaying = true;
       }
 
       stopDrone(fadeSeconds = 0.3) {
-        if (!this.droneGain || !this.isDronePlaying) return;
-        const now = this.ctx.currentTime;
-        this.droneGain.gain.cancelScheduledValues(now);
-        this.droneGain.gain.setValueAtTime(this.droneGain.gain.value, now);
-        this.droneGain.gain.linearRampToValueAtTime(0, now + fadeSeconds);
-
-        const oldOscs = this.droneOscs;
-        this.droneOscs = [];
+        if (!this.droneVoice || !this.isDronePlaying) return;
+        this.droneVoice.stopAndDispose(fadeSeconds);
+        this.droneVoice = null;
         this.isDronePlaying = false;
-
-        setTimeout(() => {
-          oldOscs.forEach(osc => {
-            try { osc.stop(); osc.disconnect(); } catch(e){}
-          });
-        }, fadeSeconds * 1000 + 50);
       }
 
       playSecretNote(midiNote, durationSeconds = 3.6) {
@@ -767,72 +764,68 @@
         this.stopSecretNoteImmediate();
 
         const freq = this.midiToFreq(midiNote);
-        const now = this.ctx.currentTime + 0.01;
+        const now = Math.max(0, this.ctx.currentTime) + 0.01;
 
-        this.secretGain = this.ctx.createGain();
-        this.secretGain.gain.setValueAtTime(0, now);
-        this.secretGain.gain.linearRampToValueAtTime(0.55, now + 0.12);
-        this.secretGain.gain.linearRampToValueAtTime(0.38, now + 1.2);
-        this.secretGain.gain.linearRampToValueAtTime(0, now + durationSeconds);
-        this.secretGain.connect(this.ctx.destination);
+        this.secretVoice = this.createVoiceGroup(freq, 0.52);
+        this.secretVoice.masterGain.gain.setValueAtTime(0, now);
+        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.52, now + 0.1);
+        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.36, now + 1.2);
+        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0, now + durationSeconds);
 
-        this.secretOscs = this.createVoices(freq, this.secretGain);
-        this.secretOscs.forEach(osc => {
+        this.secretVoice.oscillators.forEach(osc => {
           osc.start(now);
           osc.stop(now + durationSeconds + 0.1);
         });
+
+        // Cleanup automatico al termine della nota
+        setTimeout(() => {
+          if (this.secretVoice) {
+            this.secretVoice.stopAndDispose(0.05);
+            this.secretVoice = null;
+          }
+        }, (durationSeconds + 0.15) * 1000);
       }
 
       stopSecretNoteImmediate() {
-        if (this.secretGain) {
-          try {
-            const now = this.ctx.currentTime;
-            this.secretGain.gain.cancelScheduledValues(now);
-            this.secretGain.gain.setValueAtTime(0, now);
-          } catch(e){}
-        }
-        if (this.secretOscs.length > 0) {
-          this.secretOscs.forEach(osc => {
-            try { osc.stop(); osc.disconnect(); } catch(e){}
-          });
-          this.secretOscs = [];
+        if (this.secretVoice) {
+          this.secretVoice.stopAndDispose(0.03);
+          this.secretVoice = null;
         }
       }
 
-      fadeSecretNote(fadeSeconds = 0.4) {
-        if (!this.secretGain) return;
-        const now = this.ctx.currentTime;
-        this.secretGain.gain.cancelScheduledValues(now);
-        this.secretGain.gain.setValueAtTime(this.secretGain.gain.value, now);
-        this.secretGain.gain.linearRampToValueAtTime(0, now + fadeSeconds);
+      fadeSecretNote(fadeSeconds = 0.35) {
+        if (!this.secretVoice) return;
+        this.secretVoice.stopAndDispose(fadeSeconds);
+        this.secretVoice = null;
       }
 
       previewNote(midiNote, duration = 1.0) {
         this.ensureContextRunning();
         if (!this.ctx) return;
         const freq = this.midiToFreq(midiNote);
-        const now = this.ctx.currentTime + 0.005;
-        const g = this.ctx.createGain();
-        g.gain.setValueAtTime(0, now);
-        g.gain.linearRampToValueAtTime(0.44, now + 0.06);
-        g.gain.linearRampToValueAtTime(0, now + duration);
-        g.connect(this.ctx.destination);
+        const now = Math.max(0, this.ctx.currentTime) + 0.005;
 
-        const oscs = this.createVoices(freq, g);
-        oscs.forEach(osc => {
+        const voice = this.createVoiceGroup(freq, 0.42);
+        voice.masterGain.gain.setValueAtTime(0, now);
+        voice.masterGain.gain.linearRampToValueAtTime(0.42, now + 0.05);
+        voice.masterGain.gain.linearRampToValueAtTime(0, now + duration);
+
+        voice.oscillators.forEach(osc => {
           osc.start(now);
-          osc.stop(now + duration + 0.05);
+          osc.stop(now + duration + 0.08);
         });
+
+        setTimeout(() => voice.stopAndDispose(0.05), (duration + 0.1) * 1000);
       }
     }
 
 
     /* ================================================================ */
-    /* MODULO ONDA                                                      */
+    /* MODULO ONDA FISICA                                               */
     /* ================================================================ */
     const W = 1000;
-    const MID = 30;
-    const AMP = 14;
+    const MID = 25;
+    const AMP = 13;
     const CYCLES = 5;
 
     function naturalEase(t) {
@@ -863,7 +856,7 @@
       rightX = Math.min(W, rightX);
       if (rightX - leftX < 1) return '';
 
-      const steps = Math.max(28, Math.round(100 * (rightX - leftX) / W));
+      const steps = Math.max(26, Math.round(95 * (rightX - leftX) / W));
       let d = `M ${leftX} ${MID}`;
       for (let i = 1; i <= steps; i++) {
         const x = leftX + ((rightX - leftX) * i) / steps;
@@ -877,6 +870,8 @@
 
     function spawnPropagatingWave(buttonElement, isInfinite = true) {
       const stage = document.getElementById('game-stage');
+      if (!stage || !buttonElement) return null;
+
       const stageRect = stage.getBoundingClientRect();
       const btnRect = buttonElement.getBoundingClientRect();
       
@@ -895,10 +890,10 @@
       waveAxis.style.maskImage = maskString;
 
       waveAxis.innerHTML = `
-        <svg viewBox="0 0 1000 60" preserveAspectRatio="none">
+        <svg viewBox="0 0 1000 50" preserveAspectRatio="none">
           <g class="wave-burst" style="opacity: 0.85;">
             <path class="wave-fill" fill="rgba(55, 147, 134, 0.38)" />
-            <line class="wave-axis-line" stroke="#379386" stroke-width="1.8" y1="30" y2="30" />
+            <line class="wave-axis-line" stroke="#379386" stroke-width="1.8" y1="25" y2="25" />
           </g>
         </svg>
       `;
@@ -908,7 +903,7 @@
       const waveFill = waveAxis.querySelector('.wave-fill');
       const axisLine = waveAxis.querySelector('.wave-axis-line');
       const gapMs = 600;
-      const durationMs = 2500;
+      const durationMs = 2400;
       const fadeStartMs = 1500;
       const start = performance.now();
 
@@ -928,7 +923,7 @@
         const right = waveCenter + (W - waveCenter) * ease;
 
         const phase = elapsed * 0.002;
-        const edgeSoft = 90;
+        const edgeSoft = 85;
         const ampScale = 0.85 + 0.15 * ease + Math.sin(elapsed * 0.004) * 0.035;
 
         let opacity = 0.85;
@@ -956,12 +951,26 @@
 
       const audio = new AudioEngine();
 
-      const unlockAudioTouch = () => {
-        audio.ensureContextRunning();
-      };
+      // Sblocco audio su interazione
+      const unlockAudioTouch = () => audio.ensureContextRunning();
       ['touchstart', 'pointerdown', 'touchend', 'click'].forEach(evt => {
         document.addEventListener(evt, unlockAudioTouch, { once: true, passive: true });
       });
+
+      // Gestore centralizzato dei timer per evitare corse critiche
+      let activeTimers = [];
+      function setAppTimeout(fn, ms) {
+        const id = setTimeout(() => {
+          activeTimers = activeTimers.filter(t => t !== id);
+          fn();
+        }, ms);
+        activeTimers.push(id);
+        return id;
+      }
+      function clearAppTimeouts() {
+        activeTimers.forEach(id => clearTimeout(id));
+        activeTimers = [];
+      }
 
       const intervalButtonsData = [
         { id: 'btn-8', degree: '8', semitones: 12, name: 'Ottava', order: 12 },
@@ -983,6 +992,23 @@
         { id: 'btn-1sharp', degree: '1#', semitones: 1, name: '1ª Aumentata', order: 1 },
         { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Grado 1', order: 0 }
       ];
+
+      // Mappatura intervallo reale tra Drone e Nota Target
+      const intervalNamesBySemitones = {
+        0: 'Unisono',
+        1: '2ª Minore',
+        2: '2ª Maggiore',
+        3: '3ª Minore',
+        4: '3ª Maggiore',
+        5: '4ª Giusta',
+        6: 'Tritono (4ª Aum. / 5ª Dim.)',
+        7: '5ª Giusta',
+        8: '6ª Minore',
+        9: '6ª Maggiore',
+        10: '7ª Minore',
+        11: '7ª Maggiore',
+        12: 'Ottava'
+      };
 
       const paletteStops = [
         { stop: 0.00, r: 39,  g: 67,  b: 78  },
@@ -1018,6 +1044,7 @@
         return '#E37055';
       }
 
+      // Applicazione stili cromatici iniziali
       intervalButtonsData.forEach(item => {
         const fraction = item.order / 12;
         const color = getColorForFraction(fraction);
@@ -1030,7 +1057,7 @@
 
           if (item.degree.includes('b') || item.degree.includes('#')) {
             el.style.backgroundColor = '#131F25';
-            el.style.borderColor = color.rgba(0.7);
+            el.style.borderColor = color.rgba(0.75);
             el.style.color = color.rgb;
           } else {
             el.style.backgroundColor = color.rgb;
@@ -1047,13 +1074,17 @@
       let gameState = {
         active: false,
         waitingForAnswer: false,
+        isTransitioning: false,
         creatorMode: false,
         testMode: false,
         droneSelectionMode: false,
         
-        keyRootMidi: 60, // Tonalità d'impianto (Do3 = 60)
+        keyRootMidi: 60,
+        currentDroneItem: null,
         currentDroneMidi: 60,
         targetItem: null,
+        lastTargetId: null,
+
         batchCurrentNote: 0,
         batchTotalNotes: 5,
         
@@ -1068,33 +1099,34 @@
         intervalStatsTracker: {}
       };
 
-      // Set delle note da indovinare scelte dal docente
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
-
-      // Set dei droni scelti dal docente (di default grado 1)
       let teacherDroneNoteIds = new Set(['btn-1']);
 
-      // Gestore delle onde continue durante la creazione dell'esercizio
-      let creatorDroneWaveEls = [];
+      // Mappa delle onde individuali dei droni in modalità creazione: ID -> Elemento Onda
+      const creatorDroneWaves = new Map();
 
-      function clearCreatorDroneWaves() {
-        creatorDroneWaveEls.forEach(el => {
-          try { el.remove(); } catch(e){}
-        });
-        creatorDroneWaveEls = [];
+      function addCreatorDroneWave(itemId) {
+        if (!gameState.creatorMode || creatorDroneWaves.has(itemId)) return;
+        const btn = document.getElementById(itemId);
+        if (btn) {
+          const wave = spawnPropagatingWave(btn, true);
+          if (wave) creatorDroneWaves.set(itemId, wave);
+        }
       }
 
-      // Fa girare in modo continuo e visibile l'onda su ciascun drone attivo
-      function updateCreatorDroneWaves() {
-        clearCreatorDroneWaves();
-        if (!gameState.creatorMode) return;
-        teacherDroneNoteIds.forEach(id => {
-          const btn = document.getElementById(id);
-          if (btn) {
-            const wave = spawnPropagatingWave(btn, true);
-            if (wave) creatorDroneWaveEls.push(wave);
-          }
+      function removeCreatorDroneWave(itemId) {
+        if (creatorDroneWaves.has(itemId)) {
+          const wave = creatorDroneWaves.get(itemId);
+          try { wave.remove(); } catch(e){}
+          creatorDroneWaves.delete(itemId);
+        }
+      }
+
+      function clearAllCreatorDroneWaves() {
+        creatorDroneWaves.forEach(wave => {
+          try { wave.remove(); } catch(e){}
         });
+        creatorDroneWaves.clear();
       }
 
       // Elementi DOM Principali
@@ -1169,10 +1201,14 @@
       const activateBtnSpinner = document.getElementById('activate-btn-spinner');
       const licenseErrorMsg = document.getElementById('license-error-msg');
 
-      let droneWaveEl = null;
+      let gameDroneWaveEl = null;
 
-      creatorTitleInput.addEventListener('blur', () => audio.ensureContextRunning());
-      creatorTitleInput.addEventListener('focus', () => audio.ensureContextRunning());
+      // Restituisce la frequenza base impostata dal docente in creazione
+      function getCreatorBaseMidi() {
+        const val = creatorKeySelect.value;
+        if (val === 'random') return 60;
+        return parseInt(val, 10) || 60;
+      }
 
       function triggerCorrectCircleRipple(buttonElement, colorRgba) {
         const rect = buttonElement.getBoundingClientRect();
@@ -1187,7 +1223,7 @@
         ripple.style.left = `${centerX}px`;
         ripple.style.top = `${centerY}px`;
         ripple.style.backgroundColor = colorRgba;
-        ripple.style.boxShadow = `0 0 28px ${colorRgba}`;
+        ripple.style.boxShadow = `0 0 26px ${colorRgba}`;
 
         document.body.appendChild(ripple);
         ripple.addEventListener('animationend', () => ripple.remove());
@@ -1223,7 +1259,7 @@
           let list = getSavedLessons();
           list = list.filter(item => item.id !== lessonData.id && item.title.toLowerCase() !== lessonData.title.toLowerCase());
           list.unshift(lessonData);
-          if (list.length > 25) list = list.slice(0, 25);
+          if (list.length > 30) list = list.slice(0, 30);
           localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
         } catch(e) {}
       }
@@ -1253,7 +1289,7 @@
             }
           }
         } catch(e) {
-          console.warn('Sync cloud non riuscito, operatività locale garantita:', e);
+          console.warn('Sync cloud silenzioso:', e);
         }
       }
 
@@ -1261,21 +1297,21 @@
         const lessons = getSavedLessons();
         archiveList.innerHTML = '';
         if (lessons.length === 0) {
-          archiveList.innerHTML = '<div class="text-xs text-white/40 text-center py-3">Nessuna lezione salvata ancora. Quando salvi un link allievo, verrà memorizzata qui.</div>';
+          archiveList.innerHTML = '<div class="text-xs text-white/40 text-center py-6">Nessuna lezione salvata ancora. Quando salvi un link allievo, verrà memorizzata qui.</div>';
           return;
         }
 
         lessons.forEach(l => {
           const row = document.createElement('div');
-          row.className = 'flex items-center justify-between p-2 rounded-xl bg-[#0D171C] border border-white/5 hover:border-ochreBand/40 transition-colors text-xs';
+          row.className = 'flex items-center justify-between p-3 rounded-2xl bg-[#15232A] border border-white/10 hover:border-ochreBand/40 transition-colors text-xs shadow-md';
           row.innerHTML = `
-            <div class="flex-1 cursor-pointer truncate pr-2">
-              <span class="text-white font-bold block truncate">${l.title}</span>
-              <span class="text-[10px] text-white/40 font-mono">${l.notesCount} Note • ${l.date}</span>
+            <div class="flex-1 cursor-pointer truncate pr-3">
+              <span class="text-white font-bold text-sm block truncate">${l.title}</span>
+              <span class="text-[11px] text-white/50 font-mono">${l.notesCount} Note • ${l.date}</span>
             </div>
-            <div class="flex items-center gap-1.5 shrink-0">
-              <button class="load-lesson-btn px-2.5 py-1 rounded-lg bg-tealBand text-white font-bold text-[10px] hover:brightness-110 active:scale-95 transition-all">Carica</button>
-              <button class="delete-lesson-btn px-2 py-1 rounded-lg bg-white/5 text-white/40 hover:text-coralBand hover:bg-white/10 text-[11px] font-bold active:scale-95 transition-all">✕</button>
+            <div class="flex items-center gap-2 shrink-0">
+              <button class="load-lesson-btn px-3 py-1.5 rounded-xl bg-tealBand text-white font-extrabold text-xs hover:brightness-110 active:scale-95 transition-all">Carica</button>
+              <button class="delete-lesson-btn p-1.5 rounded-xl bg-white/5 text-white/50 hover:text-coralBand hover:bg-white/10 text-xs font-bold active:scale-95 transition-all" title="Elimina">✕</button>
             </div>
           `;
 
@@ -1286,24 +1322,20 @@
             
             let ids = [];
             if (Array.isArray(l.noteIds)) {
-              ids = l.noteIds.map(token => {
-                token = token.trim();
-                return token.startsWith('btn-') ? token : ('btn-' + token);
-              });
+              ids = l.noteIds.map(token => token.trim().startsWith('btn-') ? token.trim() : ('btn-' + token.trim()));
             }
             teacherSelectedNoteIds = new Set(ids);
 
             let droneIds = ['btn-1'];
             if (Array.isArray(l.droneIds) && l.droneIds.length > 0) {
-              droneIds = l.droneIds.map(token => {
-                token = token.trim();
-                return token.startsWith('btn-') ? token : ('btn-' + token);
-              });
+              droneIds = l.droneIds.map(token => token.trim().startsWith('btn-') ? token.trim() : ('btn-' + token.trim()));
             }
+
+            clearAllCreatorDroneWaves();
             teacherDroneNoteIds = new Set(droneIds);
+            teacherDroneNoteIds.forEach(dId => addCreatorDroneWave(dId));
 
             updateTeacherGridVisuals();
-            updateCreatorDroneWaves();
             lessonsArchivePanel.classList.add('hidden');
           });
 
@@ -1350,6 +1382,30 @@
       });
 
       /* ================================================================ */
+      /* CHIUSURA POPUP SOVRASCRITTURA AL CLICK ESTERNO O CAMBIA TITOLO   */
+      /* ================================================================ */
+      function dismissOverwriteModal() {
+        overwriteConfirmModal.classList.add('hidden');
+        pendingSaveData = null;
+        creatorTitleInput.focus();
+        creatorTitleInput.select();
+      }
+
+      overwriteCancelBtn.addEventListener('click', dismissOverwriteModal);
+      
+      overwriteConfirmModal.addEventListener('click', (e) => {
+        if (e.target === overwriteConfirmModal) {
+          dismissOverwriteModal();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !overwriteConfirmModal.classList.contains('hidden')) {
+          dismissOverwriteModal();
+        }
+      });
+
+      /* ================================================================ */
       /* VERIFICA LICENZA REMOTA (APPS SCRIPT)                            */
       /* ================================================================ */
       async function verifyLicenseCode(code) {
@@ -1364,7 +1420,7 @@
               return { valid: data.valid, teacher: data.teacher || 'Prof. Sartore' };
             }
           } catch(err) {
-            console.warn('Verifica remota fallita, controllo fallback locale...', err);
+            console.warn('Verifica remota fallita, fallback:', err);
           }
         }
 
@@ -1427,7 +1483,7 @@
             document.getElementById('btn-1').classList.add('active-in-exercise');
 
             if (dronesParam) {
-              const rawDrones = dronesParam.split(',').map(s => s.trim().toLowerCase());
+              const rawDrones = decodeURIComponent(dronesParam).split(',').map(s => s.trim().toLowerCase());
               teacherDroneNoteIds = new Set();
               intervalButtonsData.forEach(item => {
                 const match = rawDrones.includes(item.id.toLowerCase()) || rawDrones.includes(item.degree.toLowerCase());
@@ -1442,7 +1498,7 @@
             if (teacherDroneNoteIds.size === 0) teacherDroneNoteIds.add('btn-1');
 
             if (notesParam) {
-              const rawTokens = notesParam.split(',').map(s => s.trim().toLowerCase());
+              const rawTokens = decodeURIComponent(notesParam).split(',').map(s => s.trim().toLowerCase());
 
               intervalButtonsData.forEach(item => {
                 const el = document.getElementById(item.id);
@@ -1462,7 +1518,7 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* MODALITÀ CREAZIONE DOCENTE: AGGIORNAMENTO GRAFICO PULITO         */
+      /* MODALITÀ CREAZIONE DOCENTE: GRAFICA PULITA & FEDELE              */
       /* ================================================================ */
       function updateTeacherGridVisuals() {
         intervalButtonsData.forEach(item => {
@@ -1472,30 +1528,22 @@
           const isDrone = teacherDroneNoteIds.has(item.id);
           const isSelected = teacherSelectedNoteIds.has(item.id);
 
-          // Note Drone: visibili e sobrie (è l'onda che le evidenzia)
-          if (isDrone) {
-            el.classList.add('drone-note');
-          } else {
-            el.classList.remove('drone-note');
-          }
+          if (isDrone) el.classList.add('drone-note');
+          else el.classList.remove('drone-note');
 
-          // Note da indovinare: colorate identiche alla pagina iniziale
-          if (isSelected) {
-            el.classList.add('teacher-selected');
-          } else {
-            el.classList.remove('teacher-selected');
-          }
+          if (isSelected) el.classList.add('teacher-selected');
+          else el.classList.remove('teacher-selected');
         });
       }
 
-      // Switch pulsante DRONI (diventa giallo ocra senza spunte)
+      // Switch pulsante DRONI
       creatorDroneBtn.addEventListener('click', () => {
         gameState.droneSelectionMode = !gameState.droneSelectionMode;
         
         if (gameState.droneSelectionMode) {
           creatorDroneBtn.classList.remove('bg-[#15232A]', 'text-white/80', 'border-white/20');
           creatorDroneBtn.classList.add('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
-          creatorHelperText.textContent = "Modalità Droni attiva: tocca i cerchi per cambiare il pedale dell'onda.";
+          creatorHelperText.textContent = "Modalità Droni attiva: tocca i cerchi per accendere o spegnere il pedale dell'onda.";
           creatorHelperText.classList.add('text-ochreBand');
           creatorHelperText.classList.remove('text-white/50');
         } else {
@@ -1549,8 +1597,9 @@
 
         updateTeacherGridVisuals();
 
-        // AVVIA L'ONDA CONTINUA SUL DRONE (Default grado 1) per tutta la durata della creazione
-        updateCreatorDroneWaves();
+        // Avvia onde solo per i droni attualmente presenti nel set
+        clearAllCreatorDroneWaves();
+        teacherDroneNoteIds.forEach(id => addCreatorDroneWave(id));
 
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         if (savedLic) syncLessonsFromCloudSilently(savedLic);
@@ -1563,8 +1612,7 @@
         gameState.testMode = false;
         gameState.droneSelectionMode = false;
 
-        // Pulisce l'onda continua della creazione
-        clearCreatorDroneWaves();
+        clearAllCreatorDroneWaves();
 
         creatorTopBar.classList.add('opacity-0', '-translate-y-2');
         creatorControlsRow.classList.add('opacity-0', 'translate-y-2');
@@ -1602,7 +1650,7 @@
           statScore.style.color = '#379386';
           statAcc.textContent = `100%`;
           statAcc.style.color = '#379386';
-        }, 250);
+        }, 220);
       }
 
       function enterTestMode() {
@@ -1616,8 +1664,7 @@
         document.body.classList.remove('creator-mode');
         document.body.classList.add('test-mode');
 
-        // Ferma l'onda statica del creator prima di testare
-        clearCreatorDroneWaves();
+        clearAllCreatorDroneWaves();
 
         freeNotice.classList.add('hidden');
         creatorTopBar.classList.add('hidden');
@@ -1635,7 +1682,6 @@
 
         gameState.exerciseTitle = creatorTitleInput.value.trim() || 'Esercizio Docente';
         
-        // Impostazione Tono Iniziale
         const selectedKey = creatorKeySelect.value;
         if (selectedKey === 'random') {
           const keys = [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71];
@@ -1646,7 +1692,6 @@
 
         gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 10;
 
-        // Isola visivamente le note scelte + i droni
         gameState.allowedButtonIds = new Set(teacherSelectedNoteIds);
         gameState.allowedButtonIds.add('btn-1');
         teacherDroneNoteIds.forEach(id => gameState.allowedButtonIds.add(id));
@@ -1654,11 +1699,8 @@
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
           if (el) {
-            if (gameState.allowedButtonIds.has(item.id)) {
-              el.classList.add('active-in-exercise');
-            } else {
-              el.classList.remove('active-in-exercise');
-            }
+            if (gameState.allowedButtonIds.has(item.id)) el.classList.add('active-in-exercise');
+            else el.classList.remove('active-in-exercise');
           }
         });
 
@@ -1730,13 +1772,14 @@
         const keyVal = creatorKeySelect.value;
         const countVal = creatorCountSelect.value;
 
+        // Usa encodeURIComponent su ogni grado per preservare i diesis (#) senza troncare l'URL
         const selectedDegrees = Array.from(teacherSelectedNoteIds)
-          .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
+          .map(id => encodeURIComponent(intervalButtonsData.find(i => i.id === id)?.degree || ''))
           .filter(Boolean)
           .join(',');
 
         const selectedDrones = Array.from(teacherDroneNoteIds)
-          .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
+          .map(id => encodeURIComponent(intervalButtonsData.find(i => i.id === id)?.degree || ''))
           .filter(Boolean)
           .join(',');
 
@@ -1816,43 +1859,26 @@
         pendingSaveData = null;
       });
 
-      overwriteCancelBtn.addEventListener('click', () => {
-        overwriteConfirmModal.classList.add('hidden');
-        pendingSaveData = null;
-        creatorTitleInput.focus();
-        creatorTitleInput.select();
-      });
-
       /* ================================================================ */
-      /* GESTIONE SERIE ESERCIZIO CON DRONE SINGOLO ESTRATTO             */
+      /* GESTIONE SERIE ESERCIZIO & REPORT REALE                          */
       /* ================================================================ */
       function startBatchExercise() {
         audio.ensureContextRunning();
+        clearAppTimeouts();
+
         gameState.active = true;
+        gameState.waitingForAnswer = false;
+        gameState.isTransitioning = false;
         gameState.batchCurrentNote = 1;
+        gameState.lastTargetId = null;
         
         gameState.sessionFirstTryCorrectCount = 0;
         gameState.currentQuestionHasMistake = false;
         gameState.intervalStatsTracker = {};
 
         if (!gameState.isProStudent && !gameState.testMode) {
-          gameState.keyRootMidi = 60; // Do fisso in modalità libera
+          gameState.keyRootMidi = 60;
         }
-
-        let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
-        if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
-          candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
-        }
-
-        candidateItems.forEach(item => {
-          gameState.intervalStatsTracker[item.id] = {
-            name: item.name,
-            degree: item.degree,
-            color: item.color.rgb,
-            totalProposed: 0,
-            firstTrySuccess: 0
-          };
-        });
 
         statScore.textContent = `0/${gameState.batchTotalNotes}`;
         statScore.style.color = '#379386';
@@ -1873,6 +1899,7 @@
         if (!gameState.active) return;
 
         gameState.waitingForAnswer = true;
+        gameState.isTransitioning = false;
         gameState.currentQuestionHasMistake = false;
 
         btnMainAction.textContent = `Ascolta... (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
@@ -1880,21 +1907,25 @@
         btnMainAction.classList.add('bg-coralBand');
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
-        // Estrae un drone tra quelli selezionati
+        // Estrazione Drone
         let availableDroneIds = Array.from(teacherDroneNoteIds);
         if (availableDroneIds.length === 0) availableDroneIds = ['btn-1'];
         const pickedDroneId = availableDroneIds[Math.floor(Math.random() * availableDroneIds.length)];
         const droneItem = intervalButtonsData.find(i => i.id === pickedDroneId) || intervalButtonsData.find(i => i.id === 'btn-1');
 
+        gameState.currentDroneItem = droneItem;
         gameState.currentDroneMidi = gameState.keyRootMidi + droneItem.semitones;
 
-        // Avvia il drone continuo e fa partire l'onda dal pulsante ESATTO del drone
+        // Avvio Drone e propagazione onda dal suo cerchio
         audio.startDrone(gameState.currentDroneMidi);
-        if (droneWaveEl) droneWaveEl.remove();
+        if (gameDroneWaveEl) {
+          try { gameDroneWaveEl.remove(); } catch(e){}
+          gameDroneWaveEl = null;
+        }
         const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
-        droneWaveEl = spawnPropagatingWave(droneBtnEl, true);
+        gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
 
-        // Estrae la nota misteriosa da indovinare
+        // Estrazione nota misteriosa con algoritmo anti-ripetizione consecutiva
         let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
           candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
@@ -1906,16 +1937,36 @@
           return;
         }
 
-        const pickedItem = candidateItems[Math.floor(Math.random() * candidateItems.length)];
-        gameState.targetItem = pickedItem;
-
-        if (gameState.intervalStatsTracker[pickedItem.id]) {
-          gameState.intervalStatsTracker[pickedItem.id].totalProposed++;
+        // Esclude la nota immediatamente precedente se ci sono almeno 2 note candidate
+        let pickPool = candidateItems;
+        if (candidateItems.length > 1 && gameState.lastTargetId) {
+          pickPool = candidateItems.filter(i => i.id !== gameState.lastTargetId);
+          if (pickPool.length === 0) pickPool = candidateItems;
         }
+
+        const pickedItem = pickPool[Math.floor(Math.random() * pickPool.length)];
+        gameState.targetItem = pickedItem;
+        gameState.lastTargetId = pickedItem.id;
+
+        // Calcolo dell'intervallo reale rispetto al Drone corrente
+        const semitoneDiff = Math.abs(pickedItem.semitones - droneItem.semitones);
+        const intervalName = intervalNamesBySemitones[semitoneDiff] || `${semitoneDiff} semitoni`;
+        const trackerKey = `${intervalName} (${droneItem.degree}-${pickedItem.degree})`;
+
+        if (!gameState.intervalStatsTracker[trackerKey]) {
+          gameState.intervalStatsTracker[trackerKey] = {
+            label: trackerKey,
+            color: pickedItem.color.rgb,
+            totalProposed: 0,
+            firstTrySuccess: 0
+          };
+        }
+        gameState.intervalStatsTracker[trackerKey].totalProposed++;
+        gameState.currentTargetTrackerKey = trackerKey;
 
         const secretNoteMidi = gameState.keyRootMidi + pickedItem.semitones;
 
-        setTimeout(() => {
+        setAppTimeout(() => {
           if (!gameState.active || !gameState.waitingForAnswer) return;
           audio.playSecretNote(secretNoteMidi, 3.8);
           btnMainAction.textContent = `Indovina! (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
@@ -1925,12 +1976,15 @@
       function stopGame() {
         gameState.active = false;
         gameState.waitingForAnswer = false;
-        audio.stopDrone(0.3);
+        gameState.isTransitioning = false;
+        clearAppTimeouts();
+
+        audio.stopDrone(0.2);
         audio.stopSecretNoteImmediate();
 
-        if (droneWaveEl) {
-          droneWaveEl.remove();
-          droneWaveEl = null;
+        if (gameDroneWaveEl) {
+          try { gameDroneWaveEl.remove(); } catch(e){}
+          gameDroneWaveEl = null;
         }
 
         batchBadge.classList.add('hidden');
@@ -1959,21 +2013,21 @@
         summaryAcc.style.color = finalColor;
 
         summaryStatsByInterval.innerHTML = '';
-        Object.keys(gameState.intervalStatsTracker).forEach(id => {
-          const item = gameState.intervalStatsTracker[id];
+        Object.keys(gameState.intervalStatsTracker).forEach(key => {
+          const item = gameState.intervalStatsTracker[key];
           if (item.totalProposed > 0) {
             const row = document.createElement('div');
-            row.className = 'flex items-center justify-between text-xs px-3.5 py-2 rounded-xl bg-[#0D171C] border border-white/5 font-mono';
+            row.className = 'flex items-center justify-between text-xs px-3 py-2 rounded-xl bg-[#0D171C] border border-white/5 font-mono';
             
             const intervalRatio = item.firstTrySuccess / item.totalProposed;
             const itemPerfColor = getPerformanceColor(intervalRatio);
 
             row.innerHTML = `
               <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${item.color}"></span>
-                <span class="text-white font-bold">${item.name} (${item.degree})</span>
+                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${item.color}"></span>
+                <span class="text-white font-bold">${item.label}</span>
               </div>
-              <div class="font-extrabold" style="color: ${itemPerfColor}">
+              <div class="font-extrabold shrink-0" style="color: ${itemPerfColor}">
                 ${item.firstTrySuccess}/${item.totalProposed} al 1° colpo
               </div>
             `;
@@ -1990,11 +2044,8 @@
 
       btnMainAction.addEventListener('click', () => {
         audio.ensureContextRunning();
-        if (gameState.active) {
-          stopGame();
-        } else {
-          startBatchExercise();
-        }
+        if (gameState.active) stopGame();
+        else startBatchExercise();
       });
 
       btnReplay.addEventListener('click', () => {
@@ -2005,7 +2056,7 @@
       });
 
       /* ================================================================ */
-      /* CLICK SUI TASTI (Docente vs Allievo vs Libera)                   */
+      /* GESTIONE CLICK SUI CERCHI DELLE NOTE                             */
       /* ================================================================ */
       intervalButtonsData.forEach(item => {
         const btnEl = document.getElementById(item.id);
@@ -2013,6 +2064,9 @@
 
         btnEl.addEventListener('click', () => {
           audio.ensureContextRunning();
+
+          // Ignora il click se siamo nel secondo di celebrazione/transizione
+          if (gameState.isTransitioning) return;
 
           // CASO A: MODALITÀ CREAZIONE DOCENTE
           if (gameState.creatorMode) {
@@ -2022,31 +2076,26 @@
               if (teacherDroneNoteIds.has(item.id)) {
                 if (teacherDroneNoteIds.size > 1) {
                   teacherDroneNoteIds.delete(item.id);
-                  updateCreatorDroneWaves();
+                  removeCreatorDroneWave(item.id); // Rimuove solo la sua onda
                 } else {
-                  // Se è rimasto un solo drone, non rimuoverlo ma fai risentire il suo suono per 1.4s
-                  const keyRoot = (creatorKeySelect.value === 'random') ? 60 : (parseInt(creatorKeySelect.value, 10) || 60);
-                  const droneMidi = keyRoot + item.semitones;
-                  audio.previewNote(droneMidi, 1.4);
+                  // Se è l'ultimo rimasto, non lo rimuove e riproduce la nota di anteprima
+                  const baseMidi = getCreatorBaseMidi();
+                  audio.previewNote(baseMidi + item.semitones, 1.4);
                 }
               } else {
                 teacherDroneNoteIds.add(item.id);
-                
-                // Suona la nota effettiva del drone trasposta e sfuma dopo 1.4s (non continua all'infinito)
-                const keyRoot = (creatorKeySelect.value === 'random') ? 60 : (parseInt(creatorKeySelect.value, 10) || 60);
-                const droneMidi = keyRoot + item.semitones;
-                audio.previewNote(droneMidi, 1.4);
-                
-                // Aggiorna e sposta l'onda continua sul nuovo drone
-                updateCreatorDroneWaves();
+                const baseMidi = getCreatorBaseMidi();
+                audio.previewNote(baseMidi + item.semitones, 1.4);
+                addCreatorDroneWave(item.id); // Avvia l'onda SOLO per questo drone senza azzerare gli altri
               }
               updateTeacherGridVisuals();
               return;
             }
 
-            // SOTTOCASO A2: MODALITÀ NOTE DA INDOVINARE (GRAFICA PULITA)
+            // SOTTOCASO A2: MODALITÀ NOTE DA INDOVINARE
             if (item.id === 'btn-1') {
-              audio.previewNote(60, 1.0);
+              const baseMidi = getCreatorBaseMidi();
+              audio.previewNote(baseMidi, 1.0);
               return;
             }
 
@@ -2054,8 +2103,8 @@
               teacherSelectedNoteIds.delete(item.id);
             } else {
               teacherSelectedNoteIds.add(item.id);
-              const previewMidi = 60 + item.semitones;
-              audio.previewNote(previewMidi, 1.0);
+              const baseMidi = getCreatorBaseMidi();
+              audio.previewNote(baseMidi + item.semitones, 1.0);
             }
 
             updateTeacherGridVisuals();
@@ -2064,8 +2113,16 @@
 
           // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
-            if (item.semitones === 0) {
+            
+            // Se preme il tasto del Drone o Tonica durante la serie: risuona e mostra l'onda
+            if (item.id === (gameState.currentDroneItem?.id || 'btn-1') || item.semitones === 0) {
               audio.startDrone(gameState.currentDroneMidi);
+              if (gameDroneWaveEl) {
+                try { gameDroneWaveEl.remove(); } catch(e){}
+                gameDroneWaveEl = null;
+              }
+              const dBtn = document.getElementById(gameState.currentDroneItem?.id || 'btn-1');
+              gameDroneWaveEl = spawnPropagatingWave(dBtn, true);
               return;
             }
 
@@ -2075,15 +2132,16 @@
               const wasFirstTry = !gameState.currentQuestionHasMistake;
               if (wasFirstTry) {
                 gameState.sessionFirstTryCorrectCount++;
-                if (gameState.intervalStatsTracker[gameState.targetItem.id]) {
-                  gameState.intervalStatsTracker[gameState.targetItem.id].firstTrySuccess++;
+                if (gameState.currentTargetTrackerKey && gameState.intervalStatsTracker[gameState.currentTargetTrackerKey]) {
+                  gameState.intervalStatsTracker[gameState.currentTargetTrackerKey].firstTrySuccess++;
                 }
               }
 
               updateStatsUI();
 
               gameState.waitingForAnswer = false;
-              audio.fadeSecretNote(0.5);
+              gameState.isTransitioning = true;
+              audio.fadeSecretNote(0.4);
 
               triggerCorrectCircleRipple(btnEl, item.color.rgba(0.6));
 
@@ -2091,21 +2149,21 @@
                 btnMainAction.textContent = `Esatto! (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
                 gameState.batchCurrentNote++;
 
-                setTimeout(() => {
+                setAppTimeout(() => {
                   if (gameState.active) playQuestionInBatch();
-                }, 1900);
+                }, 1800);
 
               } else {
                 btnMainAction.textContent = `Serie Conclusa!`;
                 
-                setTimeout(() => {
+                setAppTimeout(() => {
                   stopGame();
                   if (gameState.isProStudent || gameState.testMode) {
                     showStudentSummaryReport();
                   } else {
                     promoModal.classList.remove('hidden');
                   }
-                }, 1800);
+                }, 1700);
               }
 
             } else {
@@ -2116,8 +2174,8 @@
               }, { once: true });
             }
 
-          } else {
-            // CASO C: MODALITÀ LIBERA
+          } else if (!gameState.active) {
+            // CASO C: MODALITÀ LIBERA FUORI ESERCIZIO
             const previewMidi = 60 + item.semitones;
             audio.previewNote(previewMidi, 1.2);
             spawnPropagatingWave(btnEl, false);
