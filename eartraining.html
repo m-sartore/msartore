@@ -68,11 +68,11 @@
       overflow: hidden;
     }
 
-    /* Griglia a colonna verticale a 3 tracce */
+    /* Griglia a colonna verticale a 3 tracce con riga controlli flessibile */
     .ear-grid {
       display: grid;
       grid-template-columns: 1fr 1.3fr 1fr;
-      grid-template-rows: repeat(14, minmax(0, 1fr));
+      grid-template-rows: repeat(13, minmax(0, 1fr)) auto;
       width: 100%;
       height: 100%;
       max-width: 480px;
@@ -138,8 +138,8 @@
       box-shadow: none !important;
     }
 
-    /* Note SELEZIONATE: Cerchio evidenziato con ALONE RADIALE dello stesso colore */
-    body.creator-mode .round-note-btn.teacher-selected {
+    /* Note naturali selezionate */
+    body.creator-mode .round-note-btn.teacher-selected:not(.accidental) {
       opacity: 1 !important;
       filter: none !important;
       border-color: #FFFFFF !important;
@@ -147,6 +147,19 @@
       box-shadow: 0 0 0 3px #0D171C, 
                   0 0 0 6px var(--btn-color, #379386), 
                   0 0 24px var(--btn-glow-color, rgba(55, 147, 134, 0.85)) !important;
+    }
+
+    /* Note ALTERATE (diesis e bemolli) selezionate: riga tratteggiata del colore della nota */
+    body.creator-mode .round-note-btn.accidental.teacher-selected {
+      opacity: 1 !important;
+      filter: none !important;
+      border-color: var(--btn-color, #379386) !important;
+      border-style: dashed !important;
+      border-width: 2.5px !important;
+      transform: scale(1.06);
+      box-shadow: 0 0 0 3px #0D171C, 
+                  0 0 0 5px var(--btn-color, #379386), 
+                  0 0 22px var(--btn-glow-color, rgba(55, 147, 134, 0.85)) !important;
     }
 
     /* La tonica (tasto 1) è sempre fissa e non deselezionabile */
@@ -164,6 +177,17 @@
     body.student-pro-mode .round-note-btn:not(.active-in-exercise):not(#btn-1),
     body.test-mode .round-note-btn:not(.active-in-exercise):not(#btn-1) {
       display: none !important;
+    }
+
+    /* Spinner dinamico su pulsante PRO: nero all'hover, giallo a riposo */
+    #pro-btn-spinner {
+      border-color: #E0C36F;
+      border-top-color: transparent;
+      transition: border-color 0.2s ease;
+    }
+    #toggle-pro-btn:hover #pro-btn-spinner {
+      border-color: #0D171C;
+      border-top-color: transparent;
     }
 
     /* Animazioni Barre Fluttuanti Docente */
@@ -242,10 +266,10 @@
         </div>
       </div>
 
-      <!-- Pulsante Docente PRO con Spinner integrato -->
+      <!-- Pulsante Docente PRO con Spinner reattivo all'hover -->
       <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all duration-300 font-sans shadow-sm flex items-center justify-center min-w-[55px]">
         <span id="pro-btn-text">PRO</span>
-        <span id="pro-btn-spinner" class="hidden w-3 h-3 border-2 border-ochreBand border-t-transparent rounded-full animate-spin"></span>
+        <span id="pro-btn-spinner" class="hidden w-3 h-3 border-2 rounded-full animate-spin"></span>
       </button>
 
     </div>
@@ -286,21 +310,16 @@
     </div>
   </div>
 
-  <!-- BARRA MODALITÀ DI PROVA DOCENTE -->
+  <!-- BARRA MODALITÀ DI PROVA DOCENTE (SOLO MODIFICA ESERCIZIO) -->
   <div id="test-mode-bar" class="hidden smooth-drawer shrink-0 bg-tealBand/20 border-b border-tealBand/40 px-4 py-2 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex items-center justify-between text-xs">
       <span class="text-tealBand font-bold flex items-center gap-1.5">
         <span class="w-2 h-2 rounded-full bg-tealBand animate-pulse"></span>
         <span>Anteprima: <strong id="test-mode-title" class="text-white font-extrabold">Lezione</strong></span>
       </span>
-      <div class="flex items-center gap-2">
-        <button id="back-to-edit-btn" class="px-3 py-1 rounded-lg bg-ochreBand text-appDark font-extrabold text-[11px] hover:brightness-110 transition-all">
-          Modifica Esercizio
-        </button>
-        <button id="test-close-btn" class="px-2.5 py-1 rounded-lg bg-white/10 text-white/80 font-bold text-[11px] hover:bg-white/20 transition-all">
-          Chiudi
-        </button>
-      </div>
+      <button id="back-to-edit-btn" class="px-3.5 py-1.5 rounded-lg bg-ochreBand text-appDark font-extrabold text-[11px] hover:brightness-110 active:scale-95 transition-all">
+        Modifica Esercizio
+      </button>
     </div>
   </div>
 
@@ -408,7 +427,7 @@
       </button>
 
       <!-- Row 14: Controlli Standard di Gioco -->
-      <div id="student-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-3 pt-2">
+      <div id="student-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-3 pt-3">
         <button id="btn-main-action" class="flex-1 max-w-[260px] py-3.5 px-6 rounded-2xl bg-tealBand text-white font-extrabold text-sm tracking-wider uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">
           Inizia Serie (5 note)
         </button>
@@ -419,34 +438,57 @@
         </button>
       </div>
 
-      <!-- Row 14 Alternativo: Controlli Docente (Fluidi) -->
-      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-2 pt-1 opacity-0 translate-y-2">
+      <!-- Row 14 Alternativo: Controlli Docente BEN SEPARATI e ORDINATI -->
+      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-2 pt-3 opacity-0 translate-y-2">
+        <!-- RIGA 1: SELETTORI (NOTA BASE E NUMERO NOTE DA 1 A 20) -->
         <div class="flex items-center justify-center gap-2 text-xs w-full max-w-sm">
-          <select id="creator-root-select" class="bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+          <select id="creator-root-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
             <option value="fixed-c">Nota Base: Do Fissa</option>
             <option value="random">Nota Base: Casuale</option>
           </select>
-          <select id="creator-count-select" class="bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+          <select id="creator-count-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+            <!-- Tutte le opzioni da 1 a 20 -->
+            <option value="1">1 Nota</option>
+            <option value="2">2 Note</option>
+            <option value="3">3 Note</option>
+            <option value="4">4 Note</option>
             <option value="5">5 Note</option>
+            <option value="6">6 Note</option>
+            <option value="7">7 Note</option>
             <option value="8">8 Note</option>
+            <option value="9">9 Note</option>
             <option value="10" selected>10 Note</option>
+            <option value="11">11 Note</option>
+            <option value="12">12 Note</option>
+            <option value="13">13 Note</option>
+            <option value="14">14 Note</option>
             <option value="15">15 Note</option>
+            <option value="16">16 Note</option>
+            <option value="17">17 Note</option>
+            <option value="18">18 Note</option>
+            <option value="19">19 Note</option>
+            <option value="20">20 Note</option>
           </select>
-          <button id="creator-copy-link-btn" class="flex-1 py-2 px-3 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md truncate">
-            Copia Link Allievo
+        </div>
+
+        <!-- RIGA 2: PULSANTE SALVATAGGIO SEMPRE PERFETTAMENTE VISIBILE -->
+        <div class="w-full max-w-sm">
+          <button id="creator-copy-link-btn" class="w-full py-2.5 px-4 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md text-center">
+            Copia link e salva lezione
           </button>
         </div>
-        <p class="text-[10px] text-white/50 text-center">Tocca i cerchi per includere o escludere gli intervalli.</p>
+
+        <p class="text-[10px] text-white/50 text-center mt-0.5">Tocca i cerchi per includere o escludere gli intervalli.</p>
       </div>
 
     </div>
   </main>
 
   <!-- ========================================== -->
-  <!-- 3. FOOTER MINIMALE -->
+  <!-- 3. FOOTER MINIMALE: SOLO LINK CENTRATO    -->
   <!-- ========================================== -->
-  <footer class="w-full shrink-0 py-2 px-4 text-center text-[11px] text-white/40 border-t border-white/5 bg-[#0D171C]">
-    Metodo Didattico Marco Sartore • <a href="https://msartore.it" target="_blank" class="text-ochreBand hover:underline">msartore.it</a>
+  <footer class="w-full shrink-0 py-2.5 px-4 text-center text-xs border-t border-white/5 bg-[#0D171C]">
+    <a href="https://msartore.it" target="_blank" rel="noopener noreferrer" class="text-ochreBand/70 hover:text-ochreBand hover:underline font-mono text-[11px] transition-colors">msartore.it</a>
   </footer>
 
   <!-- ========================================== -->
@@ -594,7 +636,7 @@
     /* ================================================================ */
     /* CONFIGURAZIONE URL GOOGLE APPS SCRIPT                            */
     /* ================================================================ */
-    const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec"; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT (/exec)
+    const LICENSE_API_URL = ""; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT (/exec)
 
     const FALLBACK_LICENSES = [
       'PRO-MARCO-2026',
@@ -604,7 +646,7 @@
     ];
 
     /* ================================================================ */
-    /* MOTORE AUDIO NATIVO (SAFARI IPAD COMPATIBLE)                     */
+    /* MOTORE AUDIO NATIVO                                              */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -1036,7 +1078,6 @@
       const testModeBar = document.getElementById('test-mode-bar');
       const testModeTitle = document.getElementById('test-mode-title');
       const backToEditBtn = document.getElementById('back-to-edit-btn');
-      const testCloseBtn = document.getElementById('test-close-btn');
 
       const studentControlsRow = document.getElementById('student-controls-row');
       const creatorControlsRow = document.getElementById('creator-controls-row');
@@ -1130,7 +1171,6 @@
       function saveLessonLocally(lessonData) {
         try {
           let list = getSavedLessons();
-          // Sostituisce se ha lo stesso ID o stesso Titolo
           list = list.filter(item => item.id !== lessonData.id && item.title.toLowerCase() !== lessonData.title.toLowerCase());
           list.unshift(lessonData);
           if (list.length > 25) list = list.slice(0, 25);
@@ -1171,7 +1211,7 @@
         const lessons = getSavedLessons();
         archiveList.innerHTML = '';
         if (lessons.length === 0) {
-          archiveList.innerHTML = '<div class="text-xs text-white/40 text-center py-3">Nessuna lezione salvata ancora. Quando copi un link allievo, verrà salvata qui.</div>';
+          archiveList.innerHTML = '<div class="text-xs text-white/40 text-center py-3">Nessuna lezione salvata ancora. Quando salvi un link allievo, verrà memorizzata qui.</div>';
           return;
         }
 
@@ -1184,8 +1224,8 @@
               <span class="text-[10px] text-white/40 font-mono">${l.notesCount} Note • ${l.date}</span>
             </div>
             <div class="flex items-center gap-1.5 shrink-0">
-              <button class="load-lesson-btn px-2.5 py-1 rounded-lg bg-tealBand text-white font-bold text-[10px] hover:brightness-110">Carica</button>
-              <button class="delete-lesson-btn px-2 py-1 rounded-lg bg-white/5 text-white/40 hover:text-coralBand hover:bg-white/10 text-[11px] font-bold">✕</button>
+              <button class="load-lesson-btn px-2.5 py-1 rounded-lg bg-tealBand text-white font-bold text-[10px] hover:brightness-110 active:scale-95 transition-all">Carica</button>
+              <button class="delete-lesson-btn px-2 py-1 rounded-lg bg-white/5 text-white/40 hover:text-coralBand hover:bg-white/10 text-[11px] font-bold active:scale-95 transition-all">✕</button>
             </div>
           `;
 
@@ -1206,7 +1246,6 @@
             lessonsArchivePanel.classList.add('hidden');
           });
 
-          // Apre pop-up di conferma eliminazione
           row.querySelector('.delete-lesson-btn').addEventListener('click', () => {
             pendingDeleteLesson = l;
             deleteConfirmMsg.textContent = `Sei sicuro di voler eliminare la lezione "${l.title}"? Verrà rimossa da questo dispositivo e dal foglio online.`;
@@ -1217,7 +1256,6 @@
         });
       }
 
-      // Conferma Eliminazione Lezione
       deleteCancelBtn.addEventListener('click', () => {
         deleteConfirmModal.classList.add('hidden');
         pendingDeleteLesson = null;
@@ -1228,13 +1266,11 @@
         const l = pendingDeleteLesson;
         const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
 
-        // 1. Elimina subito da locale
         let list = getSavedLessons().filter(item => item.id !== l.id && item.title !== l.title);
         localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
         renderArchiveUI();
         deleteConfirmModal.classList.add('hidden');
 
-        // 2. Elimina silenziosamente dal Foglio Google in background
         if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
           const deleteUrl = `${LICENSE_API_URL}?action=deleteLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(l.id)}&title=${encodeURIComponent(l.title)}`;
           fetch(deleteUrl).catch(() => {});
@@ -1346,7 +1382,7 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* MODALITÀ CREAZIONE DOCENTE CON TRANSIZIONE MORBIDA               */
+      /* MODALITÀ CREAZIONE DOCENTE                                       */
       /* ================================================================ */
       function updateTeacherGridVisuals() {
         intervalButtonsData.forEach(item => {
@@ -1470,7 +1506,7 @@
 
         gameState.exerciseTitle = creatorTitleInput.value.trim() || 'Esercizio Docente';
         gameState.rootMode = creatorRootSelect.value;
-        gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 5;
+        gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 10;
 
         gameState.allowedButtonIds = new Set(teacherSelectedNoteIds);
         gameState.allowedButtonIds.add('btn-1');
@@ -1495,9 +1531,8 @@
 
       creatorTestBtn.addEventListener('click', enterTestMode);
       backToEditBtn.addEventListener('click', enterCreatorMode);
-      testCloseBtn.addEventListener('click', exitToNormalMode);
 
-      // CLICK SU TASTO PRO CON SPINNER DI ATTESA
+      // CLICK SU TASTO PRO CON SPINNER NERO SULL'HOVER E GIALLO A RIPOSO
       toggleProBtn.addEventListener('click', async () => {
         audio.ensureContextRunning();
         if (gameState.creatorMode || gameState.testMode) {
@@ -1507,7 +1542,6 @@
 
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         if (savedLic) {
-          // Attiva spinner su tasto PRO
           proBtnText.classList.add('hidden');
           proBtnSpinner.classList.remove('hidden');
           toggleProBtn.disabled = true;
@@ -1567,10 +1601,8 @@
       }
 
       function executeSaveAndCopy(saveData) {
-        // 1. Salva subito in locale
         saveLessonLocally(saveData);
 
-        // 2. Invia silenziosamente a Google Apps Script (in background, gestisce aggiornamento o inserimento)
         if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
           const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
           const notesStr = Array.from(saveData.noteIds)
@@ -1582,10 +1614,9 @@
           fetch(cloudSaveUrl).catch(() => {});
         }
 
-        // 3. Copia link negli appunti
         navigator.clipboard.writeText(saveData.url).then(() => {
           const originalText = creatorCopyLinkBtn.textContent;
-          creatorCopyLinkBtn.textContent = 'Link Copiato!';
+          creatorCopyLinkBtn.textContent = 'Link copiato e lezione salvata!';
           creatorCopyLinkBtn.classList.remove('bg-ochreBand');
           creatorCopyLinkBtn.classList.add('bg-tealBand', 'text-white');
 
@@ -1593,11 +1624,11 @@
             creatorCopyLinkBtn.textContent = originalText;
             creatorCopyLinkBtn.classList.remove('bg-tealBand', 'text-white');
             creatorCopyLinkBtn.classList.add('bg-ochreBand', 'text-appDark');
-          }, 1600);
+          }, 1800);
         });
       }
 
-      // Controllo Sovrascrittura o Nuovo Salvataggio
+      // GESTIONE COPIA LINK E SALVA LEZIONE
       creatorCopyLinkBtn.addEventListener('click', () => {
         audio.ensureContextRunning();
         if (teacherSelectedNoteIds.size === 0) {
@@ -1621,9 +1652,8 @@
         };
 
         if (existingLesson) {
-          // Chiede conferma sovrascrittura
           pendingSaveData = candidateSaveData;
-          overwriteConfirmMsg.textContent = `Esiste già una lezione salvata con il titolo "${titleStr}". Vuoi aggiornare l'esercizio esistente o cambiare titolo?`;
+          overwriteConfirmMsg.textContent = `Esiste già una lezione salvata con il titolo "${titleStr}". Vuoi aggiornarla con le modifiche correnti o cambiare titolo?`;
           overwriteConfirmModal.classList.remove('hidden');
         } else {
           executeSaveAndCopy(candidateSaveData);
@@ -1837,6 +1867,7 @@
               return;
             }
 
+            // SUONA SOLO SE VIENE ACCESA (COLORATA), TACE SE VIENE SPENTA
             if (teacherSelectedNoteIds.has(item.id)) {
               teacherSelectedNoteIds.delete(item.id);
             } else {
