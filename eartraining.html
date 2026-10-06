@@ -9,6 +9,18 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👂</text></svg>">
 
+  <!-- Controllo istantaneo Allievo PRO per azzerare il FOUC/sfarfallio Free -->
+  <script>
+    (function() {
+      try {
+        var p = new URLSearchParams(window.location.search);
+        if (p.has('docente')) {
+          document.documentElement.classList.add('pro-student-pending');
+        }
+      } catch(e) {}
+    })();
+  </script>
+
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,6 +63,12 @@
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
+    }
+
+    /* Prevenzione sfarfallio Free all'apertura link allievo */
+    html.pro-student-pending #free-notice,
+    html.pro-student-pending #toggle-pro-btn {
+      display: none !important;
     }
 
     /* Asse dell'onda propagata orizzontalmente */
@@ -131,11 +149,38 @@
       margin-left: 5px;
     }
 
-    /* ================================================================ */
-    /* GRAFICA MODALITÀ CREAZIONE DOCENTE                               */
-    /* Le note spente vanno in penombra. Quelle selezionate mantengono  */
-    /* ESATTAMENTE i colori, ombre e bordi della schermata iniziale.    */
-    /* ================================================================ */
+    /* Ottimizzazioni per schermi compatti (< 720px e < 620px) */
+    @media (max-height: 720px) {
+      .ear-grid {
+        gap: 1px;
+      }
+      .round-note-btn {
+        height: min(90%, 38px);
+        font-size: clamp(0.8rem, 2.1vh, 1rem);
+        border-width: 2px;
+      }
+      .round-note-btn.accidental {
+        height: min(78%, 32px);
+        font-size: clamp(0.68rem, 1.7vh, 0.82rem);
+        border-width: 1.5px;
+      }
+    }
+
+    @media (max-height: 620px) {
+      .round-note-btn {
+        height: min(86%, 31px);
+        font-size: 0.76rem;
+      }
+      .round-note-btn.accidental {
+        height: min(74%, 25px);
+        font-size: 0.64rem;
+      }
+      #game-stage {
+        padding: 1px;
+      }
+    }
+
+    /* GRAFICA MODALITÀ CREAZIONE DOCENTE */
     body.creator-mode .round-note-btn:not(.teacher-selected):not(.drone-note) {
       opacity: 0.20 !important;
       filter: grayscale(100%) !important;
@@ -209,7 +254,7 @@
   <!-- ========================================== -->
   <!-- 1. HEADER                                  -->
   <!-- ========================================== -->
-  <header class="w-full shrink-0 z-30 bg-[#111D23]/95 backdrop-blur-md border-b border-white/10 px-3 py-2">
+  <header class="w-full shrink-0 z-30 bg-[#111D23]/95 backdrop-blur-md border-b border-white/10 px-3 py-1.5 sm:py-2">
     <div class="max-w-2xl mx-auto flex items-center justify-between gap-3">
       
       <!-- Brand & Badge Serie -->
@@ -248,7 +293,7 @@
   <!-- ========================================== -->
   <!-- BARRA SUPERIORE MODALITÀ DOCENTE           -->
   <!-- ========================================== -->
-  <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-3 py-2 z-20 opacity-0 -translate-y-2">
+  <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-3 py-1.5 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">DOCENTE</span>
@@ -267,7 +312,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- PANNELLO ARCHIVIO LEZIONI (A TUTTO SCHERMO)-->
+  <!-- PANNELLO ARCHIVIO LEZIONI                  -->
   <!-- ========================================== -->
   <div id="lessons-archive-panel" class="hidden fixed inset-0 z-50 bg-[#0D171C]/98 backdrop-blur-md flex flex-col p-4 sm:p-6 overflow-hidden">
     <div class="max-w-xl w-full mx-auto flex flex-col h-full">
@@ -407,7 +452,7 @@
       </button>
 
       <!-- Row 14: Controlli Standard di Gioco -->
-      <div id="student-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-2 pt-1.5">
+      <div id="student-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-2 pt-1">
         <button id="btn-main-action" class="flex-1 max-w-[260px] py-2.5 px-5 rounded-2xl bg-tealBand text-white font-extrabold text-xs sm:text-sm tracking-wider uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">
           Inizia Serie (5 note)
         </button>
@@ -419,7 +464,7 @@
       </div>
 
       <!-- Row 14 Alternativo: Controlli Docente -->
-      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-1.5 pt-1.5 opacity-0 translate-y-2">
+      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-1.5 pt-1 opacity-0 translate-y-2">
         
         <!-- RIGA 1: TONALITÀ + NUMERO NOTE + PULSANTE DRONI -->
         <div class="flex items-center justify-between gap-1.5 text-xs w-full max-w-sm">
@@ -480,7 +525,7 @@
   <!-- ========================================== -->
   <!-- 3. FOOTER MINIMALE                         -->
   <!-- ========================================== -->
-  <footer class="w-full shrink-0 py-1.5 px-4 text-center text-xs border-t border-white/5 bg-[#0D171C]">
+  <footer class="w-full shrink-0 py-1 px-4 text-center text-xs border-t border-white/5 bg-[#0D171C]">
     <a href="https://msartore.it" target="_blank" rel="noopener noreferrer" class="text-ochreBand/70 hover:text-ochreBand hover:underline font-mono text-[11px] transition-colors">msartore.it</a>
   </footer>
 
@@ -546,7 +591,7 @@
   <!-- ========================================== -->
   <div id="overwrite-confirm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center relative">
-      <h3 class="text-lg font-extrabold text-white mb-2">Lezione Esistente</h3>
+      <h3 class="text-lg font-extrabold text-white mb-2">Lezione Esistente con lo Stesso Nome</h3>
       <p id="overwrite-confirm-msg" class="text-xs text-white/70 leading-relaxed mb-6">
         Esiste già una lezione salvata con questo titolo. Vuoi aggiornarla con le modifiche correnti o cambiare titolo?
       </p>
@@ -562,7 +607,27 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 7. MODALE PROMO (UTENTE FREE)              -->
+  <!-- 7. MODALE DUPLICATO CON STESSI PARAMETRI   -->
+  <!-- ========================================== -->
+  <div id="duplicate-config-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center relative">
+      <h3 class="text-lg font-extrabold text-white mb-2">Esercizio Identico Rilevato</h3>
+      <p id="duplicate-config-msg" class="text-xs text-white/70 leading-relaxed mb-6">
+        Hai già creato un esercizio esattamente uguale a questo. Vuoi salvarlo comunque con questo nuovo titolo?
+      </p>
+      <div class="flex flex-col gap-2">
+        <button id="duplicate-proceed-btn" class="w-full py-2.5 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all">
+          Salva Comunque
+        </button>
+        <button id="duplicate-cancel-btn" class="w-full py-2.5 rounded-xl bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all">
+          Annulla
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 8. MODALE PROMO (UTENTE FREE)              -->
   <!-- ========================================== -->
   <div id="promo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-center">
@@ -585,7 +650,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 8. MODALE DI SBLOCCO LICENZA DOCENTE       -->
+  <!-- 9. MODALE DI SBLOCCO LICENZA DOCENTE       -->
   <!-- ========================================== -->
   <div id="license-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-white/15 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
@@ -623,7 +688,7 @@
 
 
   <!-- ================================================================= -->
-  <!-- 9. JAVASCRIPT: LOGICA APPLICATIVA COMPLETA                        -->
+  <!-- 10. JAVASCRIPT: LOGICA APPLICATIVA COMPLETA                       -->
   <!-- ================================================================= -->
   <script>
     const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec";
@@ -635,8 +700,24 @@
       'VIP-EAR-TRAIN'
     ];
 
+    const KEY_NAMES_ITA = {
+      '60': 'Do',
+      '61': 'Do♯ / Re♭',
+      '62': 'Re',
+      '63': 'Re♯ / Mi♭',
+      '64': 'Mi',
+      '65': 'Fa',
+      '66': 'Fa♯ / Sol♭',
+      '67': 'Sol',
+      '68': 'Sol♯ / La♭',
+      '69': 'La',
+      '70': 'La♯ / Si♭',
+      '71': 'Si',
+      'random': 'Casuale'
+    };
+
     /* ================================================================ */
-    /* MOTORE AUDIO NATIVO OTTIMIZZATO                                  */
+    /* MOTORE AUDIO: CALIBRATO ANTI-DISTORSIONE E ANTI-POP              */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -645,6 +726,7 @@
         this.droneVoice = null;
         this.secretVoice = null;
         this.isDronePlaying = false;
+        this.secretTimeoutId = null;
       }
 
       ensureContextRunning() {
@@ -662,11 +744,12 @@
       initLimiter() {
         if (!this.ctx) return;
         this.compressor = this.ctx.createDynamicsCompressor();
-        this.compressor.threshold.setValueAtTime(-2, this.ctx.currentTime);
-        this.compressor.knee.setValueAtTime(4, this.ctx.currentTime);
-        this.compressor.ratio.setValueAtTime(14, this.ctx.currentTime);
-        this.compressor.attack.setValueAtTime(0.003, this.ctx.currentTime);
-        this.compressor.release.setValueAtTime(0.12, this.ctx.currentTime);
+        // Parametri morbidi e trasparenti per evitare ducking o crackle
+        this.compressor.threshold.setValueAtTime(-6, this.ctx.currentTime);
+        this.compressor.knee.setValueAtTime(10, this.ctx.currentTime);
+        this.compressor.ratio.setValueAtTime(4, this.ctx.currentTime);
+        this.compressor.attack.setValueAtTime(0.015, this.ctx.currentTime);
+        this.compressor.release.setValueAtTime(0.25, this.ctx.currentTime);
         this.compressor.connect(this.ctx.destination);
       }
 
@@ -674,8 +757,7 @@
         return 440 * Math.pow(2, (midi - 69) / 12);
       }
 
-      // Crea un gruppo vocale completo che può essere distrutto e ripulito
-      createVoiceGroup(freq, masterGainVal = 0.5) {
+      createVoiceGroup(freq, targetMasterGain = 0.35) {
         const now = Math.max(0, this.ctx.currentTime);
         const masterGain = this.ctx.createGain();
         masterGain.gain.setValueAtTime(0, now);
@@ -683,15 +765,16 @@
 
         const filter = this.ctx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(Math.min(freq * 4.2, 11000), now);
-        filter.Q.setValueAtTime(0.7, now);
+        filter.frequency.setValueAtTime(Math.min(freq * 3.8, 9500), now);
+        filter.Q.setValueAtTime(0.65, now);
         filter.connect(masterGain);
 
+        // Armoniche bilanciate con somma normalizzata
         const partials = [
           { mult: 1.0, gain: 0.65 },
           { mult: 2.0, gain: 0.22 },
           { mult: 3.0, gain: 0.09 },
-          { mult: 4.0, gain: 0.03 }
+          { mult: 4.0, gain: 0.04 }
         ];
 
         const oscillators = [];
@@ -709,17 +792,21 @@
           subGains.push(pGain);
         });
 
-        const voice = {
+        return {
           masterGain,
           filter,
           oscillators,
           subGains,
-          stopAndDispose: (fadeSec = 0.05) => {
+          stopAndDispose: (fadeSec = 0.06) => {
             const t = Math.max(0, this.ctx.currentTime);
             try {
-              masterGain.gain.cancelScheduledValues(t);
-              masterGain.gain.setValueAtTime(masterGain.gain.value, t);
-              masterGain.gain.linearRampToValueAtTime(0, t + fadeSec);
+              if (masterGain.gain.cancelAndHoldAtTime) {
+                masterGain.gain.cancelAndHoldAtTime(t);
+              } else {
+                masterGain.gain.cancelScheduledValues(t);
+                masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+              }
+              masterGain.gain.linearRampToValueAtTime(0.0001, t + fadeSec);
             } catch(e) {}
 
             setTimeout(() => {
@@ -731,11 +818,9 @@
               });
               try { filter.disconnect(); } catch(e){}
               try { masterGain.disconnect(); } catch(e){}
-            }, (fadeSec * 1000) + 60);
+            }, (fadeSec * 1000) + 70);
           }
         };
-
-        return voice;
       }
 
       startDrone(midiNote) {
@@ -745,14 +830,15 @@
         const freq = this.midiToFreq(midiNote);
         const now = Math.max(0, this.ctx.currentTime) + 0.01;
 
-        this.droneVoice = this.createVoiceGroup(freq, 0.24);
+        // Headroom calibrato a 0.20 per suonare insieme alle altre note senza saturare
+        this.droneVoice = this.createVoiceGroup(freq, 0.20);
         this.droneVoice.masterGain.gain.setValueAtTime(0, now);
-        this.droneVoice.masterGain.gain.linearRampToValueAtTime(0.24, now + 0.4);
+        this.droneVoice.masterGain.gain.linearRampToValueAtTime(0.20, now + 0.45);
         this.droneVoice.oscillators.forEach(osc => osc.start(now));
         this.isDronePlaying = true;
       }
 
-      stopDrone(fadeSeconds = 0.3) {
+      stopDrone(fadeSeconds = 0.25) {
         if (!this.droneVoice || !this.isDronePlaying) return;
         this.droneVoice.stopAndDispose(fadeSeconds);
         this.droneVoice = null;
@@ -766,20 +852,20 @@
         const freq = this.midiToFreq(midiNote);
         const now = Math.max(0, this.ctx.currentTime) + 0.01;
 
-        this.secretVoice = this.createVoiceGroup(freq, 0.52);
+        this.secretVoice = this.createVoiceGroup(freq, 0.38);
         this.secretVoice.masterGain.gain.setValueAtTime(0, now);
-        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.52, now + 0.1);
-        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.36, now + 1.2);
-        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0, now + durationSeconds);
+        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.38, now + 0.12);
+        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.26, now + 1.2);
+        this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.0001, now + durationSeconds);
 
         this.secretVoice.oscillators.forEach(osc => {
           osc.start(now);
           osc.stop(now + durationSeconds + 0.1);
         });
 
-        // Cleanup automatico al termine della nota
-        setTimeout(() => {
-          if (this.secretVoice) {
+        const currentRef = this.secretVoice;
+        this.secretTimeoutId = setTimeout(() => {
+          if (this.secretVoice === currentRef) {
             this.secretVoice.stopAndDispose(0.05);
             this.secretVoice = null;
           }
@@ -787,13 +873,21 @@
       }
 
       stopSecretNoteImmediate() {
+        if (this.secretTimeoutId) {
+          clearTimeout(this.secretTimeoutId);
+          this.secretTimeoutId = null;
+        }
         if (this.secretVoice) {
           this.secretVoice.stopAndDispose(0.03);
           this.secretVoice = null;
         }
       }
 
-      fadeSecretNote(fadeSeconds = 0.35) {
+      fadeSecretNote(fadeSeconds = 0.3) {
+        if (this.secretTimeoutId) {
+          clearTimeout(this.secretTimeoutId);
+          this.secretTimeoutId = null;
+        }
         if (!this.secretVoice) return;
         this.secretVoice.stopAndDispose(fadeSeconds);
         this.secretVoice = null;
@@ -805,10 +899,10 @@
         const freq = this.midiToFreq(midiNote);
         const now = Math.max(0, this.ctx.currentTime) + 0.005;
 
-        const voice = this.createVoiceGroup(freq, 0.42);
+        const voice = this.createVoiceGroup(freq, 0.32);
         voice.masterGain.gain.setValueAtTime(0, now);
-        voice.masterGain.gain.linearRampToValueAtTime(0.42, now + 0.05);
-        voice.masterGain.gain.linearRampToValueAtTime(0, now + duration);
+        voice.masterGain.gain.linearRampToValueAtTime(0.32, now + 0.06);
+        voice.masterGain.gain.linearRampToValueAtTime(0.0001, now + duration);
 
         voice.oscillators.forEach(osc => {
           osc.start(now);
@@ -821,7 +915,7 @@
 
 
     /* ================================================================ */
-    /* MODULO ONDA FISICA                                               */
+    /* MODULO ONDA FISICA DINAMICA                                      */
     /* ================================================================ */
     const W = 1000;
     const MID = 25;
@@ -868,26 +962,34 @@
       return d;
     }
 
-    function spawnPropagatingWave(buttonElement, isInfinite = true) {
+    function updateWaveGeometry(waveAxis, buttonElement) {
       const stage = document.getElementById('game-stage');
-      if (!stage || !buttonElement) return null;
-
+      if (!stage || !buttonElement || !waveAxis) return;
       const stageRect = stage.getBoundingClientRect();
       const btnRect = buttonElement.getBoundingClientRect();
-      
+
       const relativeY = btnRect.top - stageRect.top + btnRect.height / 2;
       const relativeX = btnRect.left - stageRect.left + btnRect.width / 2;
       const percentX = (relativeX / stageRect.width) * 100;
       const waveCenter = percentX * 10;
 
-      const waveAxis = document.createElement('div');
-      waveAxis.className = 'wave-axis';
       waveAxis.style.top = `${relativeY}px`;
-
       const maskRadius = btnRect.height / 2;
       const maskString = `radial-gradient(circle at ${percentX}% 50%, transparent ${maskRadius + 3}px, #000 ${maskRadius + 4}px)`;
       waveAxis.style.webkitMaskImage = maskString;
       waveAxis.style.maskImage = maskString;
+      waveAxis._waveCenter = waveCenter;
+    }
+
+    function spawnPropagatingWave(buttonElement, isInfinite = true) {
+      const stage = document.getElementById('game-stage');
+      if (!stage || !buttonElement) return null;
+
+      const waveAxis = document.createElement('div');
+      waveAxis.className = 'wave-axis';
+      waveAxis._targetBtn = buttonElement;
+
+      updateWaveGeometry(waveAxis, buttonElement);
 
       waveAxis.innerHTML = `
         <svg viewBox="0 0 1000 50" preserveAspectRatio="none">
@@ -916,6 +1018,7 @@
           return;
         }
 
+        const waveCenter = waveAxis._waveCenter || 500;
         const propagateT = Math.min(1, elapsed / gapMs);
         const ease = naturalEase(propagateT);
         
@@ -951,13 +1054,11 @@
 
       const audio = new AudioEngine();
 
-      // Sblocco audio su interazione
       const unlockAudioTouch = () => audio.ensureContextRunning();
       ['touchstart', 'pointerdown', 'touchend', 'click'].forEach(evt => {
         document.addEventListener(evt, unlockAudioTouch, { once: true, passive: true });
       });
 
-      // Gestore centralizzato dei timer per evitare corse critiche
       let activeTimers = [];
       function setAppTimeout(fn, ms) {
         const id = setTimeout(() => {
@@ -993,19 +1094,19 @@
         { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Grado 1', order: 0 }
       ];
 
-      // Mappatura intervallo reale tra Drone e Nota Target
-      const intervalNamesBySemitones = {
+      // Dicitura unificata esaustiva per il riepilogo statistico (nessuna confusione enarmonica)
+      const unifiedIntervalNames = {
         0: 'Unisono',
-        1: '2ª Minore',
+        1: '2ª Minore / 1ª Aumentata',
         2: '2ª Maggiore',
-        3: '3ª Minore',
+        3: '3ª Minore / 2ª Aumentata',
         4: '3ª Maggiore',
         5: '4ª Giusta',
         6: 'Tritono (4ª Aum. / 5ª Dim.)',
         7: '5ª Giusta',
-        8: '6ª Minore',
+        8: '6ª Minore / 5ª Aumentata',
         9: '6ª Maggiore',
-        10: '7ª Minore',
+        10: '7ª Minore / 6ª Aumentata',
         11: '7ª Maggiore',
         12: 'Ottava'
       };
@@ -1044,7 +1145,6 @@
         return '#E37055';
       }
 
-      // Applicazione stili cromatici iniziali
       intervalButtonsData.forEach(item => {
         const fraction = item.order / 12;
         const color = getColorForFraction(fraction);
@@ -1083,7 +1183,7 @@
         currentDroneItem: null,
         currentDroneMidi: 60,
         targetItem: null,
-        lastTargetId: null,
+        lastTargetSemitones: null,
 
         batchCurrentNote: 0,
         batchTotalNotes: 5,
@@ -1101,9 +1201,27 @@
 
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
       let teacherDroneNoteIds = new Set(['btn-1']);
-
-      // Mappa delle onde individuali dei droni in modalità creazione: ID -> Elemento Onda
       const creatorDroneWaves = new Map();
+
+      // Funzione di calcolo ottava: da Sol in poi (MIDI >= 67) va all'ottava inferiore (-12 semitoni)
+      function getEffectiveKeyRoot(keyVal) {
+        let midi = 60;
+        if (keyVal === 'random') {
+          const keys = [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71];
+          midi = keys[Math.floor(Math.random() * keys.length)];
+        } else {
+          midi = parseInt(keyVal, 10) || 60;
+        }
+
+        if (midi >= 67) {
+          midi -= 12; // Da Sol a Si scala all'ottava inferiore (es. Sol4 -> Sol3)
+        }
+        return midi;
+      }
+
+      function getCreatorBaseMidi() {
+        return getEffectiveKeyRoot(creatorKeySelect.value);
+      }
 
       function addCreatorDroneWave(itemId) {
         if (!gameState.creatorMode || creatorDroneWaves.has(itemId)) return;
@@ -1188,6 +1306,12 @@
       const overwriteCancelBtn = document.getElementById('overwrite-cancel-btn');
       let pendingSaveData = null;
 
+      const duplicateConfigModal = document.getElementById('duplicate-config-modal');
+      const duplicateConfigMsg = document.getElementById('duplicate-config-msg');
+      const duplicateProceedBtn = document.getElementById('duplicate-proceed-btn');
+      const duplicateCancelBtn = document.getElementById('duplicate-cancel-btn');
+      let pendingDuplicateSaveData = null;
+
       const promoModal = document.getElementById('promo-modal');
       const promoCloseBtn = document.getElementById('promo-close-btn');
       const promoXBtn = document.getElementById('promo-x-btn');
@@ -1203,12 +1327,20 @@
 
       let gameDroneWaveEl = null;
 
-      // Restituisce la frequenza base impostata dal docente in creazione
-      function getCreatorBaseMidi() {
-        const val = creatorKeySelect.value;
-        if (val === 'random') return 60;
-        return parseInt(val, 10) || 60;
+      // Riposizionamento dinamico delle onde su resize o rotazione dello schermo
+      function updateAllActiveWavesPositions() {
+        if (gameDroneWaveEl && gameDroneWaveEl._targetBtn) {
+          updateWaveGeometry(gameDroneWaveEl, gameDroneWaveEl._targetBtn);
+        }
+        creatorDroneWaves.forEach((wave, itemId) => {
+          const btn = document.getElementById(itemId);
+          if (btn) updateWaveGeometry(wave, btn);
+        });
       }
+      window.addEventListener('resize', updateAllActiveWavesPositions);
+      window.addEventListener('orientationchange', () => {
+        setTimeout(updateAllActiveWavesPositions, 100);
+      });
 
       function triggerCorrectCircleRipple(buttonElement, colorRgba) {
         const rect = buttonElement.getBoundingClientRect();
@@ -1243,7 +1375,7 @@
       }
 
       /* ================================================================ */
-      /* GESTIONE ARCHIVIO LEZIONI (LOCAL-FIRST + SYNC CLOUD)             */
+      /* GESTIONE ARCHIVIO LEZIONI & DATABASE GOOGLE                      */
       /* ================================================================ */
       function getSavedLessons() {
         try {
@@ -1264,6 +1396,25 @@
         } catch(e) {}
       }
 
+      function areSetsEqual(setA, setB) {
+        if (!setA || !setB || setA.size !== setB.size) return false;
+        for (const item of setA) if (!setB.has(item)) return false;
+        return true;
+      }
+
+      function parseKeyToMidi(rawKey) {
+        if (!rawKey) return '60';
+        rawKey = String(rawKey).trim().toLowerCase();
+        if (rawKey === 'random' || rawKey === 'casuale') return 'random';
+        if (/^\d+$/.test(rawKey)) return rawKey;
+        for (const [code, label] of Object.entries(KEY_NAMES_ITA)) {
+          if (label.toLowerCase() === rawKey || label.toLowerCase().includes(rawKey)) {
+            return code;
+          }
+        }
+        return '60';
+      }
+
       async function syncLessonsFromCloudSilently(teacherCode) {
         if (!LICENSE_API_URL || !LICENSE_API_URL.startsWith('http')) return;
         try {
@@ -1277,6 +1428,7 @@
 
               data.lessons.forEach(cloudLesson => {
                 if (!titles.has(cloudLesson.title.toLowerCase())) {
+                  cloudLesson.keyRoot = parseKeyToMidi(cloudLesson.rootMode);
                   localList.push(cloudLesson);
                   titles.add(cloudLesson.title.toLowerCase());
                 }
@@ -1317,7 +1469,7 @@
 
           row.querySelector('.load-lesson-btn').addEventListener('click', () => {
             creatorTitleInput.value = l.title;
-            creatorKeySelect.value = l.keyRoot || '60';
+            creatorKeySelect.value = parseKeyToMidi(l.keyRoot || l.rootMode);
             creatorCountSelect.value = String(l.notesCount || 10);
             
             let ids = [];
@@ -1382,26 +1534,44 @@
       });
 
       /* ================================================================ */
-      /* CHIUSURA POPUP SOVRASCRITTURA AL CLICK ESTERNO O CAMBIA TITOLO   */
+      /* CHIUSURA POPUP SENZA SELEZIONE INVOLONTARIA TITOLO               */
       /* ================================================================ */
-      function dismissOverwriteModal() {
+      function closeOverwriteModal() {
         overwriteConfirmModal.classList.add('hidden');
         pendingSaveData = null;
-        creatorTitleInput.focus();
-        creatorTitleInput.select();
       }
 
-      overwriteCancelBtn.addEventListener('click', dismissOverwriteModal);
+      // "Cambia Titolo" è l'UNICO che fa focus e seleziona il titolo
+      overwriteCancelBtn.addEventListener('click', () => {
+        closeOverwriteModal();
+        creatorTitleInput.focus();
+        creatorTitleInput.select();
+      });
       
+      // Click fuori: chiude senza selezionare il titolo
       overwriteConfirmModal.addEventListener('click', (e) => {
-        if (e.target === overwriteConfirmModal) {
-          dismissOverwriteModal();
-        }
+        if (e.target === overwriteConfirmModal) closeOverwriteModal();
+      });
+
+      // Modale duplicato parametri identici
+      function closeDuplicateModal() {
+        duplicateConfigModal.classList.add('hidden');
+        pendingDuplicateSaveData = null;
+      }
+      duplicateCancelBtn.addEventListener('click', closeDuplicateModal);
+      duplicateConfigModal.addEventListener('click', (e) => {
+        if (e.target === duplicateConfigModal) closeDuplicateModal();
+      });
+      duplicateProceedBtn.addEventListener('click', () => {
+        if (!pendingDuplicateSaveData) return;
+        executeSaveAndCopy(pendingDuplicateSaveData);
+        closeDuplicateModal();
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !overwriteConfirmModal.classList.contains('hidden')) {
-          dismissOverwriteModal();
+        if (e.key === 'Escape') {
+          if (!overwriteConfirmModal.classList.contains('hidden')) closeOverwriteModal();
+          if (!duplicateConfigModal.classList.contains('hidden')) closeDuplicateModal();
         }
       });
 
@@ -1432,7 +1602,7 @@
       }
 
       /* ================================================================ */
-      /* CONTROLLO LINK ALLIEVO PRO                                       */
+      /* CONTROLLO LINK ALLIEVO PRO (NESSUN FOUC/SFARFALLIO)              */
       /* ================================================================ */
       async function checkUrlForProStudent() {
         const params = new URLSearchParams(window.location.search);
@@ -1444,73 +1614,80 @@
         const countParam = params.get('count');
 
         if (docenteParam) {
+          // Stato visivo pre-applicato all'istante
+          gameState.isProStudent = true;
+          document.body.classList.add('student-pro-mode');
+          document.documentElement.classList.remove('pro-student-pending');
+
+          toggleProBtn.classList.add('hidden');
+          toggleProBtn.style.display = 'none';
+
+          if (titleParam) {
+            gameState.exerciseTitle = decodeURIComponent(titleParam);
+            proExerciseTitle.textContent = gameState.exerciseTitle;
+          }
+          proBanner.classList.remove('hidden');
+          freeNotice.classList.add('hidden');
+
+          if (keyParam) {
+            gameState.keyRootMidi = getEffectiveKeyRoot(keyParam);
+          }
+
+          if (countParam) {
+            const parsedCount = parseInt(countParam, 10);
+            if (!isNaN(parsedCount) && parsedCount > 0) {
+              gameState.batchTotalNotes = parsedCount;
+              btnMainAction.textContent = `Inizia Serie (${parsedCount} note)`;
+            }
+          }
+
+          gameState.allowedButtonIds = new Set();
+          gameState.allowedButtonIds.add('btn-1');
+          document.getElementById('btn-1').classList.add('active-in-exercise');
+
+          if (dronesParam) {
+            const rawDrones = decodeURIComponent(dronesParam).split(',').map(s => s.trim().toLowerCase());
+            teacherDroneNoteIds = new Set();
+            intervalButtonsData.forEach(item => {
+              const match = rawDrones.includes(item.id.toLowerCase()) || rawDrones.includes(item.degree.toLowerCase());
+              if (match) {
+                teacherDroneNoteIds.add(item.id);
+                gameState.allowedButtonIds.add(item.id);
+                const el = document.getElementById(item.id);
+                if (el) el.classList.add('active-in-exercise');
+              }
+            });
+          }
+          if (teacherDroneNoteIds.size === 0) teacherDroneNoteIds.add('btn-1');
+
+          if (notesParam) {
+            const rawTokens = decodeURIComponent(notesParam).split(',').map(s => s.trim().toLowerCase());
+
+            intervalButtonsData.forEach(item => {
+              const el = document.getElementById(item.id);
+              const match = rawTokens.includes(item.id.toLowerCase()) || rawTokens.includes(item.degree.toLowerCase());
+              if (match || item.id === 'btn-1' || teacherDroneNoteIds.has(item.id)) {
+                gameState.allowedButtonIds.add(item.id);
+                if (el) el.classList.add('active-in-exercise');
+              } else {
+                if (el) el.classList.remove('active-in-exercise');
+              }
+            });
+          }
+
+          // Verifica asincrona in background
           const licCheck = await verifyLicenseCode(docenteParam);
           if (licCheck.valid) {
-            gameState.isProStudent = true;
             gameState.teacherCode = licCheck.teacher || docenteParam;
-            document.body.classList.add('student-pro-mode');
-
-            toggleProBtn.classList.add('hidden');
-            toggleProBtn.style.display = 'none';
-
-            if (titleParam) {
-              gameState.exerciseTitle = decodeURIComponent(titleParam);
-              proExerciseTitle.textContent = gameState.exerciseTitle;
-            }
             proTeacherId.textContent = `${gameState.teacherCode}`;
-            proBanner.classList.remove('hidden');
-            freeNotice.classList.add('hidden');
-
-            if (keyParam) {
-              if (keyParam === 'random') {
-                const keys = [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71];
-                gameState.keyRootMidi = keys[Math.floor(Math.random() * keys.length)];
-              } else {
-                gameState.keyRootMidi = parseInt(keyParam, 10) || 60;
-              }
-            }
-
-            if (countParam) {
-              const parsedCount = parseInt(countParam, 10);
-              if (!isNaN(parsedCount) && parsedCount > 0) {
-                gameState.batchTotalNotes = parsedCount;
-                btnMainAction.textContent = `Inizia Serie (${parsedCount} note)`;
-              }
-            }
-
-            gameState.allowedButtonIds = new Set();
-            gameState.allowedButtonIds.add('btn-1');
-            document.getElementById('btn-1').classList.add('active-in-exercise');
-
-            if (dronesParam) {
-              const rawDrones = decodeURIComponent(dronesParam).split(',').map(s => s.trim().toLowerCase());
-              teacherDroneNoteIds = new Set();
-              intervalButtonsData.forEach(item => {
-                const match = rawDrones.includes(item.id.toLowerCase()) || rawDrones.includes(item.degree.toLowerCase());
-                if (match) {
-                  teacherDroneNoteIds.add(item.id);
-                  gameState.allowedButtonIds.add(item.id);
-                  const el = document.getElementById(item.id);
-                  if (el) el.classList.add('active-in-exercise');
-                }
-              });
-            }
-            if (teacherDroneNoteIds.size === 0) teacherDroneNoteIds.add('btn-1');
-
-            if (notesParam) {
-              const rawTokens = decodeURIComponent(notesParam).split(',').map(s => s.trim().toLowerCase());
-
-              intervalButtonsData.forEach(item => {
-                const el = document.getElementById(item.id);
-                const match = rawTokens.includes(item.id.toLowerCase()) || rawTokens.includes(item.degree.toLowerCase());
-                if (match || item.id === 'btn-1' || teacherDroneNoteIds.has(item.id)) {
-                  gameState.allowedButtonIds.add(item.id);
-                  if (el) el.classList.add('active-in-exercise');
-                } else {
-                  if (el) el.classList.remove('active-in-exercise');
-                }
-              });
-            }
+          } else {
+            // Se il codice non è valido ritorna alla modalità free
+            gameState.isProStudent = false;
+            document.body.classList.remove('student-pro-mode');
+            toggleProBtn.classList.remove('hidden');
+            toggleProBtn.style.display = '';
+            proBanner.classList.add('hidden');
+            freeNotice.classList.remove('hidden');
           }
         }
       }
@@ -1518,7 +1695,7 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* MODALITÀ CREAZIONE DOCENTE: GRAFICA PULITA & FEDELE              */
+      /* MODALITÀ CREAZIONE DOCENTE                                       */
       /* ================================================================ */
       function updateTeacherGridVisuals() {
         intervalButtonsData.forEach(item => {
@@ -1597,7 +1774,6 @@
 
         updateTeacherGridVisuals();
 
-        // Avvia onde solo per i droni attualmente presenti nel set
         clearAllCreatorDroneWaves();
         teacherDroneNoteIds.forEach(id => addCreatorDroneWave(id));
 
@@ -1681,15 +1857,7 @@
         studentControlsRow.classList.remove('hidden');
 
         gameState.exerciseTitle = creatorTitleInput.value.trim() || 'Esercizio Docente';
-        
-        const selectedKey = creatorKeySelect.value;
-        if (selectedKey === 'random') {
-          const keys = [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71];
-          gameState.keyRootMidi = keys[Math.floor(Math.random() * keys.length)];
-        } else {
-          gameState.keyRootMidi = parseInt(selectedKey, 10) || 60;
-        }
-
+        gameState.keyRootMidi = getEffectiveKeyRoot(creatorKeySelect.value);
         gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 10;
 
         gameState.allowedButtonIds = new Set(teacherSelectedNoteIds);
@@ -1772,7 +1940,6 @@
         const keyVal = creatorKeySelect.value;
         const countVal = creatorCountSelect.value;
 
-        // Usa encodeURIComponent su ogni grado per preservare i diesis (#) senza troncare l'URL
         const selectedDegrees = Array.from(teacherSelectedNoteIds)
           .map(id => encodeURIComponent(intervalButtonsData.find(i => i.id === id)?.degree || ''))
           .filter(Boolean)
@@ -1802,7 +1969,10 @@
             .filter(Boolean)
             .join(',');
 
-          const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(saveData.id)}&title=${encodeURIComponent(saveData.title)}&notes=${encodeURIComponent(notesStr)}&drones=${encodeURIComponent(dronesStr)}&key=${encodeURIComponent(saveData.keyRoot)}&count=${saveData.notesCount}&url=${encodeURIComponent(saveData.url)}`;
+          // Invia &root= e &key= con la dicitura chiara in italiano per la colonna F (Nota Base)
+          const rootLabel = KEY_NAMES_ITA[saveData.keyRoot] || saveData.keyRoot;
+          const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(saveData.id)}&title=${encodeURIComponent(saveData.title)}&notes=${encodeURIComponent(notesStr)}&drones=${encodeURIComponent(dronesStr)}&root=${encodeURIComponent(rootLabel)}&key=${encodeURIComponent(saveData.keyRoot)}&count=${saveData.notesCount}&url=${encodeURIComponent(saveData.url)}`;
+          
           fetch(cloudSaveUrl).catch(() => {});
         }
 
@@ -1830,10 +2000,10 @@
         const titleStr = creatorTitleInput.value.trim() || 'Lezione';
         const shareUrl = generateTeacherShareUrl();
         const existingList = getSavedLessons();
-        const existingLesson = existingList.find(l => l.title.toLowerCase() === titleStr.toLowerCase());
+        const existingLessonWithSameTitle = existingList.find(l => l.title.toLowerCase() === titleStr.toLowerCase());
 
         const candidateSaveData = {
-          id: existingLesson ? existingLesson.id : ('LEZ_' + Date.now()),
+          id: existingLessonWithSameTitle ? existingLessonWithSameTitle.id : ('LEZ_' + Date.now()),
           title: titleStr,
           date: new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
           notesCount: parseInt(creatorCountSelect.value, 10) || 10,
@@ -1843,20 +2013,38 @@
           url: shareUrl
         };
 
-        if (existingLesson) {
+        // 1. Controllo se esiste già con lo STESSO TITOLO
+        if (existingLessonWithSameTitle) {
           pendingSaveData = candidateSaveData;
           overwriteConfirmMsg.textContent = `Esiste già una lezione salvata con il titolo "${titleStr}". Vuoi aggiornarla con le modifiche correnti o cambiare titolo?`;
           overwriteConfirmModal.classList.remove('hidden');
-        } else {
-          executeSaveAndCopy(candidateSaveData);
+          return;
         }
+
+        // 2. Controllo se esiste un esercizio con PARAMETRI ESATTAMENTE IDENTICI (anche se con nome diverso)
+        const duplicateLesson = existingList.find(l => {
+          const sameKey = String(l.keyRoot || l.rootMode).toLowerCase() === String(candidateSaveData.keyRoot).toLowerCase();
+          const sameCount = Number(l.notesCount) === Number(candidateSaveData.notesCount);
+          const sameNotes = areSetsEqual(new Set(l.noteIds || []), teacherSelectedNoteIds);
+          const sameDrones = areSetsEqual(new Set(l.droneIds || ['btn-1']), teacherDroneNoteIds);
+          return sameKey && sameCount && sameNotes && sameDrones;
+        });
+
+        if (duplicateLesson) {
+          pendingDuplicateSaveData = candidateSaveData;
+          duplicateConfigMsg.textContent = `Hai già salvato un esercizio con gli stessi identici parametri intitolato "${duplicateLesson.title}". Vuoi salvarlo comunque con questo nuovo titolo?`;
+          duplicateConfigModal.classList.remove('hidden');
+          return;
+        }
+
+        // 3. Salvataggio normale
+        executeSaveAndCopy(candidateSaveData);
       });
 
       overwriteProceedBtn.addEventListener('click', () => {
         if (!pendingSaveData) return;
         executeSaveAndCopy(pendingSaveData);
-        overwriteConfirmModal.classList.add('hidden');
-        pendingSaveData = null;
+        closeOverwriteModal();
       });
 
       /* ================================================================ */
@@ -1870,7 +2058,7 @@
         gameState.waitingForAnswer = false;
         gameState.isTransitioning = false;
         gameState.batchCurrentNote = 1;
-        gameState.lastTargetId = null;
+        gameState.lastTargetSemitones = null;
         
         gameState.sessionFirstTryCorrectCount = 0;
         gameState.currentQuestionHasMistake = false;
@@ -1925,50 +2113,57 @@
         const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
         gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
 
-        // Estrazione nota misteriosa con algoritmo anti-ripetizione consecutiva
-        let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
+        // IL DRONE NON PUÒ MAI ESSERE LA NOTA MISTERIOSA: Esclusione assoluta della stessa altezza
+        let candidateItems = intervalButtonsData.filter(i => i.semitones !== droneItem.semitones);
+
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
-          candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
+          candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id) && i.semitones !== droneItem.semitones);
         }
 
         if (candidateItems.length === 0) {
-          alert('Nessun intervallo selezionato.');
+          alert('Tutti gli intervalli selezionati coincidono con il drone. Includi altre note.');
           stopGame();
           return;
         }
 
-        // Esclude la nota immediatamente precedente se ci sono almeno 2 note candidate
-        let pickPool = candidateItems;
-        if (candidateItems.length > 1 && gameState.lastTargetId) {
-          pickPool = candidateItems.filter(i => i.id !== gameState.lastTargetId);
-          if (pickPool.length === 0) pickPool = candidateItems;
+        // Distribuzione perfettamente equa tra i semitoni unici (anti-bias per diesis/bemolli)
+        const uniqueSemitones = Array.from(new Set(candidateItems.map(i => i.semitones)));
+        let semitonePool = uniqueSemitones;
+        
+        // Anti-ripetizione consecutiva
+        if (uniqueSemitones.length > 1 && gameState.lastTargetSemitones !== null) {
+          semitonePool = uniqueSemitones.filter(s => s !== gameState.lastTargetSemitones);
+          if (semitonePool.length === 0) semitonePool = uniqueSemitones;
         }
 
-        const pickedItem = pickPool[Math.floor(Math.random() * pickPool.length)];
+        const chosenSemitone = semitonePool[Math.floor(Math.random() * semitonePool.length)];
+        gameState.lastTargetSemitones = chosenSemitone;
+
+        // Selezione rappresentativa del targetItem
+        const matchingItems = candidateItems.filter(i => i.semitones === chosenSemitone);
+        const pickedItem = matchingItems[Math.floor(Math.random() * matchingItems.length)];
         gameState.targetItem = pickedItem;
-        gameState.lastTargetId = pickedItem.id;
 
-        // Calcolo dell'intervallo reale rispetto al Drone corrente
+        // Calcolo dell'intervallo con etichetta unificata per le statistiche di fine serie
         const semitoneDiff = Math.abs(pickedItem.semitones - droneItem.semitones);
-        const intervalName = intervalNamesBySemitones[semitoneDiff] || `${semitoneDiff} semitoni`;
-        const trackerKey = `${intervalName} (${droneItem.degree}-${pickedItem.degree})`;
+        const intervalUnifiedLabel = unifiedIntervalNames[semitoneDiff] || `${semitoneDiff} semitoni`;
 
-        if (!gameState.intervalStatsTracker[trackerKey]) {
-          gameState.intervalStatsTracker[trackerKey] = {
-            label: trackerKey,
+        if (!gameState.intervalStatsTracker[intervalUnifiedLabel]) {
+          gameState.intervalStatsTracker[intervalUnifiedLabel] = {
+            label: intervalUnifiedLabel,
             color: pickedItem.color.rgb,
             totalProposed: 0,
             firstTrySuccess: 0
           };
         }
-        gameState.intervalStatsTracker[trackerKey].totalProposed++;
-        gameState.currentTargetTrackerKey = trackerKey;
+        gameState.intervalStatsTracker[intervalUnifiedLabel].totalProposed++;
+        gameState.currentTargetTrackerKey = intervalUnifiedLabel;
 
         const secretNoteMidi = gameState.keyRootMidi + pickedItem.semitones;
 
         setAppTimeout(() => {
           if (!gameState.active || !gameState.waitingForAnswer) return;
-          audio.playSecretNote(secretNoteMidi, 3.8);
+          audio.playSecretNote(secretNoteMidi, 3.6);
           btnMainAction.textContent = `Indovina! (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
         }, 1100);
       }
@@ -2065,20 +2260,18 @@
         btnEl.addEventListener('click', () => {
           audio.ensureContextRunning();
 
-          // Ignora il click se siamo nel secondo di celebrazione/transizione
           if (gameState.isTransitioning) return;
 
           // CASO A: MODALITÀ CREAZIONE DOCENTE
           if (gameState.creatorMode) {
             
-            // SOTTOCASO A1: MODALITÀ SELEZIONE DRONI ATTIVA
+            // SOTTOCASO A1: MODALITÀ SELEZIONE DRONI
             if (gameState.droneSelectionMode) {
               if (teacherDroneNoteIds.has(item.id)) {
                 if (teacherDroneNoteIds.size > 1) {
                   teacherDroneNoteIds.delete(item.id);
-                  removeCreatorDroneWave(item.id); // Rimuove solo la sua onda
+                  removeCreatorDroneWave(item.id);
                 } else {
-                  // Se è l'ultimo rimasto, non lo rimuove e riproduce la nota di anteprima
                   const baseMidi = getCreatorBaseMidi();
                   audio.previewNote(baseMidi + item.semitones, 1.4);
                 }
@@ -2086,13 +2279,13 @@
                 teacherDroneNoteIds.add(item.id);
                 const baseMidi = getCreatorBaseMidi();
                 audio.previewNote(baseMidi + item.semitones, 1.4);
-                addCreatorDroneWave(item.id); // Avvia l'onda SOLO per questo drone senza azzerare gli altri
+                addCreatorDroneWave(item.id);
               }
               updateTeacherGridVisuals();
               return;
             }
 
-            // SOTTOCASO A2: MODALITÀ NOTE DA INDOVINARE
+            // SOTTOCASO A2: NOTE DA INDOVINARE
             if (item.id === 'btn-1') {
               const baseMidi = getCreatorBaseMidi();
               audio.previewNote(baseMidi, 1.0);
@@ -2114,18 +2307,19 @@
           // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
             
-            // Se preme il tasto del Drone o Tonica durante la serie: risuona e mostra l'onda
-            if (item.id === (gameState.currentDroneItem?.id || 'btn-1') || item.semitones === 0) {
+            // Il drone non è mai la risposta: premendolo si riascolta il riferimento
+            if (gameState.currentDroneItem && item.semitones === gameState.currentDroneItem.semitones) {
               audio.startDrone(gameState.currentDroneMidi);
               if (gameDroneWaveEl) {
                 try { gameDroneWaveEl.remove(); } catch(e){}
                 gameDroneWaveEl = null;
               }
-              const dBtn = document.getElementById(gameState.currentDroneItem?.id || 'btn-1');
+              const dBtn = document.getElementById(gameState.currentDroneItem.id) || btnEl;
               gameDroneWaveEl = spawnPropagatingWave(dBtn, true);
               return;
             }
 
+            // Entrambe le enarmonie (bemolle o diesis) sono accettate con successo
             const isCorrect = (item.semitones === gameState.targetItem.semitones);
 
             if (isCorrect) {
@@ -2141,7 +2335,7 @@
 
               gameState.waitingForAnswer = false;
               gameState.isTransitioning = true;
-              audio.fadeSecretNote(0.4);
+              audio.fadeSecretNote(0.35);
 
               triggerCorrectCircleRipple(btnEl, item.color.rgba(0.6));
 
@@ -2151,7 +2345,7 @@
 
                 setAppTimeout(() => {
                   if (gameState.active) playQuestionInBatch();
-                }, 1800);
+                }, 1700);
 
               } else {
                 btnMainAction.textContent = `Serie Conclusa!`;
@@ -2163,7 +2357,7 @@
                   } else {
                     promoModal.classList.remove('hidden');
                   }
-                }, 1700);
+                }, 1600);
               }
 
             } else {
