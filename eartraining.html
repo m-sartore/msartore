@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ear Training Intervalli | Marco Sartore</title>
-  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con metodo armonico e drone continuo.">
+  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con drone continuo e sessioni da 5 note.">
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👂</text></svg>">
@@ -49,14 +49,14 @@
       user-select: none;
     }
 
-    /* Asse dell'onda continua della nota base */
+    /* Asse dell'onda propagata */
     .wave-axis {
       position: absolute;
       left: 0;
       right: 0;
       top: 50%;
       transform: translateY(-50%);
-      height: 70px;
+      height: 80px;
       z-index: 1;
       pointer-events: none;
     }
@@ -71,25 +71,28 @@
     /* Griglia a colonna verticale a 3 tracce */
     .ear-grid {
       display: grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
+      grid-template-columns: 1fr 1.35fr 1fr;
       grid-template-rows: repeat(14, minmax(0, 1fr));
       width: 100%;
       height: 100%;
-      max-width: 440px;
-      gap: 6px;
+      max-width: 480px;
+      gap: 5px;
       z-index: 10;
       align-items: center;
       justify-items: center;
     }
 
-    /* Pulsante rotondo per ogni nota / grado */
+    /* Pulsante rotondo per ogni nota (più grande) */
     .round-note-btn {
       aspect-ratio: 1 / 1;
-      height: 92%;
-      max-height: 52px;
+      width: 100%;
+      max-width: 62px;
+      height: 94%;
+      max-height: 62px;
       border-radius: 9999px;
-      border: 2px solid rgba(255, 255, 255, 0.12);
+      border: 2.5px solid rgba(255, 255, 255, 0.15);
       font-weight: 800;
+      font-size: clamp(1.15rem, 3.2vh, 1.45rem);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -97,7 +100,7 @@
       cursor: pointer;
       position: relative;
       transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, opacity 0.25s ease, border-color 0.2s ease;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
     }
 
     .round-note-btn:active {
@@ -105,29 +108,11 @@
     }
 
     .round-note-btn.accidental {
-      height: 84%;
-      max-height: 44px;
-      font-size: 0.85rem;
+      max-width: 50px;
+      max-height: 50px;
+      font-size: clamp(0.85rem, 2.4vh, 1.1rem);
       border-style: dashed;
-      border-width: 1.5px;
-    }
-
-    /* Modalità Creator: selezione docente */
-    body.creator-mode .round-note-btn {
-      opacity: 0.35;
-      filter: grayscale(40%);
-    }
-
-    body.creator-mode .round-note-btn.selected-teacher {
-      opacity: 1;
-      filter: none;
-      border-color: #379386 !important;
-      box-shadow: 0 0 16px rgba(55, 147, 134, 0.7);
-    }
-
-    body.creator-mode .round-note-btn[data-degree="1"] {
-      opacity: 1 !important;
-      border: 2.5px solid #E0C36F !important;
+      border-width: 2px;
     }
 
     /* Modalità Allievo Pro: intervalli esclusi nascosti */
@@ -138,8 +123,8 @@
     /* Animazione Errore (Shake) */
     @keyframes shakeNote {
       0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-7px); }
-      40%, 80% { transform: translateX(7px); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
     }
     .shake-anim {
       animation: shakeNote 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
@@ -149,13 +134,13 @@
     @keyframes rippleExpand {
       0% {
         transform: translate(-50%, -50%) scale(0.2);
-        opacity: 0.85;
+        opacity: 0.9;
       }
       50% {
-        opacity: 0.45;
+        opacity: 0.5;
       }
       100% {
-        transform: translate(-50%, -50%) scale(3.5);
+        transform: translate(-50%, -50%) scale(4.2);
         opacity: 0;
       }
     }
@@ -164,11 +149,11 @@
       position: fixed;
       pointer-events: none;
       border-radius: 9999px;
-      z-index: 25;
-      animation: rippleExpand 1.1s cubic-bezier(0.1, 0.85, 0.25, 1) forwards;
+      z-index: 30;
+      animation: rippleExpand 1.15s cubic-bezier(0.1, 0.85, 0.25, 1) forwards;
     }
 
-    /* Scrollbar sottile per modali e pannelli */
+    /* Scrollbar sottile */
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
@@ -179,15 +164,18 @@
   <!-- ========================================== -->
   <!-- 1. HEADER & BARRA STATISTICHE -->
   <!-- ========================================== -->
-  <header class="w-full shrink-0 z-30 bg-[#111D23]/90 backdrop-blur-md border-b border-white/10 px-4 py-2.5">
+  <header class="w-full shrink-0 z-30 bg-[#111D23]/95 backdrop-blur-md border-b border-white/10 px-4 py-2.5">
     <div class="max-w-2xl mx-auto flex items-center justify-between gap-3">
       
-      <!-- Brand & Titolo -->
-      <div class="flex items-center gap-2">
+      <!-- Brand & Badge Serie -->
+      <div class="flex items-center gap-2.5">
         <a href="#" class="font-extrabold text-base tracking-tight text-white flex items-center gap-1">
           <span class="text-tealBand">Ear</span><span class="text-ochreBand">Train</span>
         </a>
-        <span class="text-[10px] text-white/40 uppercase font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/5">MS</span>
+        <div id="batch-badge" class="hidden items-center gap-1 px-2 py-0.5 rounded-full bg-tealBand/20 border border-tealBand/40 text-[11px] font-mono text-tealBand font-bold">
+          <span>SERIE:</span>
+          <span id="batch-progress" class="text-white">1/5</span>
+        </div>
       </div>
 
       <!-- Statistiche Rapide -->
@@ -217,7 +205,7 @@
     </div>
   </header>
 
-  <!-- Banner Informativo Allievo PRO (Visibile solo se tramite Link del Docente) -->
+  <!-- Banner Informativo Allievo PRO (Se da link docente) -->
   <div id="pro-banner" class="hidden shrink-0 bg-gradient-to-r from-tealBand/25 via-tealBand/15 to-transparent border-b border-tealBand/30 px-4 py-2 z-20">
     <div class="max-w-2xl mx-auto flex items-center justify-between text-xs">
       <div class="flex items-center gap-2 text-tealBand font-medium">
@@ -228,9 +216,9 @@
     </div>
   </div>
 
-  <!-- Banner Modalità Free: Avviso Root Casuale -->
-  <div id="free-notice" class="shrink-0 bg-petrol/25 border-b border-white/5 px-4 py-1 text-center text-[11px] text-white/60 font-medium">
-    Modalità Libera: nota base casuale ad ogni domanda per stimolare l'orecchio relativo.
+  <!-- Banner Modalità Free -->
+  <div id="free-notice" class="shrink-0 bg-petrol/20 border-b border-white/5 px-4 py-1 text-center text-[11px] text-white/60 font-medium">
+    Modalità Libera: 5 note consecutive con la stessa base. Al termine, la base cambia!
   </div>
 
   <!-- ========================================== -->
@@ -243,12 +231,12 @@
 
       <!-- Row 1: Ottava (8) -->
       <button id="btn-8" data-degree="8" data-semitones="12" class="round-note-btn text-white" style="grid-row: 1; grid-column: 2;" type="button" aria-label="Ottava">
-        <span class="text-sm sm:text-base font-extrabold leading-none">8</span>
+        <span>8</span>
       </button>
 
       <!-- Row 2: Settima Maggiore (7) -->
       <button id="btn-7" data-degree="7" data-semitones="11" class="round-note-btn text-white" style="grid-row: 2; grid-column: 2;" type="button" aria-label="Settima Maggiore">
-        <span class="text-sm sm:text-base font-extrabold leading-none">7</span>
+        <span>7</span>
       </button>
 
       <!-- Row 3: Settima Minore / Sesta Aumentata (7b - 6#) -->
@@ -261,7 +249,7 @@
 
       <!-- Row 4: Sesta Maggiore (6) -->
       <button id="btn-6" data-degree="6" data-semitones="9" class="round-note-btn text-white" style="grid-row: 4; grid-column: 2;" type="button" aria-label="Sesta Maggiore">
-        <span class="text-sm sm:text-base font-extrabold leading-none">6</span>
+        <span>6</span>
       </button>
 
       <!-- Row 5: Sesta Minore / Quinta Aumentata (6b - 5#) -->
@@ -274,10 +262,10 @@
 
       <!-- Row 6: Quinta Giusta (5) -->
       <button id="btn-5" data-degree="5" data-semitones="7" class="round-note-btn text-white" style="grid-row: 6; grid-column: 2;" type="button" aria-label="Quinta Giusta">
-        <span class="text-sm sm:text-base font-extrabold leading-none">5</span>
+        <span>5</span>
       </button>
 
-      <!-- Row 7: Quinta Diminuita / Quarta Aumentata / Tritono (5b - 4#) -->
+      <!-- Row 7: Quinta Diminuita / Quarta Aumentata (5b - 4#) -->
       <button id="btn-5b" data-degree="5b" data-semitones="6" class="round-note-btn accidental text-white/90" style="grid-row: 7; grid-column: 1; justify-self: end;" type="button" aria-label="Quinta Diminuita">
         <span>5b</span>
       </button>
@@ -287,12 +275,12 @@
 
       <!-- Row 8: Quarta Giusta (4) -->
       <button id="btn-4" data-degree="4" data-semitones="5" class="round-note-btn text-white" style="grid-row: 8; grid-column: 2;" type="button" aria-label="Quarta Giusta">
-        <span class="text-sm sm:text-base font-extrabold leading-none">4</span>
+        <span>4</span>
       </button>
 
       <!-- Row 9: Terza Maggiore (3) -->
       <button id="btn-3" data-degree="3" data-semitones="4" class="round-note-btn text-white" style="grid-row: 9; grid-column: 2;" type="button" aria-label="Terza Maggiore">
-        <span class="text-sm sm:text-base font-extrabold leading-none">3</span>
+        <span>3</span>
       </button>
 
       <!-- Row 10: Terza Minore / Seconda Aumentata (3b - 2#) -->
@@ -305,7 +293,7 @@
 
       <!-- Row 11: Seconda Maggiore (2) -->
       <button id="btn-2" data-degree="2" data-semitones="2" class="round-note-btn text-white" style="grid-row: 11; grid-column: 2;" type="button" aria-label="Seconda Maggiore">
-        <span class="text-sm sm:text-base font-extrabold leading-none">2</span>
+        <span>2</span>
       </button>
 
       <!-- Row 12: Seconda Minore / Prima Aumentata (2b - 1#) -->
@@ -318,15 +306,15 @@
 
       <!-- Row 13: Tonica / Nota Base Drone (1) -->
       <button id="btn-1" data-degree="1" data-semitones="0" class="round-note-btn text-white" style="grid-row: 13; grid-column: 2;" type="button" aria-label="Tonica / Drone">
-        <span class="text-sm sm:text-base font-extrabold leading-none">1</span>
+        <span>1</span>
       </button>
 
       <!-- Row 14: Controlli di Gioco (Start / Riascolta) -->
       <div style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-3 pt-2">
-        <button id="btn-main-action" class="flex-1 max-w-[240px] py-3.5 px-6 rounded-2xl bg-tealBand text-white font-extrabold text-sm tracking-wider uppercase shadow-lg hover:brightness-110 active:scale-95 transition-all">
-          Inizia Esercizio
+        <button id="btn-main-action" class="flex-1 max-w-[260px] py-3.5 px-6 rounded-2xl bg-tealBand text-white font-extrabold text-sm tracking-wider uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">
+          Inizia Serie (5 note)
         </button>
-        <button id="btn-replay" disabled class="p-3.5 rounded-2xl bg-white/10 text-white font-bold text-sm hover:bg-white/20 active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none" title="Riascolta Suono Misterioso">
+        <button id="btn-replay" disabled class="p-3.5 rounded-2xl bg-white/10 text-white font-bold text-sm hover:bg-white/20 active:scale-95 transition-all disabled:opacity-30 disabled:pointer-events-none" title="Riascolta Nota">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
@@ -339,28 +327,25 @@
   <!-- ========================================== -->
   <!-- 3. FOOTER MINIMALE -->
   <!-- ========================================== -->
-  <footer class="w-full shrink-0 py-2.5 px-4 text-center text-[11px] text-white/40 border-t border-white/5 bg-[#0D171C]">
+  <footer class="w-full shrink-0 py-2 px-4 text-center text-[11px] text-white/40 border-t border-white/5 bg-[#0D171C]">
     Metodo Didattico Marco Sartore • <a href="https://msartore.it" target="_blank" class="text-ochreBand hover:underline">msartore.it</a>
   </footer>
 
   <!-- ========================================== -->
-  <!-- 4. MODALE PROMOZIONALE FREEMIUM (Ogni 5 tentativi) -->
+  <!-- 4. MODALE PROMOZIONALE FREEMIUM -->
   <!-- ========================================== -->
   <div id="promo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border-2 border-ochreBand/40 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-center">
       <div class="w-14 h-14 rounded-full bg-ochreBand/15 text-ochreBand text-2xl flex items-center justify-center mx-auto mb-4 border border-ochreBand/30">
-        💡
+        🎯
       </div>
-      <h3 class="text-xl font-extrabold text-white mb-2">Un piccolo consiglio didattico!</h3>
+      <h3 class="text-xl font-extrabold text-white mb-2">Ottima serie completata!</h3>
       <p class="text-sm text-white/80 leading-relaxed mb-6">
-        Stai studiando su <strong class="text-ochreBand font-semibold">tutti e 12 gli intervalli</strong> con nota base casuale. Questo è ottimo per la sfida globale, ma per consolidare l'orecchio è molto più efficace isolare gli intervalli della lezione (es. solo le terze o quarte).
+        Hai completato le 5 note. In modalità libera gli intervalli sono sempre tutti e 12: per concentrarti solo su quelli spiegati a lezione (es. solo 3ªM e 3ªm), chiedi il link al tuo docente!
       </p>
-      <div class="bg-[#0D171C] p-4 rounded-2xl border border-white/10 mb-6 text-xs text-white/70">
-        👉 <strong>Chiedi al tuo insegnante</strong> il link personalizzato per concentrarti solo sugli intervalli in programma per oggi!
-      </div>
       <div class="flex flex-col gap-2.5">
         <button id="promo-close-btn" class="w-full py-3 rounded-xl bg-tealBand text-white font-bold text-sm hover:brightness-110 transition-all">
-          Continua ad allenarti
+          Nuova Serie (5 note)
         </button>
         <button id="promo-to-teacher-btn" class="text-xs text-ochreBand hover:underline py-1">
           Sei un docente? Passa alla versione Pro
@@ -375,22 +360,21 @@
   <div id="teacher-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden overflow-y-auto">
     <div class="bg-appCard border border-white/15 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl my-auto">
       
-      <!-- Intestazione Pannello -->
       <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
         <div>
           <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
             <span>Area Docente</span>
             <span class="text-xs px-2 py-0.5 rounded-full bg-ochreBand text-appDark font-black">PRO</span>
           </h2>
-          <p class="text-xs text-white/60">Configura lezioni personalizzate per i tuoi allievi</p>
+          <p class="text-xs text-white/60">Configura serie da 5 note personalizzate per i tuoi allievi</p>
         </div>
         <button id="close-teacher-modal" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/70">✕</button>
       </div>
 
-      <!-- STATO A: DOCENTE BLOCCATO (Richiesta Licenza) -->
+      <!-- DOCENTE BLOCCATO -->
       <div id="teacher-locked-view" class="space-y-6">
         <div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 leading-relaxed">
-          Inserisci il tuo <strong>Codice Licenza Docente</strong> per sbloccare la selezione mirata degli intervalli, la scelta della nota base fissa e la generazione di link dedicati per gli studenti.
+          Inserisci il tuo <strong>Codice Licenza Docente</strong> per sbloccare la selezione mirata degli intervalli e generare i link personalizzati.
         </div>
 
         <div>
@@ -404,18 +388,17 @@
           <p id="license-error-msg" class="text-xs text-coralBand font-medium mt-2 hidden">Codice licenza non valido. Riprova o richiedilo qui sotto.</p>
         </div>
 
-        <!-- Box Acquisto Licenza Una Tantum -->
         <div class="pt-4 border-t border-white/10">
           <span class="text-xs font-bold text-white block mb-1">Non hai ancora una licenza?</span>
-          <p class="text-xs text-white/60 mb-3">La licenza per docenti è una tantum (nessun abbonamento mensile) ed è attivabile via Bonifico o Satispay.</p>
-          <a href="mailto:info@msartore.it?subject=Richiesta%20Licenza%20Docente%20Ear%20Training&body=Ciao%20Marco,%20vorrei%20attivare%20la%20licenza%20docente%20per%20l'app%20Ear%20Training.%20Preferisco%20pagamento%20con%20(Satispay/Bonifico):" 
+          <p class="text-xs text-white/60 mb-3">La licenza per docenti è una tantum (nessun abbonamento) ed è attivabile via Bonifico o Satispay.</p>
+          <a href="mailto:info@msartore.it?subject=Richiesta%20Licenza%20Docente%20Ear%20Training&body=Ciao%20Marco,%20vorrei%20attivare%20la%20licenza%20docente%20per%20l'app%20Ear%20Training.%20Pagamento%20preferito%20(Satispay/Bonifico):" 
              class="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-all border border-white/10">
             <span>✉️</span> Richiedi Licenza Docente (info@msartore.it)
           </a>
         </div>
       </div>
 
-      <!-- STATO B: DOCENTE SBLOCCATO (Configuratore Esercizio) -->
+      <!-- DOCENTE SBLOCCATO -->
       <div id="teacher-unlocked-view" class="space-y-6 hidden">
         <div class="flex items-center justify-between p-3 rounded-xl bg-tealBand/15 border border-tealBand/30 text-xs">
           <span class="text-tealBand font-bold">✓ Licenza Docente Attiva</span>
@@ -436,7 +419,7 @@
             </label>
             <label class="flex items-center gap-2 p-2.5 rounded-xl bg-[#0D171C] border border-white/10 cursor-pointer">
               <input type="radio" name="root-mode" value="random" class="accent-tealBand">
-              <span class="text-white/90">Casuale ad ogni giro</span>
+              <span class="text-white/90">Casuale ad ogni serie</span>
             </label>
           </div>
         </div>
@@ -444,14 +427,11 @@
         <div>
           <div class="flex items-center justify-between mb-2">
             <label class="text-xs font-mono uppercase tracking-wider text-white/70 font-bold">3. Seleziona Intervalli Inclusi</label>
-            <span class="text-[11px] text-tealBand font-medium">Clicca per attivare/disattivare</span>
+            <span class="text-[11px] text-tealBand font-medium">Attiva / Disattiva</span>
           </div>
-          <div class="grid grid-cols-4 gap-2 text-xs font-mono" id="teacher-interval-pills">
-            <!-- Verranno generati o collegati via JS per comodità -->
-          </div>
+          <div class="grid grid-cols-4 gap-2 text-xs font-mono" id="teacher-interval-pills"></div>
         </div>
 
-        <!-- Generazione & Copia Link Allievo -->
         <div class="pt-4 border-t border-white/10 space-y-2">
           <label class="block text-xs font-mono uppercase tracking-wider text-ochreBand font-bold">Link Condivisibile per l'Allievo</label>
           <div class="flex gap-2">
@@ -460,7 +440,7 @@
               Copia Link
             </button>
           </div>
-          <p class="text-[11px] text-white/50">L'allievo aprirà l'app vedendo solo questi intervalli, senza popup né pubblicità.</p>
+          <p class="text-[11px] text-white/50">L'allievo aprirà l'app con solo gli intervalli scelti e senza popup promozionali.</p>
         </div>
       </div>
 
@@ -469,18 +449,18 @@
 
 
   <!-- ================================================================= -->
-  <!-- 6. CODICE LOGICO: MOTORE AUDIO + CONTROLLER APPLICATIVO INTEGRATI -->
+  <!-- 6. JAVASCRIPT: MOTORE AUDIO AFFIDABILE + FISICA ONDA + LOGICA 5 NOTE -->
   <!-- ================================================================= -->
   <script>
     /* ================================================================ */
-    /* MODULO A: MOTORE AUDIO (WEB AUDIO API PURA, SINTESI ADDITIVA CALDA)*/
+    /* MODULO A: MOTORE AUDIO (AFFIDABILE, ANTI-CLIC, SINTESI STABILE) */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
         this.ctx = null;
-        this.droneOscGroup = null;
+        this.droneOscs = [];
         this.droneGain = null;
-        this.secretOscGroup = null;
+        this.secretOscs = [];
         this.secretGain = null;
         this.isDronePlaying = false;
       }
@@ -500,25 +480,19 @@
         return 440 * Math.pow(2, (midi - 69) / 12);
       }
 
-      /**
-       * Crea un timbro caldo e morbido (piano/elettrico/pad)
-       * sommando armonica fondamentale e parziali con inviluppo graduale.
-       */
-      createSynthVoice(freq, masterGainNode) {
+      createVoices(freq, masterGainNode) {
         const partials = [
-          { mult: 1.0, gain: 0.65 },
-          { mult: 2.0, gain: 0.22 },
-          { mult: 3.0, gain: 0.09 },
-          { mult: 4.0, gain: 0.03 }
+          { mult: 1.0, gain: 0.70 },
+          { mult: 2.0, gain: 0.25 },
+          { mult: 3.0, gain: 0.12 },
+          { mult: 4.0, gain: 0.04 }
         ];
 
         const oscillators = [];
-
-        // Filtro passa-basso morbido per rimuovere asperità digitali
         const filter = this.ctx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(freq * 3.8, this.ctx.currentTime);
-        filter.Q.setValueAtTime(0.8, this.ctx.currentTime);
+        filter.frequency.setValueAtTime(Math.min(freq * 4.2, 12000), this.ctx.currentTime);
+        filter.Q.setValueAtTime(0.7, this.ctx.currentTime);
         filter.connect(masterGainNode);
 
         partials.forEach(p => {
@@ -537,107 +511,102 @@
         return oscillators;
       }
 
-      /**
-       * Avvia la nota base come DRONE continuo con attacco morbido
-       */
       startDrone(midiNote) {
         return this.initContext().then(() => {
-          this.stopDrone(0.1);
+          this.stopDrone(0.05);
 
           const freq = this.midiToFreq(midiNote);
-          const now = this.ctx.currentTime;
+          const now = this.ctx.currentTime + 0.02;
 
           this.droneGain = this.ctx.createGain();
-          this.droneGain.gain.setValueAtTime(0.0001, now);
-          // Attacco morbido in 0.6 secondi
-          this.droneGain.gain.exponentialRampToValueAtTime(0.35, now + 0.6);
+          this.droneGain.gain.setValueAtTime(0, now);
+          // Rampa lineare priva di bug matematici
+          this.droneGain.gain.linearRampToValueAtTime(0.24, now + 0.5);
           this.droneGain.connect(this.ctx.destination);
 
-          this.droneOscGroup = this.createSynthVoice(freq, this.droneGain);
-          this.droneOscGroup.forEach(osc => osc.start(now));
+          this.droneOscs = this.createVoices(freq, this.droneGain);
+          this.droneOscs.forEach(osc => osc.start(now));
           this.isDronePlaying = true;
         });
       }
 
-      /**
-       * Ferma il drone con rilascio controllato
-       */
-      stopDrone(fadeSeconds = 0.5) {
+      stopDrone(fadeSeconds = 0.3) {
         if (!this.droneGain || !this.isDronePlaying) return;
         const now = this.ctx.currentTime;
         this.droneGain.gain.cancelScheduledValues(now);
         this.droneGain.gain.setValueAtTime(this.droneGain.gain.value, now);
-        this.droneGain.gain.exponentialRampToValueAtTime(0.0001, now + fadeSeconds);
+        this.droneGain.gain.linearRampToValueAtTime(0, now + fadeSeconds);
+
+        const oldOscs = this.droneOscs;
+        this.droneOscs = [];
+        this.isDronePlaying = false;
 
         setTimeout(() => {
-          if (this.droneOscGroup) {
-            this.droneOscGroup.forEach(osc => {
-              try { osc.stop(); osc.disconnect(); } catch(e){}
-            });
-            this.droneOscGroup = null;
-          }
-          this.isDronePlaying = false;
+          oldOscs.forEach(osc => {
+            try { osc.stop(); osc.disconnect(); } catch(e){}
+          });
         }, fadeSeconds * 1000 + 50);
       }
 
-      /**
-       * Suona la seconda nota (la nota misteriosa da indovinare) sopra il drone
-       */
-      playSecretNote(midiNote, durationSeconds = 3.5) {
+      playSecretNote(midiNote, durationSeconds = 3.6) {
         return this.initContext().then(() => {
-          this.stopSecretNote(0.1);
+          this.stopSecretNoteImmediate();
 
           const freq = this.midiToFreq(midiNote);
-          const now = this.ctx.currentTime;
+          const now = this.ctx.currentTime + 0.02;
 
           this.secretGain = this.ctx.createGain();
-          this.secretGain.gain.setValueAtTime(0.0001, now);
-          // Attacco morbido per evitare clic
-          this.secretGain.gain.exponentialRampToValueAtTime(0.42, now + 0.25);
-          // Sostegno e rilascio naturale
-          this.secretGain.gain.exponentialRampToValueAtTime(0.28, now + 1.2);
-          this.secretGain.gain.exponentialRampToValueAtTime(0.0001, now + durationSeconds);
+          this.secretGain.gain.setValueAtTime(0, now);
+          // Attacco netto e chiaro sopra la base
+          this.secretGain.gain.linearRampToValueAtTime(0.55, now + 0.12);
+          this.secretGain.gain.linearRampToValueAtTime(0.38, now + 1.2);
+          this.secretGain.gain.linearRampToValueAtTime(0, now + durationSeconds);
           this.secretGain.connect(this.ctx.destination);
 
-          this.secretOscGroup = this.createSynthVoice(freq, this.secretGain);
-          this.secretOscGroup.forEach(osc => {
+          this.secretOscs = this.createVoices(freq, this.secretGain);
+          this.secretOscs.forEach(osc => {
             osc.start(now);
-            osc.stop(now + durationSeconds + 0.05);
+            osc.stop(now + durationSeconds + 0.1);
           });
         });
       }
 
-      stopSecretNote(fadeSeconds = 0.3) {
+      stopSecretNoteImmediate() {
+        if (this.secretGain) {
+          try {
+            const now = this.ctx.currentTime;
+            this.secretGain.gain.cancelScheduledValues(now);
+            this.secretGain.gain.setValueAtTime(0, now);
+          } catch(e){}
+        }
+        if (this.secretOscs.length > 0) {
+          this.secretOscs.forEach(osc => {
+            try { osc.stop(); osc.disconnect(); } catch(e){}
+          });
+          this.secretOscs = [];
+        }
+      }
+
+      fadeSecretNote(fadeSeconds = 0.4) {
         if (!this.secretGain) return;
         const now = this.ctx.currentTime;
         this.secretGain.gain.cancelScheduledValues(now);
-        this.secretGain.gain.setValueAtTime(Math.max(this.secretGain.gain.value, 0.0001), now);
-        this.secretGain.gain.exponentialRampToValueAtTime(0.0001, now + fadeSeconds);
-        setTimeout(() => {
-          if (this.secretOscGroup) {
-            this.secretOscGroup.forEach(osc => {
-              try { osc.stop(); osc.disconnect(); } catch(e){}
-            });
-            this.secretOscGroup = null;
-          }
-        }, fadeSeconds * 1000 + 50);
+        this.secretGain.gain.setValueAtTime(this.secretGain.gain.value, now);
+        this.secretGain.gain.linearRampToValueAtTime(0, now + fadeSeconds);
       }
 
-      /**
-       * Suona una singola nota isolata (per preview quando si tocca un tasto fuori gioco)
-       */
-      previewNote(midiNote, duration = 1.2) {
+      previewNote(midiNote, duration = 1.0) {
         return this.initContext().then(() => {
           const freq = this.midiToFreq(midiNote);
-          const now = this.ctx.currentTime;
+          const now = this.ctx.currentTime + 0.01;
           const g = this.ctx.createGain();
-          g.gain.setValueAtTime(0.0001, now);
-          g.gain.exponentialRampToValueAtTime(0.4, now + 0.08);
-          g.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+          g.gain.setValueAtTime(0, now);
+          g.gain.linearRampToValueAtTime(0.4, now + 0.08);
+          g.gain.linearRampToValueAtTime(0, now + duration);
           g.connect(this.ctx.destination);
 
-          const voices = this.createSynthVoice(freq, g);
-          voices.forEach(osc => {
+          const oscs = this.createVoices(freq, g);
+          oscs.forEach(osc => {
             osc.start(now);
             osc.stop(now + duration + 0.05);
           });
@@ -647,14 +616,121 @@
 
 
     /* ================================================================ */
-    /* MODULO B: LOGICA DI GIOCO, GRADAZIONE COLORI & INTERAZIONE UI    */
+    /* MODULO B: FISICA DELL'ONDA PROPAGATA A DESTRA E SINISTRA         */
+    /* ================================================================ */
+    const W = 1000;
+    const MID = 40;
+    const AMP = 32;
+    const CYCLES = 5;
+
+    function naturalEase(t) {
+      return t * t * (3 - 2 * t);
+    }
+
+    function waveShape(x, phase, waveCenter) {
+      const dx = Math.abs(x - waveCenter);
+      const t = (dx / (W / 2)) * (CYCLES / 2) * Math.PI * 2 - phase;
+      return (
+        Math.sin(t) +
+        Math.sin(t * 2.04 + 0.55) * 0.2 +
+        Math.sin(t * 3.08 + 1.2) * 0.09 +
+        Math.sin(t * 0.48 - phase * 0.15) * 0.06
+      ) / 1.35;
+    }
+
+    function edgeEnvelope(x, left, right, soft) {
+      if (soft <= 0) return 1;
+      let env = 1;
+      if (left > 0.5) env = Math.min(env, (x - left) / soft);
+      if (right < W - 0.5) env = Math.min(env, (right - x) / soft);
+      return Math.max(0, Math.min(1, env));
+    }
+
+    function buildNaturalWave(leftX, rightX, phase, edgeSoft, ampScale, waveCenter) {
+      leftX = Math.max(0, leftX);
+      rightX = Math.min(W, rightX);
+      if (rightX - leftX < 1) return '';
+
+      const steps = Math.max(28, Math.round(100 * (rightX - leftX) / W));
+      let d = `M ${leftX} ${MID}`;
+      for (let i = 1; i <= steps; i++) {
+        const x = leftX + ((rightX - leftX) * i) / steps;
+        const env = edgeEnvelope(x, leftX, rightX, edgeSoft);
+        const y = MID + AMP * ampScale * env * waveShape(x, phase, waveCenter);
+        d += ` L ${x} ${y}`;
+      }
+      d += ` L ${rightX} ${MID} Z`;
+      return d;
+    }
+
+    function spawnPropagatingWave(buttonElement) {
+      const stage = document.getElementById('game-stage');
+      const stageRect = stage.getBoundingClientRect();
+      const btnRect = buttonElement.getBoundingClientRect();
+      
+      const relativeY = btnRect.top - stageRect.top + btnRect.height / 2;
+      const relativeX = btnRect.left - stageRect.left + btnRect.width / 2;
+      const percentX = (relativeX / stageRect.width) * 100;
+      const waveCenter = percentX * 10;
+
+      const waveAxis = document.createElement('div');
+      waveAxis.className = 'wave-axis';
+      waveAxis.style.top = `${relativeY}px`;
+
+      const maskRadius = btnRect.height / 2;
+      const maskString = `radial-gradient(circle at ${percentX}% 50%, transparent ${maskRadius + 3}px, #000 ${maskRadius + 4}px)`;
+      waveAxis.style.webkitMaskImage = maskString;
+      waveAxis.style.maskImage = maskString;
+
+      waveAxis.innerHTML = `
+        <svg viewBox="0 0 1000 80" preserveAspectRatio="none">
+          <g class="wave-burst" style="opacity: 0.9;">
+            <path class="wave-fill" fill="rgba(55, 147, 134, 0.45)" />
+            <line class="wave-axis-line" stroke="#379386" stroke-width="2" y1="40" y2="40" />
+          </g>
+        </svg>
+      `;
+      stage.insertBefore(waveAxis, stage.firstChild);
+
+      const waveFill = waveAxis.querySelector('.wave-fill');
+      const axisLine = waveAxis.querySelector('.wave-axis-line');
+      const gapMs = 650;
+      const start = performance.now();
+
+      function frame(now) {
+        if (!waveAxis.isConnected) return;
+        const elapsed = now - start;
+
+        // Propagazione da waveCenter verso destra e verso sinistra
+        const propagateT = Math.min(1, elapsed / gapMs);
+        const ease = naturalEase(propagateT);
+        
+        const left = waveCenter - waveCenter * ease;
+        const right = waveCenter + (W - waveCenter) * ease;
+
+        const phase = elapsed * 0.002;
+        const edgeSoft = 100;
+        const ampScale = 0.85 + 0.15 * ease + Math.sin(elapsed * 0.004) * 0.04;
+
+        waveFill.setAttribute('d', buildNaturalWave(left, right, phase, edgeSoft, ampScale, waveCenter));
+        axisLine.setAttribute('x1', left);
+        axisLine.setAttribute('x2', right);
+
+        requestAnimationFrame(frame);
+      }
+
+      requestAnimationFrame(frame);
+      return waveAxis;
+    }
+
+
+    /* ================================================================ */
+    /* MODULO C: CONTROLLER DI GIOCO & LOGICA A SERIE DI 5 NOTE         */
     /* ================================================================ */
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Istanze e configurazione
       const audio = new AudioEngine();
 
-      // Database delle chiavi licenza valide (configurabile)
       const VALID_LICENSES = [
         'PRO-MARCO-2026',
         'DOCENTE-2026',
@@ -662,7 +738,6 @@
         'VIP-EAR-TRAIN'
       ];
 
-      // Mappatura dei pulsanti e gradi
       const intervalButtonsData = [
         { id: 'btn-8', degree: '8', semitones: 12, name: 'Ottava', order: 12 },
         { id: 'btn-7', degree: '7', semitones: 11, name: '7ª Maggiore', order: 11 },
@@ -684,24 +759,19 @@
         { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Drone', order: 0 }
       ];
 
-      /* ================================================================ */
-      /* GRADAZIONE CONTINUA DEI COLORI DALL'1 ALL'8                      */
-      /* Palette Marco Sartore: Petrol -> Teal -> Ocre -> Peach -> Coral  */
-      /* ================================================================ */
+      // Palette Graduale: Petrol -> Teal -> Ocre -> Peach -> Coral
       const paletteStops = [
-        { stop: 0.00, r: 39,  g: 67,  b: 78  }, // Grado 1 (Tonica): Blu Petrolio (#27434E)
-        { stop: 0.25, r: 55,  g: 147, b: 134 }, // Grado 3/4: Verde Teal (#379386)
-        { stop: 0.50, r: 224, g: 195, b: 111 }, // Grado 5: Giallo Ocra (#E0C36F)
-        { stop: 0.75, r: 235, g: 160, b: 102 }, // Grado 6/7: Arancio Pesca (#EBA066)
-        { stop: 1.00, r: 227, g: 112, b: 85  }  // Grado 8: Rosso Corallo (#E37055)
+        { stop: 0.00, r: 39,  g: 67,  b: 78  }, // 1: Blu Petrolio
+        { stop: 0.25, r: 55,  g: 147, b: 134 }, // 3/4: Verde Teal
+        { stop: 0.50, r: 224, g: 195, b: 111 }, // 5: Giallo Ocra
+        { stop: 0.75, r: 235, g: 160, b: 102 }, // 6/7: Arancio Pesca
+        { stop: 1.00, r: 227, g: 112, b: 85  }  // 8: Rosso Corallo
       ];
 
       function getColorForFraction(t) {
         t = Math.max(0, Math.min(1, t));
         let i = 0;
-        while (i < paletteStops.length - 1 && paletteStops[i + 1].stop < t) {
-          i++;
-        }
+        while (i < paletteStops.length - 1 && paletteStops[i + 1].stop < t) i++;
         const s1 = paletteStops[i];
         const s2 = paletteStops[i + 1] || s1;
         const range = s2.stop - s1.stop;
@@ -717,25 +787,21 @@
         };
       }
 
-      // Assegna a ciascun pulsante il suo colore graduato
       intervalButtonsData.forEach(item => {
-        const fraction = item.order / 12; // da 0 (Tonica) a 1 (Ottava)
+        const fraction = item.order / 12;
         const color = getColorForFraction(fraction);
         item.color = color;
 
         const el = document.getElementById(item.id);
         if (el) {
           if (item.degree.includes('b') || item.degree.includes('#')) {
-            // Note alterate: stile scuro con accento cromatico
             el.style.backgroundColor = '#131F25';
             el.style.borderColor = color.rgba(0.7);
             el.style.color = color.rgb;
           } else {
-            // Note naturali: piene e sature
             el.style.backgroundColor = color.rgb;
             el.style.borderColor = color.rgba(0.9);
             el.style.color = '#FFFFFF';
-            // Per i gradi intermedi chiari (Ocra) usiamo testo scuro per contrasto WCAG
             if (fraction >= 0.42 && fraction <= 0.62) {
               el.style.color = '#121F24';
             }
@@ -743,22 +809,21 @@
         }
       });
 
-      /* ================================================================ */
-      /* STATO DELL'APPLICAZIONE                                          */
-      /* ================================================================ */
+      // STATO APPLICATIVO
       let gameState = {
         active: false,
         waitingForAnswer: false,
-        currentRootMidi: 60, // Do3 di default
+        currentRootMidi: 60,
         targetSemitones: null,
         targetButtonId: null,
+        batchCurrentNote: 0, // da 1 a 5
+        batchTotalNotes: 5,
         totalAttempts: 0,
         correctCount: 0,
         currentStreak: 0,
-        freeAttemptsSinceModal: 0,
         isProStudent: false,
-        allowedSemitones: new Set(), // Per studenti pro
-        rootMode: 'random', // 'random' oppure 'fixed-c'
+        allowedSemitones: new Set(),
+        rootMode: 'random',
         exerciseTitle: 'Esercizio Intervalli'
       };
 
@@ -770,6 +835,8 @@
       const statScore = document.getElementById('stat-score');
       const statAcc = document.getElementById('stat-acc');
       const statStreak = document.getElementById('stat-streak');
+      const batchBadge = document.getElementById('batch-badge');
+      const batchProgress = document.getElementById('batch-progress');
       const proBanner = document.getElementById('pro-banner');
       const proExerciseTitle = document.getElementById('pro-exercise-title');
       const proTeacherId = document.getElementById('pro-teacher-id');
@@ -792,82 +859,6 @@
       const generatedShareLink = document.getElementById('generated-share-link');
       const copyShareLinkBtn = document.getElementById('copy-share-link-btn');
 
-      /* ================================================================ */
-      /* ANIMAZIONE ONDA DELLA NOTA BASE (SVG SINUSOIDALE CONTINUA)       */
-      /* ================================================================ */
-      function spawnRootWave(targetButtonElement) {
-        if (droneWaveEl) droneWaveEl.remove();
-
-        const stage = document.getElementById('game-stage');
-        const stageRect = stage.getBoundingClientRect();
-        const btnRect = targetButtonElement.getBoundingClientRect();
-
-        const relativeY = btnRect.top - stageRect.top + btnRect.height / 2;
-        const relativeX = btnRect.left - stageRect.left + btnRect.width / 2;
-        const percentX = (relativeX / stageRect.width) * 100;
-        const waveCenter = percentX * 10;
-
-        const waveAxis = document.createElement('div');
-        waveAxis.className = 'wave-axis';
-        waveAxis.style.top = `${relativeY}px`;
-
-        const maskRadius = btnRect.height / 2;
-        const maskString = `radial-gradient(circle at ${percentX}% 50%, transparent ${maskRadius + 3}px, #000 ${maskRadius + 4}px)`;
-        waveAxis.style.webkitMaskImage = maskString;
-        waveAxis.style.maskImage = maskString;
-
-        waveAxis.innerHTML = `
-          <svg viewBox="0 0 1000 70" preserveAspectRatio="none">
-            <g class="wave-burst" style="opacity: 0.85;">
-              <path class="wave-fill" fill="rgba(55, 147, 134, 0.4)" />
-              <line class="wave-axis-line" stroke="#379386" stroke-width="2" y1="35" y2="35" />
-            </g>
-          </svg>
-        `;
-        stage.insertBefore(waveAxis, stage.firstChild);
-
-        const waveFill = waveAxis.querySelector('.wave-fill');
-        const axisLine = waveAxis.querySelector('.wave-axis-line');
-        const W = 1000;
-        const MID = 35;
-        const AMP = 30;
-        const start = performance.now();
-
-        function renderFrame(now) {
-          if (!waveAxis.isConnected) return;
-          const elapsed = now - start;
-          const phase = elapsed * 0.0022;
-
-          let d = `M 0 ${MID}`;
-          for (let x = 0; x <= W; x += 20) {
-            const t = (x / W) * Math.PI * 4 - phase;
-            const y = MID + AMP * Math.sin(t) * 0.75;
-            d += ` L ${x} ${y}`;
-          }
-          d += ` L ${W} ${MID} Z`;
-
-          waveFill.setAttribute('d', d);
-          axisLine.setAttribute('x1', 0);
-          axisLine.setAttribute('x2', W);
-
-          requestAnimationFrame(renderFrame);
-        }
-
-        requestAnimationFrame(renderFrame);
-        droneWaveEl = waveAxis;
-        return waveAxis;
-      }
-
-      function removeRootWave() {
-        if (droneWaveEl) {
-          droneWaveEl.remove();
-          droneWaveEl = null;
-        }
-      }
-
-      /* ================================================================ */
-      /* EFFETTO VISIVO: CERCHIO RADIALE SEMITRASPARENTE SU NOTA CORRETTA */
-      /* ================================================================ */
       function triggerCorrectCircleRipple(buttonElement, colorRgba) {
         const rect = buttonElement.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
@@ -881,18 +872,12 @@
         ripple.style.left = `${centerX}px`;
         ripple.style.top = `${centerY}px`;
         ripple.style.backgroundColor = colorRgba;
-        ripple.style.boxShadow = `0 0 25px ${colorRgba}`;
+        ripple.style.boxShadow = `0 0 28px ${colorRgba}`;
 
         document.body.appendChild(ripple);
-
-        ripple.addEventListener('animationend', () => {
-          ripple.remove();
-        });
+        ripple.addEventListener('animationend', () => ripple.remove());
       }
 
-      /* ================================================================ */
-      /* GESTIONE STATISTICHE                                             */
-      /* ================================================================ */
       function updateStatsUI() {
         statScore.textContent = `${gameState.correctCount}/${gameState.totalAttempts}`;
         statStreak.textContent = gameState.currentStreak;
@@ -902,9 +887,6 @@
         statAcc.textContent = `${acc}%`;
       }
 
-      /* ================================================================ */
-      /* CONTROLLO URL: MODALITÀ ALLIEVO PRO                              */
-      /* ================================================================ */
       function checkUrlForProStudent() {
         const params = new URLSearchParams(window.location.search);
         const docenteParam = params.get('docente');
@@ -916,29 +898,25 @@
           gameState.isProStudent = true;
           document.body.classList.add('student-pro-mode');
 
-          // Titolo personalizzato
           if (titleParam) {
             gameState.exerciseTitle = decodeURIComponent(titleParam);
             proExerciseTitle.textContent = gameState.exerciseTitle;
           }
-          proTeacherId.textContent = `Licenza: ${docenteParam}`;
+          proTeacherId.textContent = `Docente: ${docenteParam}`;
           proBanner.classList.remove('hidden');
           freeNotice.classList.add('hidden');
 
-          // Impostazione Nota Base
           if (rootParam === 'random') {
             gameState.rootMode = 'random';
           } else {
             gameState.rootMode = 'fixed-c';
           }
 
-          // Filtro intervalli
           if (intervalsParam) {
             const semitoneList = intervalsParam.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
             gameState.allowedSemitones = new Set(semitoneList);
-            gameState.allowedSemitones.add(0); // Tonica sempre presente
+            gameState.allowedSemitones.add(0);
 
-            // Aggiorna visibilità nella griglia
             intervalButtonsData.forEach(item => {
               const el = document.getElementById(item.id);
               if (el) {
@@ -956,38 +934,50 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* CICLO DI GIOCO (ROUND & NOTE MISTERIOSE)                         */
+      /* GESTIONE SERIE DA 5 NOTE                                         */
       /* ================================================================ */
-      function startNewRound() {
-        gameState.waitingForAnswer = true;
-        btnReplay.removeAttribute('disabled');
-        btnMainAction.textContent = 'Ascolta...';
-        btnMainAction.classList.remove('bg-tealBand');
-        btnMainAction.classList.add('bg-coralBand');
+      function startBatchExercise() {
+        gameState.active = true;
+        gameState.batchCurrentNote = 1;
+        batchBadge.classList.remove('hidden');
+        batchBadge.classList.add('flex');
+        batchProgress.textContent = `1/5`;
 
-        // 1. Scelta Nota Base (Drone)
+        // 1. Scelta della NOTA BASE (che resterà FISSA per tutta la serie da 5)
         if (gameState.rootMode === 'random') {
-          // Tra Do3 (60) e Fa3 (65) per mantenere l'estensione nel registro vocale/pianistico comodo
           const roots = [55, 57, 58, 60, 62, 63, 65];
           gameState.currentRootMidi = roots[Math.floor(Math.random() * roots.length)];
         } else {
           gameState.currentRootMidi = 60; // Do fisso
         }
 
-        // Avvia il Drone continuo e la relativa onda
+        // Avvia il Drone continuo e la propagazione dell'onda dalla nota base (1)
         audio.startDrone(gameState.currentRootMidi);
+        if (droneWaveEl) droneWaveEl.remove();
         const rootBtn = document.getElementById('btn-1');
-        spawnRootWave(rootBtn);
+        droneWaveEl = spawnPropagatingWave(rootBtn);
 
-        // 2. Selezione dell'intervallo misterioso da indovinare
+        // Avvia la prima nota della serie
+        playQuestionInBatch();
+      }
+
+      function playQuestionInBatch() {
+        if (!gameState.active) return;
+
+        gameState.waitingForAnswer = true;
+        btnReplay.removeAttribute('disabled');
+        btnMainAction.textContent = `Ascolta... (${gameState.batchCurrentNote}/5)`;
+        btnMainAction.classList.remove('bg-tealBand');
+        btnMainAction.classList.add('bg-coralBand');
+        batchProgress.textContent = `${gameState.batchCurrentNote}/5`;
+
         let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
-
         if (gameState.isProStudent && gameState.allowedSemitones.size > 0) {
           candidateItems = candidateItems.filter(i => gameState.allowedSemitones.has(i.semitones));
         }
 
         if (candidateItems.length === 0) {
-          alert('Nessun intervallo selezionato per questo esercizio.');
+          alert('Nessun intervallo selezionato.');
           stopGame();
           return;
         }
@@ -998,56 +988,57 @@
 
         const secretNoteMidi = gameState.currentRootMidi + pickedItem.semitones;
 
-        // Dopo un breve respiro (1.2s), entra la seconda nota misteriosa sopra il drone
+        // Piccola pausa morbida prima dell'ingresso della nota misteriosa
         setTimeout(() => {
-          if (!gameState.active) return;
+          if (!gameState.active || !gameState.waitingForAnswer) return;
           audio.playSecretNote(secretNoteMidi, 3.8);
-          btnMainAction.textContent = 'Indovina!';
-        }, 1200);
+          btnMainAction.textContent = `Indovina! (${gameState.batchCurrentNote}/5)`;
+        }, 1100);
       }
 
       function stopGame() {
         gameState.active = false;
         gameState.waitingForAnswer = false;
-        audio.stopDrone(0.4);
-        audio.stopSecretNote(0.3);
-        removeRootWave();
+        audio.stopDrone(0.3);
+        audio.stopSecretNoteImmediate();
+
+        if (droneWaveEl) {
+          droneWaveEl.remove();
+          droneWaveEl = null;
+        }
+
+        batchBadge.classList.add('hidden');
+        batchBadge.classList.remove('flex');
 
         btnReplay.setAttribute('disabled', 'true');
-        btnMainAction.textContent = 'Inizia Esercizio';
+        btnMainAction.textContent = 'Inizia Serie (5 note)';
         btnMainAction.classList.remove('bg-coralBand');
         btnMainAction.classList.add('bg-tealBand');
       }
 
-      // Tasto Principale (Inizia / Stop)
       btnMainAction.addEventListener('click', () => {
         if (gameState.active) {
           stopGame();
         } else {
-          gameState.active = true;
-          startNewRound();
+          startBatchExercise();
         }
       });
 
-      // Tasto Riascolta
       btnReplay.addEventListener('click', () => {
         if (!gameState.active || gameState.targetSemitones === null) return;
         const secretNoteMidi = gameState.currentRootMidi + gameState.targetSemitones;
         audio.playSecretNote(secretNoteMidi, 3.5);
       });
 
-      /* ================================================================ */
-      /* CLICK SUI TASTI DEGLI INTERVALLI                                 */
-      /* ================================================================ */
+      /* GESTIONE CLICK SUI TASTI */
       intervalButtonsData.forEach(item => {
         const btnEl = document.getElementById(item.id);
         if (!btnEl) return;
 
         btnEl.addEventListener('click', () => {
-          // Se il gioco è attivo e stiamo aspettando la risposta
           if (gameState.active && gameState.waitingForAnswer) {
             
-            // Cliccato il tasto Tonica (1) mentre si gioca: riascolta il drone
+            // Se clicca la tonica (1) mentre gioca: riesegue la base
             if (item.semitones === 0) {
               audio.startDrone(gameState.currentRootMidi);
               return;
@@ -1055,45 +1046,44 @@
 
             gameState.totalAttempts++;
 
-            // RISPOSTA CORRETTA
+            // RISPOSTA ESATTA
             if (item.semitones === gameState.targetSemitones) {
               gameState.correctCount++;
               gameState.currentStreak++;
               updateStatsUI();
 
               gameState.waitingForAnswer = false;
-              btnMainAction.textContent = 'Esatto!';
+              audio.fadeSecretNote(0.5);
 
-              // Sfumiamo la nota misteriosa
-              audio.stopSecretNote(1.5);
+              // 💥 CERCHIO RADIALE SEMITRASPARENTE DEL COLORE DELLA NOTA
+              triggerCorrectCircleRipple(btnEl, item.color.rgba(0.6));
 
-              // 💥 EFFETTO CERCHIO RADIALE SEMITRASPARENTE DEL COLORE DELLA NOTA
-              triggerCorrectCircleRipple(btnEl, item.color.rgba(0.55));
+              // Verifica se la serie da 5 è finita
+              if (gameState.batchCurrentNote < gameState.batchTotalNotes) {
+                btnMainAction.textContent = `Esatto! (${gameState.batchCurrentNote}/5)`;
+                gameState.batchCurrentNote++;
 
-              // Contatore modale Freemium (ogni 5 tentativi se non è Pro)
-              if (!gameState.isProStudent) {
-                gameState.freeAttemptsSinceModal++;
-                if (gameState.freeAttemptsSinceModal >= 5) {
-                  gameState.freeAttemptsSinceModal = 0;
-                  setTimeout(() => {
+                // Passa automaticamente alla prossima nota della serie (stesso drone!)
+                setTimeout(() => {
+                  if (gameState.active) playQuestionInBatch();
+                }, 1900);
+
+              } else {
+                // SERIE DI 5 COMPLETATA!
+                btnMainAction.textContent = `Serie Conclusa (5/5)!`;
+                
+                setTimeout(() => {
+                  stopGame();
+                  if (!gameState.isProStudent) {
                     promoModal.classList.remove('hidden');
-                  }, 800);
-                }
+                  }
+                }, 1800);
               }
-
-              // Passa al prossimo giro dopo 2.2s
-              setTimeout(() => {
-                if (gameState.active) {
-                  startNewRound();
-                }
-              }, 2200);
 
             } else {
               // RISPOSTA ERRATA
               gameState.currentStreak = 0;
               updateStatsUI();
-
-              // Animazione Shake
               btnEl.classList.add('shake-anim');
               btnEl.addEventListener('animationend', () => {
                 btnEl.classList.remove('shake-anim');
@@ -1101,18 +1091,17 @@
             }
 
           } else {
-            // Fuori dal gioco: preview acustica del suono toccato
+            // Preview fuori dal gioco
             const previewMidi = 60 + item.semitones;
-            audio.previewNote(previewMidi, 1.2);
+            audio.previewNote(previewMidi, 1.0);
           }
         });
       });
 
-      /* ================================================================ */
-      /* GESTIONE POPUP PROMOZIONALE FREEMIUM                             */
-      /* ================================================================ */
+      /* MODALE FREEMIUM */
       promoCloseBtn.addEventListener('click', () => {
         promoModal.classList.add('hidden');
+        startBatchExercise();
       });
 
       promoToTeacherBtn.addEventListener('click', () => {
@@ -1120,9 +1109,7 @@
         openTeacherModal();
       });
 
-      /* ================================================================ */
-      /* GESTIONE AREA DOCENTE & LICENZE                                  */
-      /* ================================================================ */
+      /* AREA DOCENTE */
       function openTeacherModal() {
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         if (savedLic && VALID_LICENSES.includes(savedLic.toUpperCase())) {
@@ -1134,9 +1121,7 @@
       }
 
       openTeacherBtn.addEventListener('click', openTeacherModal);
-      closeTeacherModal.addEventListener('click', () => {
-        teacherModal.classList.add('hidden');
-      });
+      closeTeacherModal.addEventListener('click', () => teacherModal.classList.add('hidden'));
 
       function showTeacherLocked() {
         teacherLockedView.classList.remove('hidden');
@@ -1166,11 +1151,9 @@
         showTeacherLocked();
       });
 
-      // Configurazione Pillole di Selezione Intervalli
       const teacherPillsContainer = document.getElementById('teacher-interval-pills');
-      let teacherSelectedSemitones = new Set([3, 4, 7]); // Default terze e quinte
+      let teacherSelectedSemitones = new Set([3, 4, 7]);
 
-      // Carica configurazione salvata
       const savedConfig = localStorage.getItem('ms_teacher_custom_config');
       if (savedConfig) {
         try {
@@ -1183,18 +1166,18 @@
       function initTeacherIntervalPills() {
         teacherPillsContainer.innerHTML = '';
         const uniqueIntervals = [
-          { semi: 1, label: '2ª Min (1 sem)' },
-          { semi: 2, label: '2ª Mag (2 sem)' },
-          { semi: 3, label: '3ª Min (3 sem)' },
-          { semi: 4, label: '3ª Mag (4 sem)' },
-          { semi: 5, label: '4ª Giu (5 sem)' },
-          { semi: 6, label: 'Tritono (6 sem)' },
-          { semi: 7, label: '5ª Giu (7 sem)' },
-          { semi: 8, label: '6ª Min (8 sem)' },
-          { semi: 9, label: '6ª Mag (9 sem)' },
-          { semi: 10, label: '7ª Min (10 sem)' },
-          { semi: 11, label: '7ª Mag (11 sem)' },
-          { semi: 12, label: 'Ottava (12 sem)' }
+          { semi: 1, label: '2ª Min (1s)' },
+          { semi: 2, label: '2ª Mag (2s)' },
+          { semi: 3, label: '3ª Min (3s)' },
+          { semi: 4, label: '3ª Mag (4s)' },
+          { semi: 5, label: '4ª Giu (5s)' },
+          { semi: 6, label: 'Tritono (6s)' },
+          { semi: 7, label: '5ª Giu (7s)' },
+          { semi: 8, label: '6ª Min (8s)' },
+          { semi: 9, label: '6ª Mag (9s)' },
+          { semi: 10, label: '7ª Min (10s)' },
+          { semi: 11, label: '7ª Mag (11s)' },
+          { semi: 12, label: 'Ottava (12s)' }
         ];
 
         uniqueIntervals.forEach(it => {
@@ -1213,7 +1196,7 @@
               if (teacherSelectedSemitones.size > 1) {
                 teacherSelectedSemitones.delete(it.semi);
               } else {
-                alert('Seleziona almeno un intervallo per la lezione.');
+                alert('Seleziona almeno un intervallo.');
                 return;
               }
             } else {
