@@ -129,7 +129,7 @@
     }
 
     /* ================================================================ */
-    /* GRAFICA PULITA MODALITÀ CREAZIONE DOCENTE (SENZA ALONI STRANI)   */
+    /* GRAFICA PULITA MODALITÀ CREAZIONE DOCENTE (SENZA ALONI NEON)     */
     /* ================================================================ */
     body.creator-mode .round-note-btn {
       opacity: 0.22;
@@ -156,16 +156,15 @@
       border-width: 2px !important;
     }
 
-    /* Note Drone attive: sobrie, visibili e con contorno giallo/oro discreto */
-    body.creator-mode .round-note-btn.is-drone-active {
+    /* Note Drone: visibili, pulite, SENZA ALONI O BORDI GIALLI ARTIFICIALI (è l'onda che parla) */
+    body.creator-mode .round-note-btn.drone-note {
       opacity: 1 !important;
       filter: none !important;
-      border-color: #E0C36F !important;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45) !important;
     }
 
-    body.creator-mode .round-note-btn.accidental.is-drone-active {
-      border-color: #E0C36F !important;
+    body.creator-mode .round-note-btn.accidental.drone-note {
+      border-color: var(--btn-color) !important;
       border-style: dashed !important;
       border-width: 2px !important;
     }
@@ -418,7 +417,7 @@
         <span>1#</span>
       </button>
 
-      <!-- Row 13: Tonica / Grado 1 -->
+      <!-- Row 13: Tonica / Grado 1 (Senza cerchio giallo, solo l'onda attiva) -->
       <button id="btn-1" data-degree="1" data-semitones="0" class="round-note-btn text-white active-in-exercise" style="grid-row: 13; grid-column: 2;" type="button" aria-label="Tonica / Grado 1">
         <span>1</span>
       </button>
@@ -808,7 +807,6 @@
         this.secretGain.gain.linearRampToValueAtTime(0, now + fadeSeconds);
       }
 
-      // Riproduce una nota isolata con rilascio morbido e la ferma automaticamente
       previewNote(midiNote, duration = 1.0) {
         this.ensureContextRunning();
         if (!this.ctx) return;
@@ -1014,10 +1012,10 @@
       }
 
       function getPerformanceColor(ratio) {
-        if (ratio >= 0.80) return '#379386'; // Verde Teal
-        if (ratio >= 0.60) return '#E0C36F'; // Giallo Ocra
-        if (ratio >= 0.40) return '#EBA066'; // Arancio Pesca
-        return '#E37055';                    // Rosso Corallo
+        if (ratio >= 0.80) return '#379386';
+        if (ratio >= 0.60) return '#E0C36F';
+        if (ratio >= 0.40) return '#EBA066';
+        return '#E37055';
       }
 
       intervalButtonsData.forEach(item => {
@@ -1075,6 +1073,29 @@
 
       // Set dei droni scelti dal docente (di default grado 1)
       let teacherDroneNoteIds = new Set(['btn-1']);
+
+      // Gestore delle onde continue durante la creazione dell'esercizio
+      let creatorDroneWaveEls = [];
+
+      function clearCreatorDroneWaves() {
+        creatorDroneWaveEls.forEach(el => {
+          try { el.remove(); } catch(e){}
+        });
+        creatorDroneWaveEls = [];
+      }
+
+      // Fa girare in modo continuo e visibile l'onda su ciascun drone attivo
+      function updateCreatorDroneWaves() {
+        clearCreatorDroneWaves();
+        if (!gameState.creatorMode) return;
+        teacherDroneNoteIds.forEach(id => {
+          const btn = document.getElementById(id);
+          if (btn) {
+            const wave = spawnPropagatingWave(btn, true);
+            if (wave) creatorDroneWaveEls.push(wave);
+          }
+        });
+      }
 
       // Elementi DOM Principali
       const btnMainAction = document.getElementById('btn-main-action');
@@ -1282,6 +1303,7 @@
             teacherDroneNoteIds = new Set(droneIds);
 
             updateTeacherGridVisuals();
+            updateCreatorDroneWaves();
             lessonsArchivePanel.classList.add('hidden');
           });
 
@@ -1404,7 +1426,6 @@
             gameState.allowedButtonIds.add('btn-1');
             document.getElementById('btn-1').classList.add('active-in-exercise');
 
-            // Carica droni specificati dall'insegnante
             if (dronesParam) {
               const rawDrones = dronesParam.split(',').map(s => s.trim().toLowerCase());
               teacherDroneNoteIds = new Set();
@@ -1448,19 +1469,21 @@
           const el = document.getElementById(item.id);
           if (!el) return;
 
-          // 1. Droni: indicatore visivo pulito
-          if (teacherDroneNoteIds.has(item.id)) {
-            el.classList.add('is-drone-active');
-            el.classList.remove('teacher-selected');
-          } 
-          // 2. Note da indovinare: colorazione identica a pagina iniziale
-          else if (teacherSelectedNoteIds.has(item.id)) {
+          const isDrone = teacherDroneNoteIds.has(item.id);
+          const isSelected = teacherSelectedNoteIds.has(item.id);
+
+          // Note Drone: visibili e sobrie (è l'onda che le evidenzia)
+          if (isDrone) {
+            el.classList.add('drone-note');
+          } else {
+            el.classList.remove('drone-note');
+          }
+
+          // Note da indovinare: colorate identiche alla pagina iniziale
+          if (isSelected) {
             el.classList.add('teacher-selected');
-            el.classList.remove('is-drone-active');
-          } 
-          // 3. Spente: grigie e poco visibili
-          else {
-            el.classList.remove('teacher-selected', 'is-drone-active');
+          } else {
+            el.classList.remove('teacher-selected');
           }
         });
       }
@@ -1472,15 +1495,9 @@
         if (gameState.droneSelectionMode) {
           creatorDroneBtn.classList.remove('bg-[#15232A]', 'text-white/80', 'border-white/20');
           creatorDroneBtn.classList.add('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
-          creatorHelperText.textContent = "Modalità Droni: tocca i cerchi per scegliere i pedali (vedi l'onda e ascolta).";
+          creatorHelperText.textContent = "Modalità Droni attiva: tocca i cerchi per cambiare il pedale dell'onda.";
           creatorHelperText.classList.add('text-ochreBand');
           creatorHelperText.classList.remove('text-white/50');
-          
-          // Genera onda visiva da ciascun drone attualmente attivo
-          teacherDroneNoteIds.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) spawnPropagatingWave(el, false);
-          });
         } else {
           creatorDroneBtn.classList.add('bg-[#15232A]', 'text-white/80', 'border-white/20');
           creatorDroneBtn.classList.remove('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
@@ -1500,7 +1517,6 @@
         document.body.classList.remove('test-mode');
         document.body.classList.add('creator-mode');
 
-        // Reset pulsante Droni a scuro
         creatorDroneBtn.classList.add('bg-[#15232A]', 'text-white/80', 'border-white/20');
         creatorDroneBtn.classList.remove('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
         creatorHelperText.textContent = "Tocca i cerchi per includere le note da indovinare.";
@@ -1533,6 +1549,9 @@
 
         updateTeacherGridVisuals();
 
+        // AVVIA L'ONDA CONTINUA SUL DRONE (Default grado 1) per tutta la durata della creazione
+        updateCreatorDroneWaves();
+
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         if (savedLic) syncLessonsFromCloudSilently(savedLic);
       }
@@ -1543,6 +1562,9 @@
         gameState.creatorMode = false;
         gameState.testMode = false;
         gameState.droneSelectionMode = false;
+
+        // Pulisce l'onda continua della creazione
+        clearCreatorDroneWaves();
 
         creatorTopBar.classList.add('opacity-0', '-translate-y-2');
         creatorControlsRow.classList.add('opacity-0', 'translate-y-2');
@@ -1569,7 +1591,7 @@
             const el = document.getElementById(item.id);
             if (el) {
               el.classList.add('active-in-exercise');
-              el.classList.remove('teacher-selected', 'is-drone-active');
+              el.classList.remove('teacher-selected', 'drone-note');
             }
           });
 
@@ -1593,6 +1615,9 @@
         gameState.testMode = true;
         document.body.classList.remove('creator-mode');
         document.body.classList.add('test-mode');
+
+        // Ferma l'onda statica del creator prima di testare
+        clearCreatorDroneWaves();
 
         freeNotice.classList.add('hidden');
         creatorTopBar.classList.add('hidden');
@@ -1752,7 +1777,6 @@
         });
       }
 
-      // GESTIONE COPIA LINK E SALVA LEZIONE
       creatorCopyLinkBtn.addEventListener('click', () => {
         audio.ensureContextRunning();
         if (teacherSelectedNoteIds.size === 0) {
@@ -1856,7 +1880,7 @@
         btnMainAction.classList.add('bg-coralBand');
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
-        // 1. ESTRAE UN DRONE CASUALE TRA QUELLI SELEZIONATI
+        // Estrae un drone tra quelli selezionati
         let availableDroneIds = Array.from(teacherDroneNoteIds);
         if (availableDroneIds.length === 0) availableDroneIds = ['btn-1'];
         const pickedDroneId = availableDroneIds[Math.floor(Math.random() * availableDroneIds.length)];
@@ -1864,13 +1888,13 @@
 
         gameState.currentDroneMidi = gameState.keyRootMidi + droneItem.semitones;
 
-        // Avvia il drone e fa partire l'onda dal pulsante ESATTO del drone estratto
+        // Avvia il drone continuo e fa partire l'onda dal pulsante ESATTO del drone
         audio.startDrone(gameState.currentDroneMidi);
         if (droneWaveEl) droneWaveEl.remove();
         const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
         droneWaveEl = spawnPropagatingWave(droneBtnEl, true);
 
-        // 2. ESTRAE LA NOTA MISTERIOSA DA INDOVINARE
+        // Estrae la nota misteriosa da indovinare
         let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
           candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
@@ -1998,20 +2022,23 @@
               if (teacherDroneNoteIds.has(item.id)) {
                 if (teacherDroneNoteIds.size > 1) {
                   teacherDroneNoteIds.delete(item.id);
+                  updateCreatorDroneWaves();
                 } else {
-                  alert('Deve rimanere almeno un drone selezionato.');
-                  return;
+                  // Se è rimasto un solo drone, non rimuoverlo ma fai risentire il suo suono per 1.4s
+                  const keyRoot = (creatorKeySelect.value === 'random') ? 60 : (parseInt(creatorKeySelect.value, 10) || 60);
+                  const droneMidi = keyRoot + item.semitones;
+                  audio.previewNote(droneMidi, 1.4);
                 }
               } else {
                 teacherDroneNoteIds.add(item.id);
                 
-                // Suona la nota effettiva del drone trasposta e sfuma dopo 1.4s (non continua a suonare!)
+                // Suona la nota effettiva del drone trasposta e sfuma dopo 1.4s (non continua all'infinito)
                 const keyRoot = (creatorKeySelect.value === 'random') ? 60 : (parseInt(creatorKeySelect.value, 10) || 60);
                 const droneMidi = keyRoot + item.semitones;
                 audio.previewNote(droneMidi, 1.4);
                 
-                // Spawna l'onda visiva dal tasto esatto del drone
-                spawnPropagatingWave(btnEl, false);
+                // Aggiorna e sposta l'onda continua sul nuovo drone
+                updateCreatorDroneWaves();
               }
               updateTeacherGridVisuals();
               return;
@@ -2020,7 +2047,6 @@
             // SOTTOCASO A2: MODALITÀ NOTE DA INDOVINARE (GRAFICA PULITA)
             if (item.id === 'btn-1') {
               audio.previewNote(60, 1.0);
-              spawnPropagatingWave(btnEl, false);
               return;
             }
 
