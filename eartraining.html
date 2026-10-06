@@ -90,7 +90,7 @@
       overflow: hidden;
     }
 
-    /* Griglia a colonna verticale a 3 tracce proporzionata alla viewport */
+    /* Griglia a colonna verticale proporzionata */
     .ear-grid {
       display: grid;
       grid-template-columns: 1fr 1.25fr 1fr;
@@ -102,6 +102,7 @@
       z-index: 10;
       align-items: center;
       justify-items: center;
+      transition: gap 0.25s ease;
     }
 
     /* Pulsanti PERFETTAMENTE ROTONDI */
@@ -124,7 +125,9 @@
       transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), 
                   box-shadow 0.2s ease, 
                   opacity 0.25s ease, 
-                  filter 0.25s ease;
+                  filter 0.25s ease,
+                  height 0.25s ease,
+                  font-size 0.25s ease;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
     }
 
@@ -151,9 +154,6 @@
 
     /* Ottimizzazioni per schermi compatti (< 720px e < 620px) */
     @media (max-height: 720px) {
-      .ear-grid {
-        gap: 1px;
-      }
       .round-note-btn {
         height: min(90%, 38px);
         font-size: clamp(0.8rem, 2.1vh, 1rem);
@@ -268,7 +268,7 @@
         </div>
       </div>
 
-      <!-- Statistiche (Punteggio a Sinistra, Precisione a Destra) -->
+      <!-- Statistiche (visibili solo per allievi o durante le prove) -->
       <div id="header-stats" class="flex items-center gap-3 text-xs font-mono">
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Punteggio</span>
@@ -279,6 +279,12 @@
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Precisione</span>
           <span id="stat-acc" class="font-extrabold text-tealBand text-sm transition-colors">100%</span>
         </div>
+      </div>
+
+      <!-- Badge Nome Docente (visibile quando il docente è in console PRO) -->
+      <div id="header-teacher-badge" class="hidden items-center gap-1.5 px-3 py-1 rounded-full bg-ochreBand/15 border border-ochreBand/40 text-xs font-semibold text-white">
+        <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
+        <span id="teacher-header-name" class="font-bold text-white truncate max-w-[170px] sm:max-w-xs">Docente</span>
       </div>
 
       <!-- Pulsante Docente PRO -->
@@ -296,7 +302,6 @@
   <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-3 py-1.5 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
       <div class="flex items-center gap-2 w-full sm:w-auto">
-        <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">DOCENTE</span>
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
         <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
       </div>
@@ -716,8 +721,29 @@
       'random': 'Casuale'
     };
 
+    const defaultGridRows = {
+      'btn-8': 1,
+      'btn-7': 2,
+      'btn-7b': 3,
+      'btn-6sharp': 3,
+      'btn-6': 4,
+      'btn-6b': 5,
+      'btn-5sharp': 5,
+      'btn-5': 6,
+      'btn-5b': 7,
+      'btn-4sharp': 7,
+      'btn-4': 8,
+      'btn-3': 9,
+      'btn-3b': 10,
+      'btn-2sharp': 10,
+      'btn-2': 11,
+      'btn-2b': 12,
+      'btn-1sharp': 12,
+      'btn-1': 13
+    };
+
     /* ================================================================ */
-    /* MOTORE AUDIO: CALIBRATO ANTI-DISTORSIONE E ANTI-POP              */
+    /* MOTORE AUDIO CALIBRATO                                           */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -744,7 +770,6 @@
       initLimiter() {
         if (!this.ctx) return;
         this.compressor = this.ctx.createDynamicsCompressor();
-        // Parametri morbidi e trasparenti per evitare ducking o crackle
         this.compressor.threshold.setValueAtTime(-6, this.ctx.currentTime);
         this.compressor.knee.setValueAtTime(10, this.ctx.currentTime);
         this.compressor.ratio.setValueAtTime(4, this.ctx.currentTime);
@@ -769,7 +794,6 @@
         filter.Q.setValueAtTime(0.65, now);
         filter.connect(masterGain);
 
-        // Armoniche bilanciate con somma normalizzata
         const partials = [
           { mult: 1.0, gain: 0.65 },
           { mult: 2.0, gain: 0.22 },
@@ -830,7 +854,6 @@
         const freq = this.midiToFreq(midiNote);
         const now = Math.max(0, this.ctx.currentTime) + 0.01;
 
-        // Headroom calibrato a 0.20 per suonare insieme alle altre note senza saturare
         this.droneVoice = this.createVoiceGroup(freq, 0.20);
         this.droneVoice.masterGain.gain.setValueAtTime(0, now);
         this.droneVoice.masterGain.gain.linearRampToValueAtTime(0.20, now + 0.45);
@@ -1094,7 +1117,6 @@
         { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Grado 1', order: 0 }
       ];
 
-      // Dicitura unificata esaustiva per il riepilogo statistico (nessuna confusione enarmonica)
       const unifiedIntervalNames = {
         0: 'Unisono',
         1: '2ª Minore / 1ª Aumentata',
@@ -1179,6 +1201,7 @@
         testMode: false,
         droneSelectionMode: false,
         
+        isRandomKeyMode: false,
         keyRootMidi: 60,
         currentDroneItem: null,
         currentDroneMidi: 60,
@@ -1203,7 +1226,7 @@
       let teacherDroneNoteIds = new Set(['btn-1']);
       const creatorDroneWaves = new Map();
 
-      // Funzione di calcolo ottava: da Sol in poi (MIDI >= 67) va all'ottava inferiore (-12 semitoni)
+      // Funzione di calcolo ottava: da Sol in poi (MIDI >= 67) scala di -12 semitoni
       function getEffectiveKeyRoot(keyVal) {
         let midi = 60;
         if (keyVal === 'random') {
@@ -1214,7 +1237,7 @@
         }
 
         if (midi >= 67) {
-          midi -= 12; // Da Sol a Si scala all'ottava inferiore (es. Sol4 -> Sol3)
+          midi -= 12;
         }
         return midi;
       }
@@ -1248,6 +1271,10 @@
       }
 
       // Elementi DOM Principali
+      const headerStats = document.getElementById('header-stats');
+      const headerTeacherBadge = document.getElementById('header-teacher-badge');
+      const teacherHeaderName = document.getElementById('teacher-header-name');
+
       const btnMainAction = document.getElementById('btn-main-action');
       const btnReplay = document.getElementById('btn-replay');
       const statScore = document.getElementById('stat-score');
@@ -1327,7 +1354,6 @@
 
       let gameDroneWaveEl = null;
 
-      // Riposizionamento dinamico delle onde su resize o rotazione dello schermo
       function updateAllActiveWavesPositions() {
         if (gameDroneWaveEl && gameDroneWaveEl._targetBtn) {
           updateWaveGeometry(gameDroneWaveEl, gameDroneWaveEl._targetBtn);
@@ -1341,6 +1367,99 @@
       window.addEventListener('orientationchange', () => {
         setTimeout(updateAllActiveWavesPositions, 100);
       });
+
+      /* ================================================================ */
+      /* SISTEMA DI RIDISTRIBUZIONE SPAZIALE VERTICALE (GRID ELASTICA)    */
+      /* ================================================================ */
+      function resetDefaultGridLayout() {
+        const grid = document.querySelector('.ear-grid');
+        if (!grid) return;
+
+        grid.style.gridTemplateRows = 'repeat(13, minmax(0, 1fr)) auto';
+        grid.style.gap = '';
+
+        Object.entries(defaultGridRows).forEach(([id, row]) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.style.gridRow = String(row);
+            el.style.height = '';
+            el.style.fontSize = '';
+          }
+        });
+
+        studentControlsRow.style.gridRow = '14';
+        creatorControlsRow.style.gridRow = '14';
+
+        setTimeout(updateAllActiveWavesPositions, 50);
+      }
+
+      function applyAdaptiveGridLayout() {
+        const grid = document.querySelector('.ear-grid');
+        if (!grid) return;
+
+        const isProOrTest = (gameState.isProStudent || gameState.testMode);
+        if (!isProOrTest) {
+          resetDefaultGridLayout();
+          return;
+        }
+
+        const activeItems = intervalButtonsData.filter(i => gameState.allowedButtonIds.has(i.id));
+        if (activeItems.length === 0) return;
+
+        // Raggruppa per semitoni dal più acuto al più grave (la tonica sempre in fondo)
+        const uniqueSemitones = Array.from(new Set(activeItems.map(i => i.semitones))).sort((a, b) => b - a);
+        const numLevels = uniqueSemitones.length;
+
+        grid.style.gridTemplateRows = `repeat(${numLevels}, minmax(0, 1fr)) auto`;
+
+        let btnHeight = '';
+        let btnFont = '';
+        let accidentalHeight = '';
+        let accidentalFont = '';
+        let gapVal = '2px';
+
+        if (numLevels <= 4) {
+          btnHeight = 'min(90%, 64px)';
+          btnFont = 'clamp(1.15rem, 3.2vh, 1.55rem)';
+          accidentalHeight = 'min(80%, 52px)';
+          accidentalFont = 'clamp(0.9rem, 2.5vh, 1.2rem)';
+          gapVal = '8px';
+        } else if (numLevels <= 7) {
+          btnHeight = 'min(90%, 54px)';
+          btnFont = 'clamp(1rem, 2.7vh, 1.35rem)';
+          accidentalHeight = 'min(80%, 44px)';
+          accidentalFont = 'clamp(0.78rem, 2.1vh, 1rem)';
+          gapVal = '5px';
+        } else {
+          btnHeight = 'min(92%, 46px)';
+          gapVal = '2px';
+        }
+
+        grid.style.gap = gapVal;
+
+        uniqueSemitones.forEach((semitone, idx) => {
+          const assignedRow = idx + 1;
+          const itemsInLevel = activeItems.filter(i => i.semitones === semitone);
+          itemsInLevel.forEach(item => {
+            const el = document.getElementById(item.id);
+            if (el) {
+              el.style.gridRow = String(assignedRow);
+              if (item.degree.includes('b') || item.degree.includes('#')) {
+                if (accidentalHeight) el.style.height = accidentalHeight;
+                if (accidentalFont) el.style.fontSize = accidentalFont;
+              } else {
+                if (btnHeight) el.style.height = btnHeight;
+                if (btnFont) el.style.fontSize = btnFont;
+              }
+            }
+          });
+        });
+
+        studentControlsRow.style.gridRow = String(numLevels + 1);
+        creatorControlsRow.style.gridRow = String(numLevels + 1);
+
+        setTimeout(updateAllActiveWavesPositions, 60);
+      }
 
       function triggerCorrectCircleRipple(buttonElement, colorRgba) {
         const rect = buttonElement.getBoundingClientRect();
@@ -1534,26 +1653,23 @@
       });
 
       /* ================================================================ */
-      /* CHIUSURA POPUP SENZA SELEZIONE INVOLONTARIA TITOLO               */
+      /* CHIUSURA POPUP                                                   */
       /* ================================================================ */
       function closeOverwriteModal() {
         overwriteConfirmModal.classList.add('hidden');
         pendingSaveData = null;
       }
 
-      // "Cambia Titolo" è l'UNICO che fa focus e seleziona il titolo
       overwriteCancelBtn.addEventListener('click', () => {
         closeOverwriteModal();
         creatorTitleInput.focus();
         creatorTitleInput.select();
       });
       
-      // Click fuori: chiude senza selezionare il titolo
       overwriteConfirmModal.addEventListener('click', (e) => {
         if (e.target === overwriteConfirmModal) closeOverwriteModal();
       });
 
-      // Modale duplicato parametri identici
       function closeDuplicateModal() {
         duplicateConfigModal.classList.add('hidden');
         pendingDuplicateSaveData = null;
@@ -1576,7 +1692,7 @@
       });
 
       /* ================================================================ */
-      /* VERIFICA LICENZA REMOTA (APPS SCRIPT)                            */
+      /* VERIFICA LICENZA REMOTA                                          */
       /* ================================================================ */
       async function verifyLicenseCode(code) {
         code = code.trim().toUpperCase();
@@ -1587,7 +1703,10 @@
             const res = await fetch(url);
             if (res.ok) {
               const data = await res.json();
-              return { valid: data.valid, teacher: data.teacher || 'Prof. Sartore' };
+              if (data.teacher) {
+                localStorage.setItem('ms_teacher_name', data.teacher);
+              }
+              return { valid: data.valid, teacher: data.teacher || 'Prof. Marco Sartore' };
             }
           } catch(err) {
             console.warn('Verifica remota fallita, fallback:', err);
@@ -1602,7 +1721,7 @@
       }
 
       /* ================================================================ */
-      /* CONTROLLO LINK ALLIEVO PRO (NESSUN FOUC/SFARFALLIO)              */
+      /* CONTROLLO LINK ALLIEVO PRO                                       */
       /* ================================================================ */
       async function checkUrlForProStudent() {
         const params = new URLSearchParams(window.location.search);
@@ -1614,7 +1733,6 @@
         const countParam = params.get('count');
 
         if (docenteParam) {
-          // Stato visivo pre-applicato all'istante
           gameState.isProStudent = true;
           document.body.classList.add('student-pro-mode');
           document.documentElement.classList.remove('pro-student-pending');
@@ -1630,6 +1748,7 @@
           freeNotice.classList.add('hidden');
 
           if (keyParam) {
+            gameState.isRandomKeyMode = (keyParam === 'random');
             gameState.keyRootMidi = getEffectiveKeyRoot(keyParam);
           }
 
@@ -1675,19 +1794,20 @@
             });
           }
 
-          // Verifica asincrona in background
+          applyAdaptiveGridLayout();
+
           const licCheck = await verifyLicenseCode(docenteParam);
           if (licCheck.valid) {
             gameState.teacherCode = licCheck.teacher || docenteParam;
             proTeacherId.textContent = `${gameState.teacherCode}`;
           } else {
-            // Se il codice non è valido ritorna alla modalità free
             gameState.isProStudent = false;
             document.body.classList.remove('student-pro-mode');
             toggleProBtn.classList.remove('hidden');
             toggleProBtn.style.display = '';
             proBanner.classList.add('hidden');
             freeNotice.classList.remove('hidden');
+            resetDefaultGridLayout();
           }
         }
       }
@@ -1713,7 +1833,6 @@
         });
       }
 
-      // Switch pulsante DRONI
       creatorDroneBtn.addEventListener('click', () => {
         gameState.droneSelectionMode = !gameState.droneSelectionMode;
         
@@ -1741,6 +1860,13 @@
 
         document.body.classList.remove('test-mode');
         document.body.classList.add('creator-mode');
+
+        // Mostra Nome Docente in alto e nasconde punteggio/precisione
+        const savedTeacherName = localStorage.getItem('ms_teacher_name') || 'Prof. Marco Sartore';
+        teacherHeaderName.textContent = savedTeacherName;
+        headerStats.classList.add('hidden');
+        headerTeacherBadge.classList.remove('hidden');
+        headerTeacherBadge.classList.add('flex');
 
         creatorDroneBtn.classList.add('bg-[#15232A]', 'text-white/80', 'border-white/20');
         creatorDroneBtn.classList.remove('bg-ochreBand', 'text-appDark', 'border-ochreBand', 'font-black', 'shadow-md');
@@ -1772,6 +1898,7 @@
           if (el) el.classList.add('active-in-exercise');
         });
 
+        resetDefaultGridLayout();
         updateTeacherGridVisuals();
 
         clearAllCreatorDroneWaves();
@@ -1789,6 +1916,11 @@
         gameState.droneSelectionMode = false;
 
         clearAllCreatorDroneWaves();
+
+        // Ripristina statistiche in alto e nasconde badge docente
+        headerTeacherBadge.classList.add('hidden');
+        headerTeacherBadge.classList.remove('flex');
+        headerStats.classList.remove('hidden');
 
         creatorTopBar.classList.add('opacity-0', '-translate-y-2');
         creatorControlsRow.classList.add('opacity-0', 'translate-y-2');
@@ -1821,11 +1953,14 @@
 
           gameState.batchTotalNotes = 5;
           gameState.keyRootMidi = 60;
+          gameState.isRandomKeyMode = false;
           btnMainAction.textContent = 'Inizia Serie (5 note)';
           statScore.textContent = `0/5`;
           statScore.style.color = '#379386';
           statAcc.textContent = `100%`;
           statAcc.style.color = '#379386';
+
+          resetDefaultGridLayout();
         }, 220);
       }
 
@@ -1842,6 +1977,11 @@
 
         clearAllCreatorDroneWaves();
 
+        // In prova esercizio mostra i punteggi per testare
+        headerTeacherBadge.classList.add('hidden');
+        headerTeacherBadge.classList.remove('flex');
+        headerStats.classList.remove('hidden');
+
         freeNotice.classList.add('hidden');
         creatorTopBar.classList.add('hidden');
         creatorControlsRow.classList.add('hidden');
@@ -1857,6 +1997,7 @@
         studentControlsRow.classList.remove('hidden');
 
         gameState.exerciseTitle = creatorTitleInput.value.trim() || 'Esercizio Docente';
+        gameState.isRandomKeyMode = (creatorKeySelect.value === 'random');
         gameState.keyRootMidi = getEffectiveKeyRoot(creatorKeySelect.value);
         gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 10;
 
@@ -1871,6 +2012,8 @@
             else el.classList.remove('active-in-exercise');
           }
         });
+
+        applyAdaptiveGridLayout();
 
         btnMainAction.textContent = `Inizia Serie (${gameState.batchTotalNotes} note)`;
         statScore.textContent = `0/${gameState.batchTotalNotes}`;
@@ -1969,7 +2112,6 @@
             .filter(Boolean)
             .join(',');
 
-          // Invia &root= e &key= con la dicitura chiara in italiano per la colonna F (Nota Base)
           const rootLabel = KEY_NAMES_ITA[saveData.keyRoot] || saveData.keyRoot;
           const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(saveData.id)}&title=${encodeURIComponent(saveData.title)}&notes=${encodeURIComponent(notesStr)}&drones=${encodeURIComponent(dronesStr)}&root=${encodeURIComponent(rootLabel)}&key=${encodeURIComponent(saveData.keyRoot)}&count=${saveData.notesCount}&url=${encodeURIComponent(saveData.url)}`;
           
@@ -2013,7 +2155,6 @@
           url: shareUrl
         };
 
-        // 1. Controllo se esiste già con lo STESSO TITOLO
         if (existingLessonWithSameTitle) {
           pendingSaveData = candidateSaveData;
           overwriteConfirmMsg.textContent = `Esiste già una lezione salvata con il titolo "${titleStr}". Vuoi aggiornarla con le modifiche correnti o cambiare titolo?`;
@@ -2021,7 +2162,6 @@
           return;
         }
 
-        // 2. Controllo se esiste un esercizio con PARAMETRI ESATTAMENTE IDENTICI (anche se con nome diverso)
         const duplicateLesson = existingList.find(l => {
           const sameKey = String(l.keyRoot || l.rootMode).toLowerCase() === String(candidateSaveData.keyRoot).toLowerCase();
           const sameCount = Number(l.notesCount) === Number(candidateSaveData.notesCount);
@@ -2037,7 +2177,6 @@
           return;
         }
 
-        // 3. Salvataggio normale
         executeSaveAndCopy(candidateSaveData);
       });
 
@@ -2066,6 +2205,7 @@
 
         if (!gameState.isProStudent && !gameState.testMode) {
           gameState.keyRootMidi = 60;
+          gameState.isRandomKeyMode = false;
         }
 
         statScore.textContent = `0/${gameState.batchTotalNotes}`;
@@ -2095,25 +2235,40 @@
         btnMainAction.classList.add('bg-coralBand');
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
+        // Se è attiva la tonalità casuale, cambia tonalità ad OGNI singola nota
+        if (gameState.isRandomKeyMode) {
+          gameState.keyRootMidi = getEffectiveKeyRoot('random');
+        }
+
         // Estrazione Drone
         let availableDroneIds = Array.from(teacherDroneNoteIds);
         if (availableDroneIds.length === 0) availableDroneIds = ['btn-1'];
         const pickedDroneId = availableDroneIds[Math.floor(Math.random() * availableDroneIds.length)];
         const droneItem = intervalButtonsData.find(i => i.id === pickedDroneId) || intervalButtonsData.find(i => i.id === 'btn-1');
 
+        const newDroneMidi = gameState.keyRootMidi + droneItem.semitones;
+        const isSameDroneAsBefore = (gameState.currentDroneMidi === newDroneMidi && gameState.currentDroneItem?.id === droneItem.id && audio.isDronePlaying);
+
         gameState.currentDroneItem = droneItem;
-        gameState.currentDroneMidi = gameState.keyRootMidi + droneItem.semitones;
+        gameState.currentDroneMidi = newDroneMidi;
 
-        // Avvio Drone e propagazione onda dal suo cerchio
-        audio.startDrone(gameState.currentDroneMidi);
-        if (gameDroneWaveEl) {
-          try { gameDroneWaveEl.remove(); } catch(e){}
-          gameDroneWaveEl = null;
+        // Se il drone è identico a prima rimane fisso senza stopparsi e ripartire
+        if (!isSameDroneAsBefore) {
+          audio.startDrone(gameState.currentDroneMidi);
+          if (gameDroneWaveEl) {
+            try { gameDroneWaveEl.remove(); } catch(e){}
+            gameDroneWaveEl = null;
+          }
+          const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
+          gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
+        } else {
+          if (!gameDroneWaveEl || !gameDroneWaveEl.isConnected) {
+            const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
+            gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
+          }
         }
-        const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
-        gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
 
-        // IL DRONE NON PUÒ MAI ESSERE LA NOTA MISTERIOSA: Esclusione assoluta della stessa altezza
+        // Esclusione assoluta della nota misteriosa uguale al drone attivo
         let candidateItems = intervalButtonsData.filter(i => i.semitones !== droneItem.semitones);
 
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
@@ -2126,11 +2281,9 @@
           return;
         }
 
-        // Distribuzione perfettamente equa tra i semitoni unici (anti-bias per diesis/bemolli)
         const uniqueSemitones = Array.from(new Set(candidateItems.map(i => i.semitones)));
         let semitonePool = uniqueSemitones;
         
-        // Anti-ripetizione consecutiva
         if (uniqueSemitones.length > 1 && gameState.lastTargetSemitones !== null) {
           semitonePool = uniqueSemitones.filter(s => s !== gameState.lastTargetSemitones);
           if (semitonePool.length === 0) semitonePool = uniqueSemitones;
@@ -2139,12 +2292,10 @@
         const chosenSemitone = semitonePool[Math.floor(Math.random() * semitonePool.length)];
         gameState.lastTargetSemitones = chosenSemitone;
 
-        // Selezione rappresentativa del targetItem
         const matchingItems = candidateItems.filter(i => i.semitones === chosenSemitone);
         const pickedItem = matchingItems[Math.floor(Math.random() * matchingItems.length)];
         gameState.targetItem = pickedItem;
 
-        // Calcolo dell'intervallo con etichetta unificata per le statistiche di fine serie
         const semitoneDiff = Math.abs(pickedItem.semitones - droneItem.semitones);
         const intervalUnifiedLabel = unifiedIntervalNames[semitoneDiff] || `${semitoneDiff} semitoni`;
 
@@ -2265,7 +2416,6 @@
           // CASO A: MODALITÀ CREAZIONE DOCENTE
           if (gameState.creatorMode) {
             
-            // SOTTOCASO A1: MODALITÀ SELEZIONE DRONI
             if (gameState.droneSelectionMode) {
               if (teacherDroneNoteIds.has(item.id)) {
                 if (teacherDroneNoteIds.size > 1) {
@@ -2285,7 +2435,6 @@
               return;
             }
 
-            // SOTTOCASO A2: NOTE DA INDOVINARE
             if (item.id === 'btn-1') {
               const baseMidi = getCreatorBaseMidi();
               audio.previewNote(baseMidi, 1.0);
@@ -2307,7 +2456,7 @@
           // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
             
-            // Il drone non è mai la risposta: premendolo si riascolta il riferimento
+            // Il drone non è mai la risposta: premendolo si riascolta il pedale continuo
             if (gameState.currentDroneItem && item.semitones === gameState.currentDroneItem.semitones) {
               audio.startDrone(gameState.currentDroneMidi);
               if (gameDroneWaveEl) {
@@ -2319,7 +2468,6 @@
               return;
             }
 
-            // Entrambe le enarmonie (bemolle o diesis) sono accettate con successo
             const isCorrect = (item.semitones === gameState.targetItem.semitones);
 
             if (isCorrect) {
