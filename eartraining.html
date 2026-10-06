@@ -129,16 +129,15 @@
     }
 
     /* ================================================================ */
-    /* TRANSIZIONI FLUIDE E ALONE LUMINESCENTE DOCENTE                  */
+    /* MODALITÀ CREAZIONE DOCENTE: SELEZIONI E ALONI LUMINOSI           */
     /* ================================================================ */
-    body.creator-mode .round-note-btn:not(#btn-1) {
-      opacity: 0.18;
-      filter: grayscale(80%) brightness(0.65);
-      border-color: rgba(255, 255, 255, 0.08) !important;
+    body.creator-mode .round-note-btn {
+      opacity: 0.2;
+      filter: grayscale(80%) brightness(0.7);
       box-shadow: none !important;
     }
 
-    /* Note naturali selezionate */
+    /* Note naturali selezionate da indovinare */
     body.creator-mode .round-note-btn.teacher-selected:not(.accidental) {
       opacity: 1 !important;
       filter: none !important;
@@ -149,7 +148,7 @@
                   0 0 24px var(--btn-glow-color, rgba(55, 147, 134, 0.85)) !important;
     }
 
-    /* Note ALTERATE (diesis e bemolli) selezionate: riga tratteggiata del colore della nota */
+    /* Note ALTERATE selezionate da indovinare: riga tratteggiata VIVIDA del colore della nota */
     body.creator-mode .round-note-btn.accidental.teacher-selected {
       opacity: 1 !important;
       filter: none !important;
@@ -159,27 +158,30 @@
       transform: scale(1.06);
       box-shadow: 0 0 0 3px #0D171C, 
                   0 0 0 5px var(--btn-color, #379386), 
-                  0 0 22px var(--btn-glow-color, rgba(55, 147, 134, 0.85)) !important;
+                  0 0 24px var(--btn-glow-color, rgba(55, 147, 134, 0.85)) !important;
     }
 
-    /* La tonica (tasto 1) è sempre fissa e non deselezionabile */
-    body.creator-mode .round-note-btn#btn-1 {
+    /* NOTE DRONE SELEZIONATE: Evidenziate di GIALLO ORO con alone dorato */
+    body.creator-mode .round-note-btn.drone-selected,
+    .round-note-btn.drone-selected {
       opacity: 1 !important;
       filter: none !important;
       border-color: #E0C36F !important;
       border-style: solid !important;
+      border-width: 2.5px !important;
+      transform: scale(1.06);
       box-shadow: 0 0 0 3px #0D171C, 
-                  0 0 0 5px rgba(224, 195, 111, 0.6), 
-                  0 0 16px rgba(224, 195, 111, 0.4) !important;
+                  0 0 0 6px #E0C36F, 
+                  0 0 25px rgba(224, 195, 111, 0.85) !important;
     }
 
-    /* In Prova Esercizio o Allievo Pro: le note escluse spariscono, il Tasto 1 C'È SEMPRE */
+    /* In Prova Esercizio o Allievo Pro: le note escluse spariscono, droni e tonica CI SONO SEMPRE */
     body.student-pro-mode .round-note-btn:not(.active-in-exercise):not(#btn-1),
     body.test-mode .round-note-btn:not(.active-in-exercise):not(#btn-1) {
       display: none !important;
     }
 
-    /* Spinner dinamico su pulsante PRO: nero all'hover, giallo a riposo */
+    /* Spinner dinamico su pulsante PRO */
     #pro-btn-spinner {
       border-color: #E0C36F;
       border-top-color: transparent;
@@ -310,7 +312,7 @@
     </div>
   </div>
 
-  <!-- BARRA MODALITÀ DI PROVA DOCENTE (SOLO MODIFICA ESERCIZIO) -->
+  <!-- BARRA MODALITÀ DI PROVA DOCENTE -->
   <div id="test-mode-bar" class="hidden smooth-drawer shrink-0 bg-tealBand/20 border-b border-tealBand/40 px-4 py-2 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex items-center justify-between text-xs">
       <span class="text-tealBand font-bold flex items-center gap-1.5">
@@ -421,8 +423,8 @@
         <span>1#</span>
       </button>
 
-      <!-- Row 13: Tonica / Nota Base Drone (1) - SEMPRE PRESENTE -->
-      <button id="btn-1" data-degree="1" data-semitones="0" class="round-note-btn text-white active-in-exercise" style="grid-row: 13; grid-column: 2;" type="button" aria-label="Tonica / Drone">
+      <!-- Row 13: Tonica / Grado 1 -->
+      <button id="btn-1" data-degree="1" data-semitones="0" class="round-note-btn text-white active-in-exercise" style="grid-row: 13; grid-column: 2;" type="button" aria-label="Tonica / Grado 1">
         <span>1</span>
       </button>
 
@@ -438,16 +440,31 @@
         </button>
       </div>
 
-      <!-- Row 14 Alternativo: Controlli Docente BEN SEPARATI e ORDINATI -->
+      <!-- Row 14 Alternativo: Controlli Docente BEN SEPARATI con Tono Iniziale e Selezione Droni -->
       <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-2 pt-3 opacity-0 translate-y-2">
-        <!-- RIGA 1: SELETTORI (NOTA BASE E NUMERO NOTE DA 1 A 20) -->
-        <div class="flex items-center justify-center gap-2 text-xs w-full max-w-sm">
-          <select id="creator-root-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
-            <option value="fixed-c">Nota Base: Do Fissa</option>
-            <option value="random">Nota Base: Casuale</option>
+        
+        <!-- RIGA 1: TONALITÀ + NUMERO NOTE + TOGGLE SELEZIONE DRONE -->
+        <div class="flex items-center justify-between gap-2 text-xs w-full max-w-sm">
+          
+          <!-- Tono Iniziale (Tonalità della nota 1) -->
+          <select id="creator-key-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+            <option value="60">Tonalità: Do</option>
+            <option value="61">Tonalità: Do♯ / Re♭</option>
+            <option value="62">Tonalità: Re</option>
+            <option value="63">Tonalità: Re♯ / Mi♭</option>
+            <option value="64">Tonalità: Mi</option>
+            <option value="65">Tonalità: Fa</option>
+            <option value="66">Tonalità: Fa♯ / Sol♭</option>
+            <option value="67">Tonalità: Sol</option>
+            <option value="68">Tonalità: Sol♯ / La♭</option>
+            <option value="69">Tonalità: La</option>
+            <option value="70">Tonalità: La♯ / Si♭</option>
+            <option value="71">Tonalità: Si</option>
+            <option value="random">Tonalità: Casuale</option>
           </select>
-          <select id="creator-count-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
-            <!-- Tutte le opzioni da 1 a 20 -->
+
+          <!-- Numero Note da 1 a 20 -->
+          <select id="creator-count-select" class="w-24 bg-[#15232A] border border-white/20 rounded-xl px-2 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
             <option value="1">1 Nota</option>
             <option value="2">2 Note</option>
             <option value="3">3 Note</option>
@@ -469,6 +486,13 @@
             <option value="19">19 Note</option>
             <option value="20">20 Note</option>
           </select>
+
+          <!-- Casella Seleziona Drone -->
+          <label id="creator-drone-toggle-label" class="flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-[#15232A] border border-white/20 cursor-pointer select-none text-[11px] font-bold text-white/80 hover:border-ochreBand transition-all">
+            <input type="checkbox" id="creator-drone-toggle" class="accent-ochreBand w-3.5 h-3.5 rounded cursor-pointer">
+            <span class="text-ochreBand whitespace-nowrap">Droni</span>
+          </label>
+
         </div>
 
         <!-- RIGA 2: PULSANTE SALVATAGGIO SEMPRE PERFETTAMENTE VISIBILE -->
@@ -478,7 +502,9 @@
           </button>
         </div>
 
-        <p class="text-[10px] text-white/50 text-center mt-0.5">Tocca i cerchi per includere o escludere gli intervalli.</p>
+        <p id="creator-helper-text" class="text-[10px] text-white/50 text-center mt-0.5">
+          Tocca i cerchi per includere le note da indovinare (colorate).
+        </p>
       </div>
 
     </div>
@@ -636,7 +662,7 @@
     /* ================================================================ */
     /* CONFIGURAZIONE URL GOOGLE APPS SCRIPT                            */
     /* ================================================================ */
-    const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec"; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT (/exec)
+    const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec";
 
     const FALLBACK_LICENSES = [
       'PRO-MARCO-2026',
@@ -962,7 +988,7 @@
         { id: 'btn-2', degree: '2', semitones: 2, name: '2ª Maggiore', order: 2 },
         { id: 'btn-2b', degree: '2b', semitones: 1, name: '2ª Minore', order: 1 },
         { id: 'btn-1sharp', degree: '1#', semitones: 1, name: '1ª Aumentata', order: 1 },
-        { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Drone', order: 0 }
+        { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Grado 1', order: 0 }
       ];
 
       const paletteStops = [
@@ -1030,7 +1056,10 @@
         waitingForAnswer: false,
         creatorMode: false,
         testMode: false,
-        currentRootMidi: 60,
+        droneSelectionMode: false, // Se l'insegnante sta scegliendo i droni
+        
+        keyRootMidi: 60, // Tonalità d'impianto (Do3 = 60)
+        currentDroneMidi: 60,
         targetItem: null,
         batchCurrentNote: 0,
         batchTotalNotes: 5,
@@ -1040,14 +1069,17 @@
         
         isProStudent: false,
         allowedButtonIds: new Set(),
-        rootMode: 'random',
         exerciseTitle: 'Esercizio Intervalli',
         teacherCode: 'Prof. Marco Sartore',
         
         intervalStatsTracker: {}
       };
 
+      // Set delle note da indovinare scelte dal docente
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
+
+      // Set dei droni scelti dal docente (di default solo grado 1)
+      let teacherDroneNoteIds = new Set(['btn-1']);
 
       // Elementi DOM Principali
       const btnMainAction = document.getElementById('btn-main-action');
@@ -1081,8 +1113,10 @@
 
       const studentControlsRow = document.getElementById('student-controls-row');
       const creatorControlsRow = document.getElementById('creator-controls-row');
-      const creatorRootSelect = document.getElementById('creator-root-select');
+      const creatorKeySelect = document.getElementById('creator-key-select');
       const creatorCountSelect = document.getElementById('creator-count-select');
+      const creatorDroneToggle = document.getElementById('creator-drone-toggle');
+      const creatorHelperText = document.getElementById('creator-helper-text');
       const creatorCopyLinkBtn = document.getElementById('creator-copy-link-btn');
 
       // Modali
@@ -1231,7 +1265,7 @@
 
           row.querySelector('.load-lesson-btn').addEventListener('click', () => {
             creatorTitleInput.value = l.title;
-            creatorRootSelect.value = l.rootMode || 'fixed-c';
+            creatorKeySelect.value = l.keyRoot || '60';
             creatorCountSelect.value = String(l.notesCount || 10);
             
             let ids = [];
@@ -1242,6 +1276,17 @@
               });
             }
             teacherSelectedNoteIds = new Set(ids);
+
+            // Carica droni salvati (o default btn-1)
+            let droneIds = ['btn-1'];
+            if (Array.isArray(l.droneIds) && l.droneIds.length > 0) {
+              droneIds = l.droneIds.map(token => {
+                token = token.trim();
+                return token.startsWith('btn-') ? token : ('btn-' + token);
+              });
+            }
+            teacherDroneNoteIds = new Set(droneIds);
+
             updateTeacherGridVisuals();
             lessonsArchivePanel.classList.add('hidden');
           });
@@ -1321,8 +1366,9 @@
         const params = new URLSearchParams(window.location.search);
         const docenteParam = params.get('docente');
         const notesParam = params.get('notes');
+        const dronesParam = params.get('drones');
+        const keyParam = params.get('key');
         const titleParam = params.get('title');
-        const rootParam = params.get('root');
         const countParam = params.get('count');
 
         if (docenteParam) {
@@ -1343,10 +1389,13 @@
             proBanner.classList.remove('hidden');
             freeNotice.classList.add('hidden');
 
-            if (rootParam === 'fixed-c') {
-              gameState.rootMode = 'fixed-c';
-            } else {
-              gameState.rootMode = 'random';
+            if (keyParam) {
+              if (keyParam === 'random') {
+                const keys = [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71];
+                gameState.keyRootMidi = keys[Math.floor(Math.random() * keys.length)];
+              } else {
+                gameState.keyRootMidi = parseInt(keyParam, 10) || 60;
+              }
             }
 
             if (countParam) {
@@ -1361,13 +1410,29 @@
             gameState.allowedButtonIds.add('btn-1');
             document.getElementById('btn-1').classList.add('active-in-exercise');
 
+            // Carica droni specificati dall'insegnante
+            if (dronesParam) {
+              const rawDrones = dronesParam.split(',').map(s => s.trim().toLowerCase());
+              teacherDroneNoteIds = new Set();
+              intervalButtonsData.forEach(item => {
+                const match = rawDrones.includes(item.id.toLowerCase()) || rawDrones.includes(item.degree.toLowerCase());
+                if (match) {
+                  teacherDroneNoteIds.add(item.id);
+                  gameState.allowedButtonIds.add(item.id);
+                  const el = document.getElementById(item.id);
+                  if (el) el.classList.add('active-in-exercise');
+                }
+              });
+            }
+            if (teacherDroneNoteIds.size === 0) teacherDroneNoteIds.add('btn-1');
+
             if (notesParam) {
               const rawTokens = notesParam.split(',').map(s => s.trim().toLowerCase());
 
               intervalButtonsData.forEach(item => {
                 const el = document.getElementById(item.id);
                 const match = rawTokens.includes(item.id.toLowerCase()) || rawTokens.includes(item.degree.toLowerCase());
-                if (match || item.id === 'btn-1') {
+                if (match || item.id === 'btn-1' || teacherDroneNoteIds.has(item.id)) {
                   gameState.allowedButtonIds.add(item.id);
                   if (el) el.classList.add('active-in-exercise');
                 } else {
@@ -1382,20 +1447,43 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* MODALITÀ CREAZIONE DOCENTE                                       */
+      /* MODALITÀ CREAZIONE DOCENTE: AGGIORNAMENTO GRAFICO                */
       /* ================================================================ */
       function updateTeacherGridVisuals() {
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
-          if (!el || item.id === 'btn-1') return;
+          if (!el) return;
 
-          if (teacherSelectedNoteIds.has(item.id)) {
-            el.classList.add('teacher-selected');
-          } else {
+          // 1. Droni: evidenziati in GIALLO/ORO
+          if (teacherDroneNoteIds.has(item.id)) {
+            el.classList.add('drone-selected');
             el.classList.remove('teacher-selected');
+          } 
+          // 2. Note da indovinare: evidenziate nella loro palette
+          else if (teacherSelectedNoteIds.has(item.id)) {
+            el.classList.add('teacher-selected');
+            el.classList.remove('drone-selected');
+          } 
+          // 3. Spente
+          else {
+            el.classList.remove('teacher-selected', 'drone-selected');
           }
         });
       }
+
+      // Switch tra modalità note da indovinare e modalità droni
+      creatorDroneToggle.addEventListener('change', () => {
+        gameState.droneSelectionMode = creatorDroneToggle.checked;
+        if (gameState.droneSelectionMode) {
+          creatorHelperText.textContent = "Modalità Droni attiva: tocca i cerchi per scegliere i pedali (in giallo/oro).";
+          creatorHelperText.classList.add('text-ochreBand');
+          creatorHelperText.classList.remove('text-white/50');
+        } else {
+          creatorHelperText.textContent = "Tocca i cerchi per includere le note da indovinare (colorate).";
+          creatorHelperText.classList.remove('text-ochreBand');
+          creatorHelperText.classList.add('text-white/50');
+        }
+      });
 
       function enterCreatorMode() {
         if (gameState.active) stopGame();
@@ -1466,11 +1554,12 @@
             const el = document.getElementById(item.id);
             if (el) {
               el.classList.add('active-in-exercise');
-              el.classList.remove('teacher-selected');
+              el.classList.remove('teacher-selected', 'drone-selected');
             }
           });
 
           gameState.batchTotalNotes = 5;
+          gameState.keyRootMidi = 60;
           btnMainAction.textContent = 'Inizia Serie (5 note)';
           statScore.textContent = `0/5`;
           statScore.style.color = '#379386';
@@ -1505,11 +1594,22 @@
         studentControlsRow.classList.remove('hidden');
 
         gameState.exerciseTitle = creatorTitleInput.value.trim() || 'Esercizio Docente';
-        gameState.rootMode = creatorRootSelect.value;
+        
+        // Impostazione Tono Iniziale
+        const selectedKey = creatorKeySelect.value;
+        if (selectedKey === 'random') {
+          const keys = [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71];
+          gameState.keyRootMidi = keys[Math.floor(Math.random() * keys.length)];
+        } else {
+          gameState.keyRootMidi = parseInt(selectedKey, 10) || 60;
+        }
+
         gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 10;
 
+        // Isola visivamente le note scelte + i droni
         gameState.allowedButtonIds = new Set(teacherSelectedNoteIds);
         gameState.allowedButtonIds.add('btn-1');
+        teacherDroneNoteIds.forEach(id => gameState.allowedButtonIds.add(id));
 
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
@@ -1532,7 +1632,6 @@
       creatorTestBtn.addEventListener('click', enterTestMode);
       backToEditBtn.addEventListener('click', enterCreatorMode);
 
-      // CLICK SU TASTO PRO CON SPINNER NERO SULL'HOVER E GIALLO A RIPOSO
       toggleProBtn.addEventListener('click', async () => {
         audio.ensureContextRunning();
         if (gameState.creatorMode || gameState.testMode) {
@@ -1588,7 +1687,7 @@
       function generateTeacherShareUrl() {
         const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
         const titleVal = encodeURIComponent(creatorTitleInput.value.trim() || 'Lezione');
-        const rootModeVal = creatorRootSelect.value;
+        const keyVal = creatorKeySelect.value;
         const countVal = creatorCountSelect.value;
 
         const selectedDegrees = Array.from(teacherSelectedNoteIds)
@@ -1596,8 +1695,13 @@
           .filter(Boolean)
           .join(',');
 
+        const selectedDrones = Array.from(teacherDroneNoteIds)
+          .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
+          .filter(Boolean)
+          .join(',');
+
         const baseUrl = window.location.origin + window.location.pathname;
-        return `${baseUrl}?docente=${activeLicense}&notes=${selectedDegrees}&title=${titleVal}&root=${rootModeVal}&count=${countVal}`;
+        return `${baseUrl}?docente=${activeLicense}&notes=${selectedDegrees}&drones=${selectedDrones}&key=${keyVal}&title=${titleVal}&count=${countVal}`;
       }
 
       function executeSaveAndCopy(saveData) {
@@ -1610,7 +1714,12 @@
             .filter(Boolean)
             .join(',');
 
-          const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(saveData.id)}&title=${encodeURIComponent(saveData.title)}&notes=${encodeURIComponent(notesStr)}&root=${encodeURIComponent(saveData.rootMode)}&count=${saveData.notesCount}&url=${encodeURIComponent(saveData.url)}`;
+          const dronesStr = Array.from(saveData.droneIds)
+            .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
+            .filter(Boolean)
+            .join(',');
+
+          const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(saveData.id)}&title=${encodeURIComponent(saveData.title)}&notes=${encodeURIComponent(notesStr)}&drones=${encodeURIComponent(dronesStr)}&key=${encodeURIComponent(saveData.keyRoot)}&count=${saveData.notesCount}&url=${encodeURIComponent(saveData.url)}`;
           fetch(cloudSaveUrl).catch(() => {});
         }
 
@@ -1646,8 +1755,9 @@
           title: titleStr,
           date: new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
           notesCount: parseInt(creatorCountSelect.value, 10) || 10,
-          rootMode: creatorRootSelect.value,
+          keyRoot: creatorKeySelect.value,
           noteIds: Array.from(teacherSelectedNoteIds),
+          droneIds: Array.from(teacherDroneNoteIds),
           url: shareUrl
         };
 
@@ -1675,7 +1785,7 @@
       });
 
       /* ================================================================ */
-      /* GESTIONE SERIE ESERCIZIO & SCHEDA RIEPILOGO ALLIEVO             */
+      /* GESTIONE SERIE ESERCIZIO CON DRONE SINGOLO ESTRATTO             */
       /* ================================================================ */
       function startBatchExercise() {
         audio.ensureContextRunning();
@@ -1685,6 +1795,11 @@
         gameState.sessionFirstTryCorrectCount = 0;
         gameState.currentQuestionHasMistake = false;
         gameState.intervalStatsTracker = {};
+
+        // Inizializza il Tono Iniziale
+        if (!gameState.isProStudent && !gameState.testMode) {
+          gameState.keyRootMidi = 60; // Do fisso in modalità libera
+        }
 
         let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
@@ -1713,18 +1828,6 @@
         btnReplay.classList.remove('hidden');
         btnReplay.classList.add('flex');
 
-        if (gameState.rootMode === 'random') {
-          const roots = [55, 57, 58, 60, 62, 63, 65];
-          gameState.currentRootMidi = roots[Math.floor(Math.random() * roots.length)];
-        } else {
-          gameState.currentRootMidi = 60;
-        }
-
-        audio.startDrone(gameState.currentRootMidi);
-        if (droneWaveEl) droneWaveEl.remove();
-        const rootBtn = document.getElementById('btn-1');
-        droneWaveEl = spawnPropagatingWave(rootBtn, true);
-
         playQuestionInBatch();
       }
 
@@ -1739,8 +1842,23 @@
         btnMainAction.classList.add('bg-coralBand');
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
-        let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
+        // 1. ESTRAE UN DRONE CASUALE TRA QUELLI SELEZIONATI
+        let availableDroneIds = Array.from(teacherDroneNoteIds);
+        if (availableDroneIds.length === 0) availableDroneIds = ['btn-1'];
+        const pickedDroneId = availableDroneIds[Math.floor(Math.random() * availableDroneIds.length)];
+        const droneItem = intervalButtonsData.find(i => i.id === pickedDroneId) || intervalButtonsData.find(i => i.id === 'btn-1');
 
+        // Calcola la frequenza MIDI del Drone trasposta sul Tono Iniziale
+        gameState.currentDroneMidi = gameState.keyRootMidi + droneItem.semitones;
+
+        // Avvia il drone e fa partire l'onda dal pulsante ESATTO del drone estratto
+        audio.startDrone(gameState.currentDroneMidi);
+        if (droneWaveEl) droneWaveEl.remove();
+        const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
+        droneWaveEl = spawnPropagatingWave(droneBtnEl, true);
+
+        // 2. ESTRAE LA NOTA MISTERIOSA DA INDOVINARE
+        let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
           candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
         }
@@ -1758,7 +1876,8 @@
           gameState.intervalStatsTracker[pickedItem.id].totalProposed++;
         }
 
-        const secretNoteMidi = gameState.currentRootMidi + pickedItem.semitones;
+        // Calcola la frequenza della nota misteriosa trasposta sul Tono Iniziale
+        const secretNoteMidi = gameState.keyRootMidi + pickedItem.semitones;
 
         setTimeout(() => {
           if (!gameState.active || !gameState.waitingForAnswer) return;
@@ -1845,7 +1964,7 @@
       btnReplay.addEventListener('click', () => {
         audio.ensureContextRunning();
         if (!gameState.active || !gameState.targetItem) return;
-        const secretNoteMidi = gameState.currentRootMidi + gameState.targetItem.semitones;
+        const secretNoteMidi = gameState.keyRootMidi + gameState.targetItem.semitones;
         audio.playSecretNote(secretNoteMidi, 3.5);
       });
 
@@ -1861,13 +1980,32 @@
 
           // CASO A: MODALITÀ CREAZIONE DOCENTE
           if (gameState.creatorMode) {
+            
+            // SOTTOCASO A1: MODALITÀ SELEZIONE DRONI ATTIVA
+            if (gameState.droneSelectionMode) {
+              if (teacherDroneNoteIds.has(item.id)) {
+                if (teacherDroneNoteIds.size > 1) {
+                  teacherDroneNoteIds.delete(item.id);
+                } else {
+                  alert('Deve rimanere almeno un drone selezionato.');
+                  return;
+                }
+              } else {
+                teacherDroneNoteIds.add(item.id);
+                const previewMidi = 60 + item.semitones;
+                audio.previewNote(previewMidi, 1.0);
+              }
+              updateTeacherGridVisuals();
+              return;
+            }
+
+            // SOTTOCASO A2: MODALITÀ NOTE DA INDOVINARE (COLORATE)
             if (item.id === 'btn-1') {
               audio.previewNote(60, 1.0);
               spawnPropagatingWave(btnEl, false);
               return;
             }
 
-            // SUONA SOLO SE VIENE ACCESA (COLORATA), TACE SE VIENE SPENTA
             if (teacherSelectedNoteIds.has(item.id)) {
               teacherSelectedNoteIds.delete(item.id);
             } else {
@@ -1883,7 +2021,7 @@
           // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
             if (item.semitones === 0) {
-              audio.startDrone(gameState.currentRootMidi);
+              audio.startDrone(gameState.currentDroneMidi);
               return;
             }
 
