@@ -242,16 +242,17 @@
         </div>
       </div>
 
-      <!-- Pulsante Docente PRO (Nascosto per gli allievi) -->
-      <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all duration-300 font-sans shadow-sm">
-        PRO
+      <!-- Pulsante Docente PRO con Spinner integrato -->
+      <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all duration-300 font-sans shadow-sm flex items-center justify-center min-w-[55px]">
+        <span id="pro-btn-text">PRO</span>
+        <span id="pro-btn-spinner" class="hidden w-3 h-3 border-2 border-ochreBand border-t-transparent rounded-full animate-spin"></span>
       </button>
 
     </div>
   </header>
 
   <!-- ========================================== -->
-  <!-- BARRA SUPERIORE MODALITÀ DOCENTE (CON ANIMAZIONE FLUIDA) -->
+  <!-- BARRA SUPERIORE MODALITÀ DOCENTE (FLUIDA) -->
   <!-- ========================================== -->
   <div id="creator-top-bar" class="hidden smooth-drawer shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-4 py-2.5 z-20 opacity-0 -translate-y-2">
     <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
@@ -271,7 +272,7 @@
     </div>
   </div>
 
-  <!-- PANNELLO DRAWER ARCHIVIO LEZIONI SALVATE (CON SINCRONIZZAZIONE SILENZIOSA) -->
+  <!-- PANNELLO ARCHIVIO LEZIONI SALVATE -->
   <div id="lessons-archive-panel" class="hidden smooth-drawer bg-[#15232A] border-b border-white/15 px-4 py-3 z-20 shadow-2xl">
     <div class="max-w-xl mx-auto">
       <div class="flex items-center justify-between pb-2 mb-2 border-b border-white/10 text-xs">
@@ -281,9 +282,7 @@
         </div>
         <button id="close-archive-btn" class="text-white/50 hover:text-white text-xs font-bold">Chiudi</button>
       </div>
-      <div id="archive-list" class="space-y-1.5 max-h-44 overflow-y-auto pr-1">
-        <!-- Generato dinamicamente -->
-      </div>
+      <div id="archive-list" class="space-y-1.5 max-h-44 overflow-y-auto pr-1"></div>
     </div>
   </div>
 
@@ -305,7 +304,7 @@
     </div>
   </div>
 
-  <!-- Banner Allievo PRO (Se aperto tramite link reale docente) -->
+  <!-- Banner Allievo PRO -->
   <div id="pro-banner" class="hidden shrink-0 bg-gradient-to-r from-tealBand/25 via-tealBand/15 to-transparent border-b border-tealBand/30 px-4 py-2 z-20">
     <div class="max-w-2xl mx-auto flex items-center justify-between text-xs">
       <div class="flex items-center gap-2 text-tealBand font-medium">
@@ -316,7 +315,7 @@
     </div>
   </div>
 
-  <!-- Banner Modalità Free (SOLO SCHERMATA INIZIALE LIBERA) -->
+  <!-- Banner Modalità Free (SOLO SCHERMATA INIZIALE) -->
   <div id="free-notice" class="shrink-0 bg-petrol/20 border-b border-white/5 px-4 py-1 text-center text-[11px] text-white/60 font-medium">
     Modalità Libera: 5 note consecutive con la stessa base. Suona i tasti liberamente tra le serie!
   </div>
@@ -338,7 +337,7 @@
         <span>7</span>
       </button>
 
-      <!-- Row 3: Settima Minore (7b) a Sinistra / Sesta Aumentata (6#) a Destra -->
+      <!-- Row 3: Settima Minore (7b) / Sesta Aumentata (6#) -->
       <button id="btn-7b" data-degree="7b" data-semitones="10" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 3; grid-column: 1;" type="button" aria-label="Settima Minore">
         <span>7b</span>
       </button>
@@ -351,7 +350,7 @@
         <span>6</span>
       </button>
 
-      <!-- Row 5: Sesta Minore (6b) a Sinistra / Quinta Aumentata (5#) a Destra -->
+      <!-- Row 5: Sesta Minore (6b) / Quinta Aumentata (5#) -->
       <button id="btn-6b" data-degree="6b" data-semitones="8" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 5; grid-column: 1;" type="button" aria-label="Sesta Minore">
         <span>6b</span>
       </button>
@@ -364,7 +363,7 @@
         <span>5</span>
       </button>
 
-      <!-- Row 7: Quinta Diminuita (5b) a Sinistra / Quarta Aumentata (4#) a Destra -->
+      <!-- Row 7: Quinta Diminuita (5b) / Quarta Aumentata (4#) -->
       <button id="btn-5b" data-degree="5b" data-semitones="6" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 7; grid-column: 1;" type="button" aria-label="Quinta Diminuita">
         <span>5b</span>
       </button>
@@ -382,7 +381,7 @@
         <span>3</span>
       </button>
 
-      <!-- Row 10: Terza Minore (3b) a Sinistra / Seconda Aumentata (2#) a Destra -->
+      <!-- Row 10: Terza Minore (3b) / Seconda Aumentata (2#) -->
       <button id="btn-3b" data-degree="3b" data-semitones="3" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 10; grid-column: 1;" type="button" aria-label="Terza Minore">
         <span>3b</span>
       </button>
@@ -395,7 +394,7 @@
         <span>2</span>
       </button>
 
-      <!-- Row 12: Seconda Minore (2b) a Sinistra / Prima Aumentata (1#) a Destra -->
+      <!-- Row 12: Seconda Minore (2b) / Prima Aumentata (1#) -->
       <button id="btn-2b" data-degree="2b" data-semitones="1" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 12; grid-column: 1;" type="button" aria-label="Seconda Minore">
         <span>2b</span>
       </button>
@@ -420,7 +419,7 @@
         </button>
       </div>
 
-      <!-- Row 14 Alternativo: Controlli in Modalità Creazione Docente (Con Animazione) -->
+      <!-- Row 14 Alternativo: Controlli Docente (Fluidi) -->
       <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-2 pt-1 opacity-0 translate-y-2">
         <div class="flex items-center justify-center gap-2 text-xs w-full max-w-sm">
           <select id="creator-root-select" class="bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
@@ -456,7 +455,6 @@
   <div id="student-summary-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden overflow-y-auto">
     <div class="bg-appCard border border-tealBand/40 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative my-auto">
       
-      <!-- Intestazione Scheda -->
       <div class="text-center pb-4 border-b border-white/10 mb-5">
         <span class="inline-block px-2.5 py-0.5 rounded-full bg-tealBand/20 text-tealBand font-mono text-[10px] font-extrabold uppercase tracking-wider mb-2">
           Scheda Esercizio Completato
@@ -465,7 +463,6 @@
         <p id="summary-teacher" class="text-xs text-white/60 font-mono mt-0.5">Prof. Marco Sartore</p>
       </div>
 
-      <!-- Score Box: Punteggio a SINISTRA, Precisione a DESTRA -->
       <div class="grid grid-cols-2 gap-3 mb-6">
         <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Punteggio</span>
@@ -477,12 +474,9 @@
         </div>
       </div>
 
-      <!-- Dettaglio Intervalli al 1° Colpo Senza Errori -->
       <div class="mb-6">
         <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli al primo colpo:</span>
-        <div id="summary-stats-by-interval" class="space-y-1.5">
-          <!-- Popolato dinamicamente -->
-        </div>
+        <div id="summary-stats-by-interval" class="space-y-1.5"></div>
       </div>
 
       <button id="summary-close-btn" class="w-full py-3.5 rounded-xl bg-tealBand text-white font-extrabold text-sm hover:brightness-110 active:scale-95 transition-all shadow-md">
@@ -493,11 +487,50 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 5. MODALE PROMO (SOLO UTENTE FREE) -->
+  <!-- 5. MODALE CONFERMA ELIMINAZIONE LEZIONE -->
+  <!-- ========================================== -->
+  <div id="delete-confirm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-appCard border border-coralBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center">
+      <h3 class="text-lg font-extrabold text-white mb-2">Elimina Lezione</h3>
+      <p id="delete-confirm-msg" class="text-xs text-white/70 leading-relaxed mb-6">
+        Sei sicuro di voler eliminare questa lezione? Verrà rimossa da questo dispositivo e dal foglio online.
+      </p>
+      <div class="flex gap-2">
+        <button id="delete-cancel-btn" class="flex-1 py-2.5 rounded-xl bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all">
+          Annulla
+        </button>
+        <button id="delete-proceed-btn" class="flex-1 py-2.5 rounded-xl bg-coralBand text-white font-extrabold text-xs hover:brightness-110 transition-all">
+          Elimina
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 6. MODALE SOVRASCRITTURA LEZIONE ESISTENTE -->
+  <!-- ========================================== -->
+  <div id="overwrite-confirm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center">
+      <h3 class="text-lg font-extrabold text-white mb-2">Lezione Esistente</h3>
+      <p id="overwrite-confirm-msg" class="text-xs text-white/70 leading-relaxed mb-6">
+        Esiste già una lezione salvata con questo titolo. Vuoi aggiornarla con le modifiche correnti o cambiare titolo?
+      </p>
+      <div class="flex flex-col gap-2">
+        <button id="overwrite-proceed-btn" class="w-full py-2.5 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all">
+          Aggiorna Esistente
+        </button>
+        <button id="overwrite-cancel-btn" class="w-full py-2.5 rounded-xl bg-white/10 text-white font-bold text-xs hover:bg-white/20 transition-all">
+          Cambia Titolo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 7. MODALE PROMO (SOLO UTENTE FREE) -->
   <!-- ========================================== -->
   <div id="promo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-center">
-      
       <button id="promo-x-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors" aria-label="Chiudi">✕</button>
 
       <h3 class="text-xl font-extrabold text-white mb-2 font-sans">Serie completata!</h3>
@@ -517,11 +550,10 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 6. MODALE DI SBLOCCO LICENZA DOCENTE -->
+  <!-- 8. MODALE DI SBLOCCO LICENZA DOCENTE -->
   <!-- ========================================== -->
   <div id="license-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-white/15 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
-      
       <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-5">
         <h2 class="text-lg font-extrabold text-white flex items-center gap-2 font-sans">
           <span>Attivazione Console Docente</span>
@@ -543,7 +575,7 @@
             <span id="activate-btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-appDark border-t-transparent rounded-full animate-spin"></span>
           </button>
         </div>
-        <p id="license-error-msg" class="text-xs text-coralBand font-medium mt-2 hidden">Codice non valido o non trovato nel database.</p>
+        <p id="license-error-msg" class="text-xs text-coralBand font-medium mt-2 hidden">Codice non valido o non attivo nel database.</p>
       </div>
 
       <div class="pt-3 border-t border-white/10 text-center">
@@ -551,20 +583,18 @@
           Non hai una licenza? Richiedila qui
         </a>
       </div>
-
     </div>
   </div>
 
 
   <!-- ================================================================= -->
-  <!-- 7. JAVASCRIPT: LOGICA APPLICATIVA & ARCHIVIO LEZIONI             -->
+  <!-- 9. JAVASCRIPT: LOGICA APPLICATIVA COMPLETA                        -->
   <!-- ================================================================= -->
   <script>
     /* ================================================================ */
     /* CONFIGURAZIONE URL GOOGLE APPS SCRIPT                            */
-    /* Incolla qui l'URL della Web App di Apps Script (termina in /exec) */
     /* ================================================================ */
-    const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec"; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT
+    const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec"; // <-- INCOLLA QUI L'URL DEL TUO APPS SCRIPT (/exec)
 
     const FALLBACK_LICENSES = [
       'PRO-MARCO-2026',
@@ -574,7 +604,7 @@
     ];
 
     /* ================================================================ */
-    /* MODULO AUDIO                                                     */
+    /* MOTORE AUDIO NATIVO (SAFARI IPAD COMPATIBLE)                     */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -893,13 +923,12 @@
         { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Drone', order: 0 }
       ];
 
-      // Palette Graduale
       const paletteStops = [
-        { stop: 0.00, r: 39,  g: 67,  b: 78  }, // Blu Petrolio
-        { stop: 0.25, r: 55,  g: 147, b: 134 }, // Verde Teal
-        { stop: 0.50, r: 224, g: 195, b: 111 }, // Giallo Ocra
-        { stop: 0.75, r: 235, g: 160, b: 102 }, // Arancio Pesca
-        { stop: 1.00, r: 227, g: 112, b: 85  }  // Rosso Corallo
+        { stop: 0.00, r: 39,  g: 67,  b: 78  },
+        { stop: 0.25, r: 55,  g: 147, b: 134 },
+        { stop: 0.50, r: 224, g: 195, b: 111 },
+        { stop: 0.75, r: 235, g: 160, b: 102 },
+        { stop: 1.00, r: 227, g: 112, b: 85  }
       ];
 
       function getColorForFraction(t) {
@@ -990,8 +1019,10 @@
       const proTeacherId = document.getElementById('pro-teacher-id');
       const freeNotice = document.getElementById('free-notice');
 
-      // Elementi Modalità Docente & Prova
+      // Elementi Docente & Prova
       const toggleProBtn = document.getElementById('toggle-pro-btn');
+      const proBtnText = document.getElementById('pro-btn-text');
+      const proBtnSpinner = document.getElementById('pro-btn-spinner');
       const creatorTopBar = document.getElementById('creator-top-bar');
       const creatorTitleInput = document.getElementById('creator-title-input');
       const creatorTestBtn = document.getElementById('creator-test-btn');
@@ -1021,6 +1052,18 @@
       const summaryAcc = document.getElementById('summary-acc');
       const summaryStatsByInterval = document.getElementById('summary-stats-by-interval');
       const summaryCloseBtn = document.getElementById('summary-close-btn');
+
+      const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+      const deleteConfirmMsg = document.getElementById('delete-confirm-msg');
+      const deleteProceedBtn = document.getElementById('delete-proceed-btn');
+      const deleteCancelBtn = document.getElementById('delete-cancel-btn');
+      let pendingDeleteLesson = null;
+
+      const overwriteConfirmModal = document.getElementById('overwrite-confirm-modal');
+      const overwriteConfirmMsg = document.getElementById('overwrite-confirm-msg');
+      const overwriteProceedBtn = document.getElementById('overwrite-proceed-btn');
+      const overwriteCancelBtn = document.getElementById('overwrite-cancel-btn');
+      let pendingSaveData = null;
 
       const promoModal = document.getElementById('promo-modal');
       const promoCloseBtn = document.getElementById('promo-close-btn');
@@ -1073,7 +1116,7 @@
       }
 
       /* ================================================================ */
-      /* GESTIONE ARCHIVIO LOCALE + CLOUD SYNC IN BACKGROUND              */
+      /* GESTIONE ARCHIVIO LEZIONI (LOCAL-FIRST + SYNC CLOUD)             */
       /* ================================================================ */
       function getSavedLessons() {
         try {
@@ -1084,17 +1127,17 @@
         }
       }
 
-      function saveLessonToArchive(lessonData) {
+      function saveLessonLocally(lessonData) {
         try {
           let list = getSavedLessons();
-          list = list.filter(item => item.title.toLowerCase() !== lessonData.title.toLowerCase());
+          // Sostituisce se ha lo stesso ID o stesso Titolo
+          list = list.filter(item => item.id !== lessonData.id && item.title.toLowerCase() !== lessonData.title.toLowerCase());
           list.unshift(lessonData);
           if (list.length > 25) list = list.slice(0, 25);
           localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
         } catch(e) {}
       }
 
-      // Sincronizzazione silenziosa all'accesso con Google Sheets
       async function syncLessonsFromCloudSilently(teacherCode) {
         if (!LICENSE_API_URL || !LICENSE_API_URL.startsWith('http')) return;
         try {
@@ -1106,7 +1149,6 @@
               let localList = getSavedLessons();
               let titles = new Set(localList.map(l => l.title.toLowerCase()));
 
-              // Aggiunge le lezioni del cloud non ancora presenti in locale
               data.lessons.forEach(cloudLesson => {
                 if (!titles.has(cloudLesson.title.toLowerCase())) {
                   localList.push(cloudLesson);
@@ -1121,7 +1163,7 @@
             }
           }
         } catch(e) {
-          console.warn('Sync silenzioso non riuscito, operatività locale garantita:', e);
+          console.warn('Sync cloud non riuscito, operatività locale garantita:', e);
         }
       }
 
@@ -1142,8 +1184,8 @@
               <span class="text-[10px] text-white/40 font-mono">${l.notesCount} Note • ${l.date}</span>
             </div>
             <div class="flex items-center gap-1.5 shrink-0">
-              <button class="load-lesson-btn px-2 py-1 rounded bg-tealBand text-white font-bold text-[10px] hover:brightness-110">Carica</button>
-              <button class="delete-lesson-btn px-1.5 py-1 text-white/30 hover:text-coralBand text-xs">✕</button>
+              <button class="load-lesson-btn px-2.5 py-1 rounded-lg bg-tealBand text-white font-bold text-[10px] hover:brightness-110">Carica</button>
+              <button class="delete-lesson-btn px-2 py-1 rounded-lg bg-white/5 text-white/40 hover:text-coralBand hover:bg-white/10 text-[11px] font-bold">✕</button>
             </div>
           `;
 
@@ -1152,7 +1194,6 @@
             creatorRootSelect.value = l.rootMode || 'fixed-c';
             creatorCountSelect.value = String(l.notesCount || 10);
             
-            // Ripristina note selezionate sulla colonna
             let ids = [];
             if (Array.isArray(l.noteIds)) {
               ids = l.noteIds.map(token => {
@@ -1165,15 +1206,41 @@
             lessonsArchivePanel.classList.add('hidden');
           });
 
+          // Apre pop-up di conferma eliminazione
           row.querySelector('.delete-lesson-btn').addEventListener('click', () => {
-            let list = getSavedLessons().filter(item => item.title !== l.title);
-            localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
-            renderArchiveUI();
+            pendingDeleteLesson = l;
+            deleteConfirmMsg.textContent = `Sei sicuro di voler eliminare la lezione "${l.title}"? Verrà rimossa da questo dispositivo e dal foglio online.`;
+            deleteConfirmModal.classList.remove('hidden');
           });
 
           archiveList.appendChild(row);
         });
       }
+
+      // Conferma Eliminazione Lezione
+      deleteCancelBtn.addEventListener('click', () => {
+        deleteConfirmModal.classList.add('hidden');
+        pendingDeleteLesson = null;
+      });
+
+      deleteProceedBtn.addEventListener('click', () => {
+        if (!pendingDeleteLesson) return;
+        const l = pendingDeleteLesson;
+        const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
+
+        // 1. Elimina subito da locale
+        let list = getSavedLessons().filter(item => item.id !== l.id && item.title !== l.title);
+        localStorage.setItem('ms_teacher_saved_lessons', JSON.stringify(list));
+        renderArchiveUI();
+        deleteConfirmModal.classList.add('hidden');
+
+        // 2. Elimina silenziosamente dal Foglio Google in background
+        if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
+          const deleteUrl = `${LICENSE_API_URL}?action=deleteLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(l.id)}&title=${encodeURIComponent(l.title)}`;
+          fetch(deleteUrl).catch(() => {});
+        }
+        pendingDeleteLesson = null;
+      });
 
       creatorArchiveBtn.addEventListener('click', () => {
         lessonsArchivePanel.classList.toggle('hidden');
@@ -1306,7 +1373,6 @@
         testModeBar.classList.add('hidden');
         studentControlsRow.classList.add('hidden');
 
-        // Transizione fluida
         creatorTopBar.classList.remove('hidden');
         creatorControlsRow.classList.remove('hidden');
         creatorControlsRow.classList.add('flex');
@@ -1317,7 +1383,10 @@
         });
 
         toggleProBtn.classList.add('bg-ochreBand', 'text-appDark');
-        toggleProBtn.textContent = 'CHIUDI';
+        proBtnText.textContent = 'CHIUDI';
+        proBtnText.classList.remove('hidden');
+        proBtnSpinner.classList.add('hidden');
+        toggleProBtn.disabled = false;
 
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
@@ -1326,7 +1395,6 @@
 
         updateTeacherGridVisuals();
 
-        // Sincronizzazione silenziosa in background all'accesso
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         if (savedLic) syncLessonsFromCloudSilently(savedLic);
       }
@@ -1353,7 +1421,10 @@
           freeNotice.classList.remove('hidden');
 
           toggleProBtn.classList.remove('bg-ochreBand', 'text-appDark');
-          toggleProBtn.textContent = 'PRO';
+          proBtnText.textContent = 'PRO';
+          proBtnText.classList.remove('hidden');
+          proBtnSpinner.classList.add('hidden');
+          toggleProBtn.disabled = false;
 
           intervalButtonsData.forEach(item => {
             const el = document.getElementById(item.id);
@@ -1426,6 +1497,7 @@
       backToEditBtn.addEventListener('click', enterCreatorMode);
       testCloseBtn.addEventListener('click', exitToNormalMode);
 
+      // CLICK SU TASTO PRO CON SPINNER DI ATTESA
       toggleProBtn.addEventListener('click', async () => {
         audio.ensureContextRunning();
         if (gameState.creatorMode || gameState.testMode) {
@@ -1435,7 +1507,17 @@
 
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         if (savedLic) {
+          // Attiva spinner su tasto PRO
+          proBtnText.classList.add('hidden');
+          proBtnSpinner.classList.remove('hidden');
+          toggleProBtn.disabled = true;
+
           const check = await verifyLicenseCode(savedLic);
+
+          proBtnText.classList.remove('hidden');
+          proBtnSpinner.classList.add('hidden');
+          toggleProBtn.disabled = false;
+
           if (check.valid) {
             enterCreatorMode();
             return;
@@ -1484,42 +1566,24 @@
         return `${baseUrl}?docente=${activeLicense}&notes=${selectedDegrees}&title=${titleVal}&root=${rootModeVal}&count=${countVal}`;
       }
 
-      creatorCopyLinkBtn.addEventListener('click', () => {
-        audio.ensureContextRunning();
-        if (teacherSelectedNoteIds.size === 0) {
-          alert('Seleziona almeno una nota sulla colonna per l\'esercizio.');
-          return;
-        }
+      function executeSaveAndCopy(saveData) {
+        // 1. Salva subito in locale
+        saveLessonLocally(saveData);
 
-        const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
-        const titleStr = creatorTitleInput.value.trim() || 'Lezione';
-        const notesStr = Array.from(teacherSelectedNoteIds)
-          .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
-          .filter(Boolean)
-          .join(',');
-        const rootStr = creatorRootSelect.value;
-        const countNum = parseInt(creatorCountSelect.value, 10) || 10;
-        const shareUrl = generateTeacherShareUrl();
-
-        // 1. Salva subito in memoria locale (Zero attesa)
-        saveLessonToArchive({
-          id: 'les_' + Date.now(),
-          title: titleStr,
-          date: new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
-          notesCount: countNum,
-          rootMode: rootStr,
-          noteIds: Array.from(teacherSelectedNoteIds),
-          url: shareUrl
-        });
-
-        // 2. Spedisce silenziosamente a Google Apps Script in background (Fire-and-forget)
+        // 2. Invia silenziosamente a Google Apps Script (in background, gestisce aggiornamento o inserimento)
         if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
-          const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&title=${encodeURIComponent(titleStr)}&notes=${encodeURIComponent(notesStr)}&root=${encodeURIComponent(rootStr)}&count=${countNum}&url=${encodeURIComponent(shareUrl)}`;
+          const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
+          const notesStr = Array.from(saveData.noteIds)
+            .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
+            .filter(Boolean)
+            .join(',');
+
+          const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(saveData.id)}&title=${encodeURIComponent(saveData.title)}&notes=${encodeURIComponent(notesStr)}&root=${encodeURIComponent(saveData.rootMode)}&count=${saveData.notesCount}&url=${encodeURIComponent(saveData.url)}`;
           fetch(cloudSaveUrl).catch(() => {});
         }
 
-        // 3. Copia immediata negli appunti
-        navigator.clipboard.writeText(shareUrl).then(() => {
+        // 3. Copia link negli appunti
+        navigator.clipboard.writeText(saveData.url).then(() => {
           const originalText = creatorCopyLinkBtn.textContent;
           creatorCopyLinkBtn.textContent = 'Link Copiato!';
           creatorCopyLinkBtn.classList.remove('bg-ochreBand');
@@ -1531,6 +1595,53 @@
             creatorCopyLinkBtn.classList.add('bg-ochreBand', 'text-appDark');
           }, 1600);
         });
+      }
+
+      // Controllo Sovrascrittura o Nuovo Salvataggio
+      creatorCopyLinkBtn.addEventListener('click', () => {
+        audio.ensureContextRunning();
+        if (teacherSelectedNoteIds.size === 0) {
+          alert('Seleziona almeno una nota sulla colonna per l\'esercizio.');
+          return;
+        }
+
+        const titleStr = creatorTitleInput.value.trim() || 'Lezione';
+        const shareUrl = generateTeacherShareUrl();
+        const existingList = getSavedLessons();
+        const existingLesson = existingList.find(l => l.title.toLowerCase() === titleStr.toLowerCase());
+
+        const candidateSaveData = {
+          id: existingLesson ? existingLesson.id : ('LEZ_' + Date.now()),
+          title: titleStr,
+          date: new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
+          notesCount: parseInt(creatorCountSelect.value, 10) || 10,
+          rootMode: creatorRootSelect.value,
+          noteIds: Array.from(teacherSelectedNoteIds),
+          url: shareUrl
+        };
+
+        if (existingLesson) {
+          // Chiede conferma sovrascrittura
+          pendingSaveData = candidateSaveData;
+          overwriteConfirmMsg.textContent = `Esiste già una lezione salvata con il titolo "${titleStr}". Vuoi aggiornare l'esercizio esistente o cambiare titolo?`;
+          overwriteConfirmModal.classList.remove('hidden');
+        } else {
+          executeSaveAndCopy(candidateSaveData);
+        }
+      });
+
+      overwriteProceedBtn.addEventListener('click', () => {
+        if (!pendingSaveData) return;
+        executeSaveAndCopy(pendingSaveData);
+        overwriteConfirmModal.classList.add('hidden');
+        pendingSaveData = null;
+      });
+
+      overwriteCancelBtn.addEventListener('click', () => {
+        overwriteConfirmModal.classList.add('hidden');
+        pendingSaveData = null;
+        creatorTitleInput.focus();
+        creatorTitleInput.select();
       });
 
       /* ================================================================ */
@@ -1726,7 +1837,6 @@
               return;
             }
 
-            // SUONA SOLO SE SI ACCENDE, TACE SE SI SPEGNE
             if (teacherSelectedNoteIds.has(item.id)) {
               teacherSelectedNoteIds.delete(item.id);
             } else {
@@ -1741,7 +1851,6 @@
 
           // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
-            
             if (item.semitones === 0) {
               audio.startDrone(gameState.currentRootMidi);
               return;
