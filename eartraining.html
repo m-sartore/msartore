@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Ear Training Intervalli | Marco Sartore</title>
-  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con drone continuo e sessioni da 5 note.">
+  <meta name="description" content="Ear training interattivo per il riconoscimento degli intervalli musicali con drone continuo e configuratore docente avanzato.">
 
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👂</text></svg>">
@@ -49,7 +49,7 @@
       user-select: none;
     }
 
-    /* Asse dell'onda propagata */
+    /* Asse dell'onda propagata orizzontalmente */
     .wave-axis {
       position: absolute;
       left: 0;
@@ -82,7 +82,7 @@
       justify-items: center;
     }
 
-    /* Pulsanti PERFETTAMENTE ROTONDI su tutti gli schermi */
+    /* Pulsanti PERFETTAMENTE ROTONDI su tutti gli schermi (iPad, iPhone, Android, Desktop) */
     .round-note-btn {
       height: min(90%, 54px);
       width: auto;
@@ -99,7 +99,7 @@
       position: relative;
       align-self: center;
       justify-self: center;
-      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, opacity 0.25s ease, border-color 0.2s ease;
+      transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, opacity 0.25s ease, border-color 0.25s ease, filter 0.25s ease;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
     }
 
@@ -107,6 +107,7 @@
       transform: scale(0.92);
     }
 
+    /* Note alterate laterali */
     .round-note-btn.accidental {
       height: min(78%, 44px);
       font-size: clamp(0.8rem, 2.1vh, 1.05rem);
@@ -123,12 +124,37 @@
       margin-left: 6px;
     }
 
+    /* ================================================================ */
+    /* STILI MODALITÀ CREAZIONE DOCENTE                                */
+    /* ================================================================ */
+    body.creator-mode .round-note-btn:not(#btn-1) {
+      opacity: 0.28;
+      filter: grayscale(60%);
+      border-color: rgba(255, 255, 255, 0.1) !important;
+      box-shadow: none !important;
+    }
+
+    /* Note selezionate dal docente: RESTANO ACCESE E ILLUMINATE */
+    body.creator-mode .round-note-btn.teacher-selected {
+      opacity: 1 !important;
+      filter: none !important;
+      border-color: #FAF8F5 !important;
+      box-shadow: 0 0 20px var(--btn-glow-color, rgba(55, 147, 134, 0.7)), 0 4px 14px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    /* La tonica è sempre fissa e presente */
+    body.creator-mode .round-note-btn#btn-1 {
+      opacity: 1 !important;
+      border-color: #E0C36F !important;
+      border-style: solid !important;
+    }
+
     /* Modalità Allievo Pro: intervalli esclusi nascosti */
     body.student-pro-mode .round-note-btn:not(.active-in-exercise) {
       display: none !important;
     }
 
-    /* Animazione Errore (Shake) */
+    /* Animazione Errore */
     @keyframes shakeNote {
       0%, 100% { transform: translateX(0); }
       20%, 60% { transform: translateX(-8px); }
@@ -138,7 +164,7 @@
       animation: shakeNote 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
     }
 
-    /* Animazione Espansione Cerchio Semitrasparente (Risposta Corretta) */
+    /* Cerchio radiale corretto */
     @keyframes rippleExpand {
       0% {
         transform: translate(-50%, -50%) scale(0.2);
@@ -169,7 +195,7 @@
 <body class="h-full flex flex-col justify-between relative selection:bg-ochreBand selection:text-appDark">
 
   <!-- ========================================== -->
-  <!-- 1. HEADER & BARRA STATISTICHE (SOLO SCORE E PRECISIONE) -->
+  <!-- 1. HEADER (NORMALE & MODALITÀ CREAZIONE) -->
   <!-- ========================================== -->
   <header class="w-full shrink-0 z-30 bg-[#111D23]/95 backdrop-blur-md border-b border-white/10 px-4 py-2.5">
     <div class="max-w-2xl mx-auto flex items-center justify-between gap-3">
@@ -185,8 +211,8 @@
         </div>
       </div>
 
-      <!-- Statistiche: SOLO Precisione % e Score -->
-      <div class="flex items-center gap-4 text-xs font-mono">
+      <!-- Statistiche (Precisione % e Punteggio) -->
+      <div id="header-stats" class="flex items-center gap-4 text-xs font-mono">
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Precisione</span>
           <span id="stat-acc" class="font-extrabold text-tealBand text-sm">100%</span>
@@ -198,13 +224,29 @@
         </div>
       </div>
 
-      <!-- Pulsante Docente: "PRO" con font istituzionale pulito -->
-      <button id="open-teacher-btn" class="text-xs font-black tracking-wider px-3 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all font-sans">
+      <!-- Pulsante Docente PRO -->
+      <button id="toggle-pro-btn" class="text-xs font-black tracking-wider px-3 py-1.5 rounded-full bg-white/5 hover:bg-ochreBand hover:text-appDark text-ochreBand border border-ochreBand/40 transition-all font-sans">
         PRO
       </button>
 
     </div>
   </header>
+
+  <!-- ========================================== -->
+  <!-- BARRA SUPERIORE MODALITÀ DOCENTE (TITOLO) -->
+  <!-- ========================================== -->
+  <div id="creator-top-bar" class="hidden shrink-0 bg-gradient-to-r from-ochreBand/15 via-tealBand/15 to-transparent border-b border-ochreBand/30 px-4 py-2.5 z-20">
+    <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">DOCENTE</span>
+        <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
+        <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-60 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
+      </div>
+      <button id="creator-exit-btn" class="self-end sm:self-auto text-white/60 hover:text-white text-[11px] font-semibold underline">
+        Esci / Prova esercizio
+      </button>
+    </div>
+  </div>
 
   <!-- Banner Allievo PRO (Se da link docente) -->
   <div id="pro-banner" class="hidden shrink-0 bg-gradient-to-r from-tealBand/25 via-tealBand/15 to-transparent border-b border-tealBand/30 px-4 py-2 z-20">
@@ -239,7 +281,7 @@
         <span>7</span>
       </button>
 
-      <!-- Row 3: Settima Minore / Sesta Aumentata (7b - 6#) -->
+      <!-- Row 3: Settima Minore (7b) a Sinistra / Sesta Aumentata (6#) a Destra -->
       <button id="btn-7b" data-degree="7b" data-semitones="10" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 3; grid-column: 1;" type="button" aria-label="Settima Minore">
         <span>7b</span>
       </button>
@@ -252,7 +294,7 @@
         <span>6</span>
       </button>
 
-      <!-- Row 5: Sesta Minore / Quinta Aumentata (6b - 5#) -->
+      <!-- Row 5: Sesta Minore (6b) a Sinistra / Quinta Aumentata (5#) a Destra -->
       <button id="btn-6b" data-degree="6b" data-semitones="8" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 5; grid-column: 1;" type="button" aria-label="Sesta Minore">
         <span>6b</span>
       </button>
@@ -265,7 +307,7 @@
         <span>5</span>
       </button>
 
-      <!-- Row 7: Quinta Diminuita / Quarta Aumentata (5b - 4#) -->
+      <!-- Row 7: Quinta Diminuita (5b) a Sinistra / Quarta Aumentata (4#) a Destra -->
       <button id="btn-5b" data-degree="5b" data-semitones="6" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 7; grid-column: 1;" type="button" aria-label="Quinta Diminuita">
         <span>5b</span>
       </button>
@@ -283,7 +325,7 @@
         <span>3</span>
       </button>
 
-      <!-- Row 10: Terza Minore / Seconda Aumentata (3b - 2#) -->
+      <!-- Row 10: Terza Minore (3b) a Sinistra / Seconda Aumentata (2#) a Destra -->
       <button id="btn-3b" data-degree="3b" data-semitones="3" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 10; grid-column: 1;" type="button" aria-label="Terza Minore">
         <span>3b</span>
       </button>
@@ -296,7 +338,7 @@
         <span>2</span>
       </button>
 
-      <!-- Row 12: Seconda Minore / Prima Aumentata (2b - 1#) -->
+      <!-- Row 12: Seconda Minore (2b) a Sinistra / Prima Aumentata (1#) a Destra -->
       <button id="btn-2b" data-degree="2b" data-semitones="1" class="round-note-btn accidental flat-col text-white/90" style="grid-row: 12; grid-column: 1;" type="button" aria-label="Seconda Minore">
         <span>2b</span>
       </button>
@@ -309,8 +351,8 @@
         <span>1</span>
       </button>
 
-      <!-- Row 14: Controlli di Gioco (Il tasto Riascolta compare SOLO a serie iniziata) -->
-      <div style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-3 pt-2">
+      <!-- Row 14: Controlli Standard di Gioco -->
+      <div id="student-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="w-full flex items-center justify-center gap-3 pt-2">
         <button id="btn-main-action" class="flex-1 max-w-[260px] py-3.5 px-6 rounded-2xl bg-tealBand text-white font-extrabold text-sm tracking-wider uppercase shadow-xl hover:brightness-110 active:scale-95 transition-all">
           Inizia Serie (5 note)
         </button>
@@ -319,6 +361,26 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         </button>
+      </div>
+
+      <!-- Row 14 Alternativo: Controlli in Modalità Creazione Docente -->
+      <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden w-full flex-col items-center justify-center gap-2 pt-1">
+        <div class="flex items-center justify-center gap-2 text-xs w-full max-w-sm">
+          <select id="creator-root-select" class="bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+            <option value="fixed-c">Nota Base: Do Fissa</option>
+            <option value="random">Nota Base: Casuale</option>
+          </select>
+          <select id="creator-count-select" class="bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-2 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
+            <option value="5">5 Note</option>
+            <option value="8">8 Note</option>
+            <option value="10" selected>10 Note</option>
+            <option value="15">15 Note</option>
+          </select>
+          <button id="creator-copy-link-btn" class="flex-1 py-2 px-3 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md truncate">
+            Copia Link Allievo
+          </button>
+        </div>
+        <p class="text-[10px] text-white/50 text-center">Tocca i cerchi sulla colonna per illuminare gli intervalli della lezione.</p>
       </div>
 
     </div>
@@ -332,12 +394,11 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- 4. MODALE DI FINE SERIE / PROMO (SENZA BERSAGLIO) -->
+  <!-- 4. MODALE DI FINE SERIE / PROMO -->
   <!-- ========================================== -->
   <div id="promo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-center">
       
-      <!-- Pulsante Chiusura X -->
       <button id="promo-x-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors" aria-label="Chiudi">✕</button>
 
       <h3 class="text-xl font-extrabold text-white mb-2 font-sans">Serie completata!</h3>
@@ -345,111 +406,50 @@
         In modalità libera gli intervalli sono sempre tutti e 12. Se desideri concentrarti solo sugli intervalli specifici della tua lezione (es. solo le terze o le quinte), chiedi il link personalizzato al tuo docente.
       </p>
       
-      <!-- Pulsante Chiudi Principale -->
       <div class="flex flex-col gap-2.5">
         <button id="promo-close-btn" class="w-full py-3.5 rounded-xl bg-tealBand text-white font-bold text-sm hover:brightness-110 active:scale-95 transition-all shadow-md font-sans">
           Chiudi
         </button>
         <button id="promo-to-teacher-btn" class="text-xs text-ochreBand hover:underline py-1 font-sans">
-          Sei un docente? Passa alla versione Pro
+          Sei un docente? Attiva la console di creazione
         </button>
       </div>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- 5. PANNELLO DOCENTE (SBLOCCO CON LICENZA) -->
+  <!-- 5. MODALE DI SBLOCCO LICENZA (SOLO 1ª VOLTA) -->
   <!-- ========================================== -->
-  <div id="teacher-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden overflow-y-auto">
-    <div class="bg-appCard border border-white/15 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl my-auto">
+  <div id="license-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-appCard border border-white/15 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
       
-      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-        <div>
-          <h2 class="text-xl font-extrabold text-white flex items-center gap-2 font-sans">
-            <span>Area Docente</span>
-            <span class="text-xs px-2 py-0.5 rounded-full bg-ochreBand text-appDark font-black">PRO</span>
-          </h2>
-          <p class="text-xs text-white/60">Configura serie personalizzate per i tuoi allievi</p>
-        </div>
-        <button id="close-teacher-modal" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/70">✕</button>
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-5">
+        <h2 class="text-lg font-extrabold text-white flex items-center gap-2 font-sans">
+          <span>Attivazione Console Docente</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-ochreBand text-appDark font-black">PRO</span>
+        </h2>
+        <button id="close-license-modal" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/70">✕</button>
       </div>
 
-      <!-- DOCENTE BLOCCATO -->
-      <div id="teacher-locked-view" class="space-y-6">
-        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/80 leading-relaxed">
-          Inserisci il tuo <strong>Codice Licenza Docente</strong> per sbloccare la selezione mirata degli intervalli, la scelta della nota base e il numero di note della serie.
-        </div>
+      <p class="text-xs text-white/80 leading-relaxed mb-4">
+        Inserisci il tuo <strong>Codice Licenza</strong> per sbloccare la console interattiva e generare i link personalizzati per i tuoi studenti.
+      </p>
 
-        <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-white/70 mb-2 font-bold">Codice Licenza</label>
-          <div class="flex gap-2">
-            <input type="text" id="license-input" placeholder="es. PRO-MARCO-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-ochreBand font-mono uppercase">
-            <button id="activate-license-btn" class="px-5 py-3 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs tracking-wider uppercase hover:brightness-110 transition-all">
-              Attiva
-            </button>
-          </div>
-          <p id="license-error-msg" class="text-xs text-coralBand font-medium mt-2 hidden">Codice licenza non valido. Riprova o richiedilo qui sotto.</p>
+      <div class="mb-4">
+        <label class="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">Codice Licenza</label>
+        <div class="flex gap-2">
+          <input type="text" id="license-input" placeholder="es. PRO-MARCO-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-ochreBand font-mono uppercase">
+          <button id="activate-license-btn" class="px-4 py-2.5 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all">
+            Sblocca
+          </button>
         </div>
-
-        <div class="pt-4 border-t border-white/10">
-          <span class="text-xs font-bold text-white block mb-1">Non hai ancora una licenza?</span>
-          <p class="text-xs text-white/60 mb-3">La licenza per docenti è una tantum (nessun abbonamento) ed è attivabile via Bonifico o Satispay.</p>
-          <a href="mailto:info@msartore.it?subject=Richiesta%20Licenza%20Docente%20Ear%20Training&body=Ciao%20Marco,%20vorrei%20attivare%20la%20licenza%20docente%20per%20l'app%20Ear%20Training.%20Pagamento%20preferito%20(Satispay/Bonifico):" 
-             class="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition-all border border-white/10">
-            <span>✉️</span> Richiedi Licenza Docente (info@msartore.it)
-          </a>
-        </div>
+        <p id="license-error-msg" class="text-xs text-coralBand font-medium mt-2 hidden">Codice non valido. Usa: PRO-MARCO-2026</p>
       </div>
 
-      <!-- DOCENTE SBLOCCATO -->
-      <div id="teacher-unlocked-view" class="space-y-6 hidden">
-        <div class="flex items-center justify-between p-3 rounded-xl bg-tealBand/15 border border-tealBand/30 text-xs">
-          <span class="text-tealBand font-bold">✓ Licenza Docente Attiva</span>
-          <button id="forget-license-btn" class="text-white/50 hover:text-white underline text-[11px]">Disconnetti</button>
-        </div>
-
-        <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">1. Titolo Lezione</label>
-          <input type="text" id="custom-title-input" value="Lezione 3 - Le Terze" class="w-full bg-[#0D171C] border border-white/20 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-tealBand">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">2. Nota Base</label>
-            <select id="teacher-root-mode" class="w-full bg-[#0D171C] border border-white/20 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-tealBand">
-              <option value="fixed-c">Do Fissa (C3)</option>
-              <option value="random">Casuale per serie</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">3. Note per Serie</label>
-            <select id="teacher-notes-count" class="w-full bg-[#0D171C] border border-white/20 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-tealBand">
-              <option value="5">5 Note</option>
-              <option value="8">8 Note</option>
-              <option value="10" selected>10 Note</option>
-              <option value="15">15 Note</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-mono uppercase tracking-wider text-white/70 font-bold">4. Intervalli Inclusi</label>
-            <span class="text-[11px] text-tealBand font-medium">Attiva / Disattiva</span>
-          </div>
-          <div class="grid grid-cols-4 gap-2 text-xs font-mono" id="teacher-interval-pills"></div>
-        </div>
-
-        <div class="pt-4 border-t border-white/10 space-y-2">
-          <label class="block text-xs font-mono uppercase tracking-wider text-ochreBand font-bold">Link Condivisibile per l'Allievo</label>
-          <div class="flex gap-2">
-            <input type="text" id="generated-share-link" readonly class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3 py-2.5 text-xs text-white/90 font-mono">
-            <button id="copy-share-link-btn" class="px-4 py-2.5 rounded-xl bg-tealBand text-white font-bold text-xs hover:brightness-110 active:scale-95 transition-all">
-              Copia Link
-            </button>
-          </div>
-          <p class="text-[11px] text-white/50">L'allievo aprirà l'app con solo gli intervalli e la lunghezza serie decisi da te.</p>
-        </div>
+      <div class="pt-3 border-t border-white/10 text-center">
+        <a href="mailto:info@msartore.it?subject=Richiesta%20Licenza%20Docente%20Ear%20Training" class="text-xs text-white/50 hover:text-ochreBand underline">
+          Non hai una licenza? Richiedila qui
+        </a>
       </div>
 
     </div>
@@ -457,10 +457,12 @@
 
 
   <!-- ================================================================= -->
-  <!-- 6. JAVASCRIPT: MOTORE AUDIO + LOGICA REPLAY A SCOMPARSA           -->
+  <!-- 6. JAVASCRIPT: MOTORE AUDIO + ONDA + CONSOLE DOCENTE INTERATTIVA -->
   <!-- ================================================================= -->
   <script>
-    /* MODULO AUDIO */
+    /* ================================================================ */
+    /* MODULO AUDIO (SINTESI MORBIDA, ZERO CLIC, STABILE)              */
+    /* ================================================================ */
     class AudioEngine {
       constructor() {
         this.ctx = null;
@@ -619,7 +621,9 @@
     }
 
 
-    /* MODULO ONDA PROPAGATA */
+    /* ================================================================ */
+    /* MODULO ONDA (PROPAGAZIONE NATURALE DA CENTRO NOTA)               */
+    /* ================================================================ */
     const W = 1000;
     const MID = 30;
     const AMP = 14;
@@ -739,7 +743,9 @@
     }
 
 
-    /* CONTROLLER APPLICATIVO */
+    /* ================================================================ */
+    /* LOGICA APPLICATIVA: GIOCO + CONSOLE DOCENTE INTERATTIVA          */
+    /* ================================================================ */
     document.addEventListener('DOMContentLoaded', () => {
 
       const audio = new AudioEngine();
@@ -751,6 +757,7 @@
         'VIP-EAR-TRAIN'
       ];
 
+      // Mappatura dei 18 pulsanti fisici con specifica identificazione di grado
       const intervalButtonsData = [
         { id: 'btn-8', degree: '8', semitones: 12, name: 'Ottava', order: 12 },
         { id: 'btn-7', degree: '7', semitones: 11, name: '7ª Maggiore', order: 11 },
@@ -772,6 +779,7 @@
         { id: 'btn-1', degree: '1', semitones: 0, name: 'Tonica / Drone', order: 0 }
       ];
 
+      // Palette Graduale
       const paletteStops = [
         { stop: 0.00, r: 39,  g: 67,  b: 78  }, // Blu Petrolio
         { stop: 0.25, r: 55,  g: 147, b: 134 }, // Verde Teal
@@ -799,6 +807,7 @@
         };
       }
 
+      // Applicazione colori e glow variabili
       intervalButtonsData.forEach(item => {
         const fraction = item.order / 12;
         const color = getColorForFraction(fraction);
@@ -806,6 +815,7 @@
 
         const el = document.getElementById(item.id);
         if (el) {
+          el.style.setProperty('--btn-glow-color', color.rgba(0.75));
           if (item.degree.includes('b') || item.degree.includes('#')) {
             el.style.backgroundColor = '#131F25';
             el.style.borderColor = color.rgba(0.7);
@@ -825,22 +835,24 @@
       let gameState = {
         active: false,
         waitingForAnswer: false,
+        creatorMode: false,
         currentRootMidi: 60,
-        targetSemitones: null,
-        targetButtonId: null,
+        targetItem: null,
         batchCurrentNote: 0,
-        batchTotalNotes: 5, // Default Free
+        batchTotalNotes: 5,
         totalAttempts: 0,
         correctCount: 0,
         isProStudent: false,
-        allowedSemitones: new Set(),
+        allowedButtonIds: new Set(), // Set di ID specifici per studenti Pro (es. solo 'btn-3b')
         rootMode: 'random',
         exerciseTitle: 'Esercizio Intervalli'
       };
 
-      let droneWaveEl = null;
+      // Set delle note selezionate dal docente sulla griglia
+      // Default: Terza Minore (3b), Terza Maggiore (3) e Quinta Giusta (5)
+      let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
 
-      // Elementi DOM
+      // Elementi DOM Principali
       const btnMainAction = document.getElementById('btn-main-action');
       const btnReplay = document.getElementById('btn-replay');
       const statScore = document.getElementById('stat-score');
@@ -852,26 +864,29 @@
       const proTeacherId = document.getElementById('pro-teacher-id');
       const freeNotice = document.getElementById('free-notice');
 
+      // Elementi Modalità Docente
+      const toggleProBtn = document.getElementById('toggle-pro-btn');
+      const creatorTopBar = document.getElementById('creator-top-bar');
+      const creatorTitleInput = document.getElementById('creator-title-input');
+      const creatorExitBtn = document.getElementById('creator-exit-btn');
+      const studentControlsRow = document.getElementById('student-controls-row');
+      const creatorControlsRow = document.getElementById('creator-controls-row');
+      const creatorRootSelect = document.getElementById('creator-root-select');
+      const creatorCountSelect = document.getElementById('creator-count-select');
+      const creatorCopyLinkBtn = document.getElementById('creator-copy-link-btn');
+
       // Modali
       const promoModal = document.getElementById('promo-modal');
       const promoCloseBtn = document.getElementById('promo-close-btn');
       const promoXBtn = document.getElementById('promo-x-btn');
       const promoToTeacherBtn = document.getElementById('promo-to-teacher-btn');
-
-      const openTeacherBtn = document.getElementById('open-teacher-btn');
-      const teacherModal = document.getElementById('teacher-modal');
-      const closeTeacherModal = document.getElementById('close-teacher-modal');
-      const teacherLockedView = document.getElementById('teacher-locked-view');
-      const teacherUnlockedView = document.getElementById('teacher-unlocked-view');
+      const licenseModal = document.getElementById('license-modal');
+      const closeLicenseModal = document.getElementById('close-license-modal');
       const licenseInput = document.getElementById('license-input');
       const activateLicenseBtn = document.getElementById('activate-license-btn');
       const licenseErrorMsg = document.getElementById('license-error-msg');
-      const forgetLicenseBtn = document.getElementById('forget-license-btn');
-      const customTitleInput = document.getElementById('custom-title-input');
-      const teacherRootMode = document.getElementById('teacher-root-mode');
-      const teacherNotesCount = document.getElementById('teacher-notes-count');
-      const generatedShareLink = document.getElementById('generated-share-link');
-      const copyShareLinkBtn = document.getElementById('copy-share-link-btn');
+
+      let droneWaveEl = null;
 
       function triggerCorrectCircleRipple(buttonElement, colorRgba) {
         const rect = buttonElement.getBoundingClientRect();
@@ -900,10 +915,13 @@
         statAcc.textContent = `${acc}%`;
       }
 
+      /* ================================================================ */
+      /* CONTROLLO LINK ALLIEVO PRO (PARAMETRI URL)                       */
+      /* ================================================================ */
       function checkUrlForProStudent() {
         const params = new URLSearchParams(window.location.search);
         const docenteParam = params.get('docente');
-        const intervalsParam = params.get('intervals');
+        const notesParam = params.get('notes'); // es: "3b,3,5" o "btn-3b,btn-3"
         const titleParam = params.get('title');
         const rootParam = params.get('root');
         const countParam = params.get('count');
@@ -920,10 +938,10 @@
           proBanner.classList.remove('hidden');
           freeNotice.classList.add('hidden');
 
-          if (rootParam === 'random') {
-            gameState.rootMode = 'random';
-          } else {
+          if (rootParam === 'fixed-c') {
             gameState.rootMode = 'fixed-c';
+          } else {
+            gameState.rootMode = 'random';
           }
 
           if (countParam) {
@@ -934,19 +952,20 @@
             }
           }
 
-          if (intervalsParam) {
-            const semitoneList = intervalsParam.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
-            gameState.allowedSemitones = new Set(semitoneList);
-            gameState.allowedSemitones.add(0);
+          if (notesParam) {
+            const rawTokens = notesParam.split(',').map(s => s.trim().toLowerCase());
+            gameState.allowedButtonIds = new Set();
+            gameState.allowedButtonIds.add('btn-1'); // Tonica sempre visibile
 
             intervalButtonsData.forEach(item => {
               const el = document.getElementById(item.id);
-              if (el) {
-                if (gameState.allowedSemitones.has(item.semitones)) {
-                  el.classList.add('active-in-exercise');
-                } else {
-                  el.classList.remove('active-in-exercise');
-                }
+              // Verifica se il parametro contiene l'id (es. btn-3b) o il grado (es. 3b)
+              const match = rawTokens.includes(item.id.toLowerCase()) || rawTokens.includes(item.degree.toLowerCase());
+              if (match) {
+                gameState.allowedButtonIds.add(item.id);
+                if (el) el.classList.add('active-in-exercise');
+              } else {
+                if (el && item.id !== 'btn-1') el.classList.remove('active-in-exercise');
               }
             });
           }
@@ -955,7 +974,122 @@
 
       checkUrlForProStudent();
 
-      /* GESTIONE SERIE */
+      /* ================================================================ */
+      /* MODALITÀ CREAZIONE DOCENTE SULLA GRIGLIA                         */
+      /* ================================================================ */
+      function updateTeacherGridVisuals() {
+        intervalButtonsData.forEach(item => {
+          const el = document.getElementById(item.id);
+          if (!el || item.id === 'btn-1') return;
+
+          if (teacherSelectedNoteIds.has(item.id)) {
+            el.classList.add('teacher-selected');
+          } else {
+            el.classList.remove('teacher-selected');
+          }
+        });
+      }
+
+      function enterCreatorMode() {
+        if (gameState.active) stopGame();
+
+        gameState.creatorMode = true;
+        document.body.classList.add('creator-mode');
+
+        creatorTopBar.classList.remove('hidden');
+        studentControlsRow.classList.add('hidden');
+        creatorControlsRow.classList.remove('hidden');
+        creatorControlsRow.classList.add('flex');
+
+        toggleProBtn.classList.add('bg-ochreBand', 'text-appDark');
+        toggleProBtn.textContent = 'CHIUDI';
+
+        updateTeacherGridVisuals();
+      }
+
+      function exitCreatorMode() {
+        gameState.creatorMode = false;
+        document.body.classList.remove('creator-mode');
+
+        creatorTopBar.classList.add('hidden');
+        creatorControlsRow.classList.add('hidden');
+        creatorControlsRow.classList.remove('flex');
+        studentControlsRow.classList.remove('hidden');
+
+        toggleProBtn.classList.remove('bg-ochreBand', 'text-appDark');
+        toggleProBtn.textContent = 'PRO';
+      }
+
+      // Toggle pulsante PRO
+      toggleProBtn.addEventListener('click', () => {
+        if (gameState.creatorMode) {
+          exitCreatorMode();
+          return;
+        }
+
+        const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
+        if (savedLic && VALID_LICENSES.includes(savedLic.toUpperCase())) {
+          enterCreatorMode();
+        } else {
+          licenseModal.classList.remove('hidden');
+        }
+      });
+
+      creatorExitBtn.addEventListener('click', exitCreatorMode);
+      closeLicenseModal.addEventListener('click', () => licenseModal.classList.add('hidden'));
+
+      activateLicenseBtn.addEventListener('click', () => {
+        const code = licenseInput.value.trim().toUpperCase();
+        if (VALID_LICENSES.includes(code)) {
+          localStorage.setItem('ms_ear_trainer_teacher_license', code);
+          licenseModal.classList.add('hidden');
+          enterCreatorMode();
+        } else {
+          licenseErrorMsg.classList.remove('hidden');
+        }
+      });
+
+      // Generazione e copia del link allievo con selezione enarmonica precisa
+      function generateTeacherShareUrl() {
+        const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
+        const titleVal = encodeURIComponent(creatorTitleInput.value.trim() || 'Lezione');
+        const rootModeVal = creatorRootSelect.value;
+        const countVal = creatorCountSelect.value;
+
+        // Convertiamo gli ID selezionati nei rispettivi gradi (es. 3b, 3, 5)
+        const selectedDegrees = Array.from(teacherSelectedNoteIds)
+          .map(id => intervalButtonsData.find(i => i.id === id)?.degree)
+          .filter(Boolean)
+          .join(',');
+
+        const baseUrl = window.location.origin + window.location.pathname;
+        return `${baseUrl}?docente=${activeLicense}&notes=${selectedDegrees}&title=${titleVal}&root=${rootModeVal}&count=${countVal}`;
+      }
+
+      creatorCopyLinkBtn.addEventListener('click', () => {
+        if (teacherSelectedNoteIds.size === 0) {
+          alert('Seleziona almeno una nota sulla colonna per l\'esercizio.');
+          return;
+        }
+
+        const shareUrl = generateTeacherShareUrl();
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          const originalText = creatorCopyLinkBtn.textContent;
+          creatorCopyLinkBtn.textContent = '✓ Link Copiato!';
+          creatorCopyLinkBtn.classList.remove('bg-ochreBand');
+          creatorCopyLinkBtn.classList.add('bg-tealBand', 'text-white');
+
+          setTimeout(() => {
+            creatorCopyLinkBtn.textContent = originalText;
+            creatorCopyLinkBtn.classList.remove('bg-tealBand', 'text-white');
+            creatorCopyLinkBtn.classList.add('bg-ochreBand', 'text-appDark');
+          }, 1600);
+        });
+      });
+
+      /* ================================================================ */
+      /* GESTIONE SERIE Esercizio                                         */
+      /* ================================================================ */
       function startBatchExercise() {
         gameState.active = true;
         gameState.batchCurrentNote = 1;
@@ -963,11 +1097,10 @@
         batchBadge.classList.add('flex');
         batchProgress.textContent = `1/${gameState.batchTotalNotes}`;
 
-        // Mostra il pulsante Riascolta
         btnReplay.classList.remove('hidden');
         btnReplay.classList.add('flex');
 
-        // Nota base
+        // Impostazione Nota Base
         if (gameState.rootMode === 'random') {
           const roots = [55, 57, 58, 60, 62, 63, 65];
           gameState.currentRootMidi = roots[Math.floor(Math.random() * roots.length)];
@@ -993,8 +1126,10 @@
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
         let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
-        if (gameState.isProStudent && gameState.allowedSemitones.size > 0) {
-          candidateItems = candidateItems.filter(i => gameState.allowedSemitones.has(i.semitones));
+
+        // Se Allievo PRO: isola esattamente gli ID selezionati dal docente
+        if (gameState.isProStudent && gameState.allowedButtonIds.size > 0) {
+          candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
         }
 
         if (candidateItems.length === 0) {
@@ -1004,8 +1139,7 @@
         }
 
         const pickedItem = candidateItems[Math.floor(Math.random() * candidateItems.length)];
-        gameState.targetSemitones = pickedItem.semitones;
-        gameState.targetButtonId = pickedItem.id;
+        gameState.targetItem = pickedItem;
 
         const secretNoteMidi = gameState.currentRootMidi + pickedItem.semitones;
 
@@ -1030,7 +1164,6 @@
         batchBadge.classList.add('hidden');
         batchBadge.classList.remove('flex');
 
-        // Nasconde il pulsante Riascolta
         btnReplay.classList.add('hidden');
         btnReplay.classList.remove('flex');
 
@@ -1048,17 +1181,44 @@
       });
 
       btnReplay.addEventListener('click', () => {
-        if (!gameState.active || gameState.targetSemitones === null) return;
-        const secretNoteMidi = gameState.currentRootMidi + gameState.targetSemitones;
+        if (!gameState.active || !gameState.targetItem) return;
+        const secretNoteMidi = gameState.currentRootMidi + gameState.targetItem.semitones;
         audio.playSecretNote(secretNoteMidi, 3.5);
       });
 
-      /* GESTIONE CLICK TASTI */
+      /* ================================================================ */
+      /* CLICK SUI TASTI DELLA COLONNA (Docente vs Allievo vs Libera)    */
+      /* ================================================================ */
       intervalButtonsData.forEach(item => {
         const btnEl = document.getElementById(item.id);
         if (!btnEl) return;
 
         btnEl.addEventListener('click', () => {
+          
+          // CASO A: MODALITÀ CREAZIONE DOCENTE
+          if (gameState.creatorMode) {
+            if (item.id === 'btn-1') {
+              // Tonica sempre attiva
+              audio.previewNote(60, 1.0);
+              spawnPropagatingWave(btnEl, false);
+              return;
+            }
+
+            // Suona la nota
+            const previewMidi = 60 + item.semitones;
+            audio.previewNote(previewMidi, 1.0);
+
+            // Toggle selezione (indipendente tra sinistra e destra!)
+            if (teacherSelectedNoteIds.has(item.id)) {
+              teacherSelectedNoteIds.delete(item.id);
+            } else {
+              teacherSelectedNoteIds.add(item.id);
+            }
+            updateTeacherGridVisuals();
+            return;
+          }
+
+          // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
             
             if (item.semitones === 0) {
@@ -1068,7 +1228,10 @@
 
             gameState.totalAttempts++;
 
-            if (item.semitones === gameState.targetSemitones) {
+            // Corretto: verifica corrispondenza di semitoni (o di ID esatto in pro)
+            const isCorrect = (item.semitones === gameState.targetItem.semitones);
+
+            if (isCorrect) {
               gameState.correctCount++;
               updateStatsUI();
 
@@ -1105,7 +1268,7 @@
             }
 
           } else {
-            // Modalità libera
+            // CASO C: MODALITÀ LIBERA (SUONA E PROPAGA ONDA)
             const previewMidi = 60 + item.semitones;
             audio.previewNote(previewMidi, 1.2);
             spawnPropagatingWave(btnEl, false);
@@ -1113,174 +1276,19 @@
         });
       });
 
-      /* CHIUSURA MODALE */
-      const closeModalHandler = () => {
-        promoModal.classList.add('hidden');
-      };
-
+      /* MODALE FINE SERIE */
+      const closeModalHandler = () => promoModal.classList.add('hidden');
       promoCloseBtn.addEventListener('click', closeModalHandler);
       promoXBtn.addEventListener('click', closeModalHandler);
 
       promoToTeacherBtn.addEventListener('click', () => {
         promoModal.classList.add('hidden');
-        openTeacherModal();
-      });
-
-      /* AREA DOCENTE */
-      function openTeacherModal() {
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         if (savedLic && VALID_LICENSES.includes(savedLic.toUpperCase())) {
-          showTeacherUnlocked();
+          enterCreatorMode();
         } else {
-          showTeacherLocked();
+          licenseModal.classList.remove('hidden');
         }
-        teacherModal.classList.remove('hidden');
-      }
-
-      openTeacherBtn.addEventListener('click', openTeacherModal);
-      closeTeacherModal.addEventListener('click', () => teacherModal.classList.add('hidden'));
-
-      function showTeacherLocked() {
-        teacherLockedView.classList.remove('hidden');
-        teacherUnlockedView.classList.add('hidden');
-        licenseErrorMsg.classList.add('hidden');
-      }
-
-      function showTeacherUnlocked() {
-        teacherLockedView.classList.add('hidden');
-        teacherUnlockedView.classList.remove('hidden');
-        initTeacherIntervalPills();
-        updateShareLinkPreview();
-      }
-
-      activateLicenseBtn.addEventListener('click', () => {
-        const code = licenseInput.value.trim().toUpperCase();
-        if (VALID_LICENSES.includes(code)) {
-          localStorage.setItem('ms_ear_trainer_teacher_license', code);
-          showTeacherUnlocked();
-        } else {
-          licenseErrorMsg.classList.remove('hidden');
-        }
-      });
-
-      forgetLicenseBtn.addEventListener('click', () => {
-        localStorage.removeItem('ms_ear_trainer_teacher_license');
-        showTeacherLocked();
-      });
-
-      const teacherPillsContainer = document.getElementById('teacher-interval-pills');
-      let teacherSelectedSemitones = new Set([3, 4, 7]);
-
-      const savedConfig = localStorage.getItem('ms_teacher_custom_config');
-      if (savedConfig) {
-        try {
-          const parsed = JSON.parse(savedConfig);
-          if (parsed.semitones) teacherSelectedSemitones = new Set(parsed.semitones);
-          if (parsed.title) customTitleInput.value = parsed.title;
-          if (parsed.notesCount) teacherNotesCount.value = parsed.notesCount;
-          if (parsed.rootMode) teacherRootMode.value = parsed.rootMode;
-        } catch(e){}
-      }
-
-      function initTeacherIntervalPills() {
-        teacherPillsContainer.innerHTML = '';
-        const uniqueIntervals = [
-          { semi: 1, label: '2ª Min (1s)' },
-          { semi: 2, label: '2ª Mag (2s)' },
-          { semi: 3, label: '3ª Min (3s)' },
-          { semi: 4, label: '3ª Mag (4s)' },
-          { semi: 5, label: '4ª Giu (5s)' },
-          { semi: 6, label: 'Tritono (6s)' },
-          { semi: 7, label: '5ª Giu (7s)' },
-          { semi: 8, label: '6ª Min (8s)' },
-          { semi: 9, label: '6ª Mag (9s)' },
-          { semi: 10, label: '7ª Min (10s)' },
-          { semi: 11, label: '7ª Mag (11s)' },
-          { semi: 12, label: 'Ottava (12s)' }
-        ];
-
-        uniqueIntervals.forEach(it => {
-          const pill = document.createElement('button');
-          pill.type = 'button';
-          const isSelected = teacherSelectedSemitones.has(it.semi);
-          pill.className = `p-2 rounded-xl text-center border font-semibold text-[11px] transition-all ${
-            isSelected 
-              ? 'bg-tealBand text-white border-tealBand shadow-md' 
-              : 'bg-[#0D171C] text-white/50 border-white/10 hover:border-white/30'
-          }`;
-          pill.textContent = it.label;
-
-          pill.addEventListener('click', () => {
-            if (teacherSelectedSemitones.has(it.semi)) {
-              if (teacherSelectedSemitones.size > 1) {
-                teacherSelectedSemitones.delete(it.semi);
-              } else {
-                alert('Seleziona almeno un intervallo.');
-                return;
-              }
-            } else {
-              teacherSelectedSemitones.add(it.semi);
-            }
-            initTeacherIntervalPills();
-            updateShareLinkPreview();
-            saveTeacherConfig();
-          });
-
-          teacherPillsContainer.appendChild(pill);
-        });
-      }
-
-      function saveTeacherConfig() {
-        const payload = {
-          title: customTitleInput.value,
-          semitones: Array.from(teacherSelectedSemitones),
-          notesCount: teacherNotesCount.value,
-          rootMode: teacherRootMode.value
-        };
-        localStorage.setItem('ms_teacher_custom_config', JSON.stringify(payload));
-      }
-
-      customTitleInput.addEventListener('input', () => {
-        updateShareLinkPreview();
-        saveTeacherConfig();
-      });
-
-      teacherRootMode.addEventListener('change', () => {
-        updateShareLinkPreview();
-        saveTeacherConfig();
-      });
-
-      teacherNotesCount.addEventListener('change', () => {
-        updateShareLinkPreview();
-        saveTeacherConfig();
-      });
-
-      function updateShareLinkPreview() {
-        const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
-        const titleVal = encodeURIComponent(customTitleInput.value.trim() || 'Lezione');
-        const semitonesArr = Array.from(teacherSelectedSemitones).sort((a,b)=>a-b).join(',');
-        const rootModeVal = teacherRootMode.value;
-        const countVal = teacherNotesCount.value;
-
-        const baseUrl = window.location.origin + window.location.pathname;
-        const finalUrl = `${baseUrl}?docente=${activeLicense}&intervals=${semitonesArr}&title=${titleVal}&root=${rootModeVal}&count=${countVal}`;
-        generatedShareLink.value = finalUrl;
-      }
-
-      copyShareLinkBtn.addEventListener('click', () => {
-        generatedShareLink.select();
-        navigator.clipboard.writeText(generatedShareLink.value).then(() => {
-          const oldText = copyShareLinkBtn.textContent;
-          copyShareLinkBtn.textContent = 'Copiato!';
-          copyShareLinkBtn.classList.remove('bg-tealBand');
-          copyShareLinkBtn.classList.add('bg-ochreBand', 'text-appDark');
-
-          setTimeout(() => {
-            copyShareLinkBtn.textContent = oldText;
-            copyShareLinkBtn.classList.remove('bg-ochreBand', 'text-appDark');
-            copyShareLinkBtn.classList.add('bg-tealBand', 'text-white');
-          }, 1600);
-        });
       });
 
     });
