@@ -223,12 +223,12 @@
       <div id="header-stats" class="flex items-center gap-4 text-xs font-mono">
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Punteggio</span>
-          <span id="stat-score" class="font-extrabold text-tealBand text-sm">0/5</span>
+          <span id="stat-score" class="font-extrabold text-tealBand text-sm transition-colors">0/5</span>
         </div>
         <div class="w-[1px] h-5 bg-white/10"></div>
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Precisione</span>
-          <span id="stat-acc" class="font-extrabold text-tealBand text-sm">100%</span>
+          <span id="stat-acc" class="font-extrabold text-tealBand text-sm transition-colors">100%</span>
         </div>
       </div>
 
@@ -250,7 +250,6 @@
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
         <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-64 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
       </div>
-      <!-- TASTO SOLO PROVA ESERCIZIO (CHIUDI È NELL'HEADER) -->
       <button id="creator-test-btn" class="self-end sm:self-auto px-4 py-1.5 rounded-xl bg-tealBand text-white font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all">
         Prova Esercizio
       </button>
@@ -435,7 +434,7 @@
         <p id="summary-teacher" class="text-xs text-white/60 font-mono mt-0.5">Prof. Marco Sartore</p>
       </div>
 
-      <!-- Score Box: Punteggio a SINISTRA, Precisione a DESTRA con colore dinamico -->
+      <!-- Score Box: Punteggio a SINISTRA, Precisione a DESTRA -->
       <div class="grid grid-cols-2 gap-3 mb-6">
         <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Punteggio</span>
@@ -447,7 +446,7 @@
         </div>
       </div>
 
-      <!-- Dettaglio Intervalli al 1° Colpo Senza Errori con colori graduati -->
+      <!-- Dettaglio Intervalli al 1° Colpo Senza Errori -->
       <div class="mb-6">
         <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli al primo colpo:</span>
         <div id="summary-stats-by-interval" class="space-y-1.5">
@@ -884,12 +883,11 @@
         };
       }
 
-      // Funzione per ricavare il colore in base al rendimento (Verso il Verde o Verso il Rosso)
       function getPerformanceColor(ratio) {
-        if (ratio >= 0.80) return '#379386'; // Verde Teal (Ottimo)
-        if (ratio >= 0.60) return '#E0C36F'; // Giallo Ocra (Buono)
-        if (ratio >= 0.40) return '#EBA066'; // Arancio Pesca (Sufficiente)
-        return '#E37055';                    // Rosso Corallo (Basso)
+        if (ratio >= 0.80) return '#379386'; // Verde Teal
+        if (ratio >= 0.60) return '#E0C36F'; // Giallo Ocra
+        if (ratio >= 0.40) return '#EBA066'; // Arancio Pesca
+        return '#E37055';                    // Rosso Corallo
       }
 
       intervalButtonsData.forEach(item => {
@@ -1015,18 +1013,21 @@
         ripple.addEventListener('animationend', () => ripple.remove());
       }
 
+      /* AGGIORNAMENTO STATISTICHE REAL-TIME SENZA MAI SUPERARE IL 100% */
       function updateStatsUI() {
-        const ratio = gameState.batchTotalNotes > 0 ? (gameState.sessionFirstTryCorrectCount / gameState.batchTotalNotes) : 1;
-        const perfColor = getPerformanceColor(ratio);
+        // Le domande completate finora sono esattamente pari a gameState.batchCurrentNote
+        const questionsCompleted = gameState.batchCurrentNote;
+        
+        // La precisione in corso è calcolata sulle domande concluse finora
+        const liveRatio = questionsCompleted > 0 ? (gameState.sessionFirstTryCorrectCount / questionsCompleted) : 1;
+        const acc = Math.min(100, Math.max(0, Math.round(liveRatio * 100)));
+        const perfColor = getPerformanceColor(liveRatio);
 
         statScore.textContent = `${gameState.sessionFirstTryCorrectCount}/${gameState.batchTotalNotes}`;
         statScore.style.color = perfColor;
 
-        const currentAttempts = Math.max(1, gameState.batchCurrentNote - 1);
-        const liveRatio = gameState.sessionFirstTryCorrectCount / currentAttempts;
-        const acc = Math.round(liveRatio * 100);
         statAcc.textContent = `${acc}%`;
-        statAcc.style.color = getPerformanceColor(liveRatio);
+        statAcc.style.color = perfColor;
       }
 
       /* ================================================================ */
@@ -1045,7 +1046,7 @@
           gameState.teacherCode = docenteParam;
           document.body.classList.add('student-pro-mode');
 
-          // NASCONDE COMPLETAMENTE IL TASTO PRO PER L'ALLIEVO
+          // NASCONDE IL TASTO PRO PER L'ALLIEVO
           toggleProBtn.classList.add('hidden');
           toggleProBtn.style.display = 'none';
 
@@ -1055,8 +1056,6 @@
           }
           proTeacherId.textContent = `Docente: ${docenteParam}`;
           proBanner.classList.remove('hidden');
-          
-          // NASCONDE IL BANNER MODALITÀ LIBERA
           freeNotice.classList.add('hidden');
 
           if (rootParam === 'fixed-c') {
@@ -1097,7 +1096,7 @@
       checkUrlForProStudent();
 
       /* ================================================================ */
-      /* GESTIONE MODALITÀ: CREAZIONE, PROVA E RITORNO PULITO A INIZIALE */
+      /* GESTIONE MODALITÀ                                                */
       /* ================================================================ */
       function updateTeacherGridVisuals() {
         intervalButtonsData.forEach(item => {
@@ -1120,9 +1119,7 @@
         document.body.classList.remove('test-mode');
         document.body.classList.add('creator-mode');
 
-        // NASCONDE IL BANNER MODALITÀ LIBERA
         freeNotice.classList.add('hidden');
-
         testModeBar.classList.add('hidden');
         creatorTopBar.classList.remove('hidden');
         studentControlsRow.classList.add('hidden');
@@ -1140,7 +1137,6 @@
         updateTeacherGridVisuals();
       }
 
-      // Ritorno alla schermata iniziale: TUTTI E 12 GLI INTERVALLI E BANNER LIBERO VISIBILE
       function exitToNormalMode() {
         if (gameState.active) stopGame();
 
@@ -1154,7 +1150,6 @@
         creatorControlsRow.classList.remove('flex');
         studentControlsRow.classList.remove('hidden');
 
-        // RIAPPARE IL BANNER DELLA MODALITÀ LIBERA
         freeNotice.classList.remove('hidden');
 
         toggleProBtn.classList.remove('bg-ochreBand', 'text-appDark');
@@ -1176,7 +1171,6 @@
         statAcc.style.color = '#379386';
       }
 
-      /* MODALITÀ DI PROVA ESERCIZIO */
       function enterTestMode() {
         if (teacherSelectedNoteIds.size === 0) {
           alert('Seleziona almeno un intervallo sulla colonna prima di provare.');
@@ -1188,9 +1182,7 @@
         document.body.classList.remove('creator-mode');
         document.body.classList.add('test-mode');
 
-        // NASCONDE IL BANNER MODALITÀ LIBERA
         freeNotice.classList.add('hidden');
-
         creatorTopBar.classList.add('hidden');
         creatorControlsRow.classList.add('hidden');
         creatorControlsRow.classList.remove('flex');
@@ -1322,7 +1314,7 @@
         });
 
         statScore.textContent = `0/${gameState.batchTotalNotes}`;
-        statScore.style.color = '#E37055';
+        statScore.style.color = '#379386';
         statAcc.textContent = `100%`;
         statAcc.style.color = '#379386';
 
@@ -1337,7 +1329,7 @@
           const roots = [55, 57, 58, 60, 62, 63, 65];
           gameState.currentRootMidi = roots[Math.floor(Math.random() * roots.length)];
         } else {
-          gameState.currentRootMidi = 60; // Do fisso
+          gameState.currentRootMidi = 60;
         }
 
         audio.startDrone(gameState.currentRootMidi);
@@ -1413,18 +1405,17 @@
         summaryTitle.textContent = gameState.exerciseTitle;
         summaryTeacher.textContent = gameState.isProStudent ? `Prof. ${gameState.teacherCode}` : 'Esercizio Docente';
         
-        // Punteggio & Precisione con colorazione in palette dinamica
         const finalRatio = gameState.batchTotalNotes > 0 ? (gameState.sessionFirstTryCorrectCount / gameState.batchTotalNotes) : 1;
         const finalColor = getPerformanceColor(finalRatio);
 
         summaryScore.textContent = `${gameState.sessionFirstTryCorrectCount}/${gameState.batchTotalNotes}`;
         summaryScore.style.color = finalColor;
         
-        const acc = Math.round(finalRatio * 100);
+        const acc = Math.min(100, Math.round(finalRatio * 100));
         summaryAcc.textContent = `${acc}%`;
         summaryAcc.style.color = finalColor;
 
-        // Dettaglio intervalli con colore dinamico verso verde o rosso
+        // Dettaglio intervalli al primo colpo
         summaryStatsByInterval.innerHTML = '';
         Object.keys(gameState.intervalStatsTracker).forEach(id => {
           const item = gameState.intervalStatsTracker[id];
@@ -1521,6 +1512,7 @@
                 }
               }
 
+              // Calcolo precisione esatto sul numero di note completate
               updateStatsUI();
 
               gameState.waitingForAnswer = false;
