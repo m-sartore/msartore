@@ -90,7 +90,7 @@
       overflow: hidden;
     }
 
-    /* Griglia a colonna simmetrica: traccia 1 e traccia 3 perfettamente uguali */
+    /* Griglia a colonna rigorosamente simmetrica */
     .ear-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
@@ -291,7 +291,7 @@
         </div>
       </div>
 
-      <!-- Badge Nome Docente (visibile quando il docente è in console PRO) -->
+      <!-- Badge Nome Docente (visibile all'istante quando il docente è in console PRO) -->
       <div id="header-teacher-badge" class="hidden items-center gap-1.5 px-3 py-1 rounded-full bg-ochreBand/15 border border-ochreBand/40 text-xs font-semibold text-white">
         <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
         <span id="teacher-header-name" class="font-bold text-white truncate max-w-[170px] sm:max-w-xs">Docente</span>
@@ -315,7 +315,7 @@
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
         <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
       </div>
-      <!-- Pulsanti centrati quando vanno a capo su mobile (justify-center w-full) -->
+      <!-- Pulsanti centrati quando vanno a capo su schermi piccoli -->
       <div class="flex items-center justify-center gap-2 w-full sm:w-auto">
         <button id="creator-archive-btn" class="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all">
           Archivio
@@ -754,7 +754,7 @@
     };
 
     /* ================================================================ */
-    /* MOTORE AUDIO CALIBRATO CON FADE-OUT NATURALE                     */
+    /* MOTORE AUDIO CALIBRATO CON CROSSFADE E RILASCIO NATURALE         */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -832,21 +832,19 @@
           filter,
           oscillators,
           subGains,
-          // Rilascio esponenziale morbido che evita interruzioni nette
-          stopAndDispose: (fadeSec = 0.25) => {
+          // Rilascio esponenziale progressivo e naturale tramite setTargetAtTime
+          stopAndDispose: (fadeSec = 0.8) => {
             const t = Math.max(0, this.ctx.currentTime);
             try {
-              if (masterGain.gain.cancelAndHoldAtTime) {
-                masterGain.gain.cancelAndHoldAtTime(t);
-              } else {
-                masterGain.gain.cancelScheduledValues(t);
-                masterGain.gain.setValueAtTime(Math.max(0.0001, masterGain.gain.value), t);
-              }
-              masterGain.gain.exponentialRampToValueAtTime(0.0001, t + fadeSec);
+              masterGain.gain.cancelScheduledValues(t);
+              masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+              // Costante di tempo esponenziale per sfumare senza scatti o tagli
+              masterGain.gain.setTargetAtTime(0, t, Math.max(0.08, fadeSec / 3.2));
             } catch(e) {
-              try { masterGain.gain.linearRampToValueAtTime(0.0001, t + fadeSec); } catch(err){}
+              try { masterGain.gain.linearRampToValueAtTime(0, t + fadeSec); } catch(err){}
             }
 
+            const cleanupDelay = Math.max(400, (fadeSec * 1000) + 120);
             setTimeout(() => {
               oscillators.forEach(osc => {
                 try { osc.stop(); osc.disconnect(); } catch(e){}
@@ -856,26 +854,35 @@
               });
               try { filter.disconnect(); } catch(e){}
               try { masterGain.disconnect(); } catch(e){}
-            }, (fadeSec * 1000) + 80);
+            }, cleanupDelay);
           }
         };
       }
 
-      startDrone(midiNote) {
+      // Transizione incrociata tra droni: sfuma il vecchio dolcemente mentre il nuovo entra
+      transitionDrone(newMidiNote, fadeDuration = 0.85) {
         this.ensureContextRunning();
-        this.stopDrone(0.25);
 
-        const freq = this.midiToFreq(midiNote);
-        const now = Math.max(0, this.ctx.currentTime) + 0.01;
+        if (this.droneVoice) {
+          this.droneVoice.stopAndDispose(fadeDuration);
+          this.droneVoice = null;
+        }
+
+        const freq = this.midiToFreq(newMidiNote);
+        const now = Math.max(0, this.ctx.currentTime) + 0.12;
 
         this.droneVoice = this.createVoiceGroup(freq, 0.20);
         this.droneVoice.masterGain.gain.setValueAtTime(0, now);
-        this.droneVoice.masterGain.gain.linearRampToValueAtTime(0.20, now + 0.45);
+        this.droneVoice.masterGain.gain.linearRampToValueAtTime(0.20, now + 0.65);
         this.droneVoice.oscillators.forEach(osc => osc.start(now));
         this.isDronePlaying = true;
       }
 
-      stopDrone(fadeSeconds = 0.35) {
+      startDrone(midiNote) {
+        this.transitionDrone(midiNote, 0.85);
+      }
+
+      stopDrone(fadeSeconds = 0.8) {
         if (!this.droneVoice || !this.isDronePlaying) return;
         this.droneVoice.stopAndDispose(fadeSeconds);
         this.droneVoice = null;
@@ -884,7 +891,7 @@
 
       playSecretNote(midiNote, durationSeconds = 3.6) {
         this.ensureContextRunning();
-        this.stopSecretNoteImmediate(0.25);
+        this.stopSecretNoteImmediate(0.3);
 
         const freq = this.midiToFreq(midiNote);
         const now = Math.max(0, this.ctx.currentTime) + 0.01;
@@ -893,23 +900,27 @@
         this.secretVoice.masterGain.gain.setValueAtTime(0, now);
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.38, now + 0.12);
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.26, now + 1.2);
-        this.secretVoice.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + durationSeconds);
+
+        // Decadimento finale morbido
+        const fadeStart = Math.max(now + 1.5, now + durationSeconds - 0.7);
+        this.secretVoice.masterGain.gain.setValueAtTime(0.26, fadeStart);
+        this.secretVoice.masterGain.gain.setTargetAtTime(0, fadeStart, 0.22);
 
         this.secretVoice.oscillators.forEach(osc => {
           osc.start(now);
-          osc.stop(now + durationSeconds + 0.1);
+          osc.stop(now + durationSeconds + 0.2);
         });
 
         const currentRef = this.secretVoice;
         this.secretTimeoutId = setTimeout(() => {
           if (this.secretVoice === currentRef) {
-            this.secretVoice.stopAndDispose(0.25);
+            this.secretVoice.stopAndDispose(0.3);
             this.secretVoice = null;
           }
-        }, (durationSeconds + 0.15) * 1000);
+        }, (durationSeconds + 0.2) * 1000);
       }
 
-      stopSecretNoteImmediate(fadeSeconds = 0.25) {
+      stopSecretNoteImmediate(fadeSeconds = 0.3) {
         if (this.secretTimeoutId) {
           clearTimeout(this.secretTimeoutId);
           this.secretTimeoutId = null;
@@ -920,7 +931,7 @@
         }
       }
 
-      fadeSecretNote(fadeSeconds = 0.35) {
+      fadeSecretNote(fadeSeconds = 0.45) {
         if (this.secretTimeoutId) {
           clearTimeout(this.secretTimeoutId);
           this.secretTimeoutId = null;
@@ -939,14 +950,17 @@
         const voice = this.createVoiceGroup(freq, 0.32);
         voice.masterGain.gain.setValueAtTime(0, now);
         voice.masterGain.gain.linearRampToValueAtTime(0.32, now + 0.06);
-        voice.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        const fadeOutStart = Math.max(now + 0.4, now + duration - 0.35);
+        voice.masterGain.gain.setValueAtTime(0.32, fadeOutStart);
+        voice.masterGain.gain.setTargetAtTime(0, fadeOutStart, 0.12);
 
         voice.oscillators.forEach(osc => {
           osc.start(now);
-          osc.stop(now + duration + 0.08);
+          osc.stop(now + duration + 0.15);
         });
 
-        setTimeout(() => voice.stopAndDispose(0.25), (duration + 0.1) * 1000);
+        setTimeout(() => voice.stopAndDispose(0.25), (duration + 0.15) * 1000);
       }
     }
 
@@ -1395,7 +1409,6 @@
           const el = document.getElementById(id);
           if (el) {
             el.style.gridRow = String(row);
-            // Ripristina colonna fissa esatta
             if (id.includes('b')) el.style.gridColumn = '1';
             else if (id.includes('sharp')) el.style.gridColumn = '3';
             else el.style.gridColumn = '2';
@@ -1424,7 +1437,6 @@
         const activeItems = intervalButtonsData.filter(i => gameState.allowedButtonIds.has(i.id));
         if (activeItems.length === 0) return;
 
-        // Ordina per semitoni dal più acuto al più grave
         const uniqueSemitones = Array.from(new Set(activeItems.map(i => i.semitones))).sort((a, b) => b - a);
         const numLevels = uniqueSemitones.length;
 
@@ -1463,7 +1475,6 @@
             if (el) {
               el.style.gridRow = String(assignedRow);
               
-              // Blocco rigoroso delle colonne: i naturali (1-8) STANNO SEMPRE NELLA COLONNA 2
               if (item.degree.includes('b')) {
                 el.style.gridColumn = '1';
               } else if (item.degree.includes('#')) {
@@ -1565,8 +1576,13 @@
       async function syncLessonsFromCloudSilently(teacherCode) {
         if (!LICENSE_API_URL || !LICENSE_API_URL.startsWith('http')) return;
         try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 2800);
+
           const url = `${LICENSE_API_URL}?action=getLessons&code=${encodeURIComponent(teacherCode)}`;
-          const res = await fetch(url);
+          const res = await fetch(url, { signal: controller.signal });
+          clearTimeout(timeoutId);
+
           if (res.ok) {
             const data = await res.json();
             if (data.success && Array.isArray(data.lessons)) {
@@ -1588,7 +1604,7 @@
             }
           }
         } catch(e) {
-          console.warn('Sync cloud silenzioso:', e);
+          console.warn('Sync cloud silenzioso completato o timeout.');
         }
       }
 
@@ -1720,29 +1736,49 @@
       });
 
       /* ================================================================ */
-      /* VERIFICA LICENZA REMOTA                                          */
+      /* VERIFICA LICENZA OTTIMIZZATA (CON CACHE E TIMEOUT VELOCE)        */
       /* ================================================================ */
       async function verifyLicenseCode(code) {
         code = code.trim().toUpperCase();
 
+        if (FALLBACK_LICENSES.includes(code)) {
+          localStorage.setItem('ms_license_verified', 'true');
+          localStorage.setItem('ms_teacher_name', 'Prof. Marco Sartore');
+          return { valid: true, teacher: 'Prof. Marco Sartore' };
+        }
+
+        const cachedCode = localStorage.getItem('ms_ear_trainer_teacher_license');
+        const cachedTeacher = localStorage.getItem('ms_teacher_name');
+        const cachedValid = localStorage.getItem('ms_license_verified');
+        if (cachedValid === 'true' && cachedCode === code && cachedTeacher) {
+          return { valid: true, teacher: cachedTeacher };
+        }
+
         if (LICENSE_API_URL && LICENSE_API_URL.startsWith('http')) {
           try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2800);
+
             const url = `${LICENSE_API_URL}?action=verify&code=${encodeURIComponent(code)}`;
-            const res = await fetch(url);
+            const res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+
             if (res.ok) {
               const data = await res.json();
-              if (data.teacher) {
-                localStorage.setItem('ms_teacher_name', data.teacher);
+              if (data.valid) {
+                const teacherName = data.teacher || 'Prof. Marco Sartore';
+                localStorage.setItem('ms_license_verified', 'true');
+                localStorage.setItem('ms_teacher_name', teacherName);
+                return { valid: true, teacher: teacherName };
               }
-              return { valid: data.valid, teacher: data.teacher || 'Prof. Marco Sartore' };
             }
           } catch(err) {
-            console.warn('Verifica remota fallita, fallback:', err);
+            console.warn('Verifica remota lenta o non disponibile, utilizzo fallback.');
           }
         }
 
-        if (FALLBACK_LICENSES.includes(code)) {
-          return { valid: true, teacher: 'Prof. Marco Sartore' };
+        if (cachedValid === 'true') {
+          return { valid: true, teacher: cachedTeacher || 'Prof. Marco Sartore' };
         }
 
         return { valid: false };
@@ -1889,7 +1925,7 @@
         document.body.classList.remove('test-mode');
         document.body.classList.add('creator-mode');
 
-        // Mostra Nome Docente in alto e nasconde punteggio/precisione
+        // Mostra Nome Docente salvato in memoria all'istante
         const savedTeacherName = localStorage.getItem('ms_teacher_name') || 'Prof. Marco Sartore';
         teacherHeaderName.textContent = savedTeacherName;
         headerStats.classList.add('hidden');
@@ -2051,7 +2087,10 @@
       creatorTestBtn.addEventListener('click', enterTestMode);
       backToEditBtn.addEventListener('click', enterCreatorMode);
 
-      toggleProBtn.addEventListener('click', async () => {
+      /* ================================================================ */
+      /* CLICK PRO: ACCESSO LOCALE ISTANTANEO (ZERO ATTESA)               */
+      /* ================================================================ */
+      toggleProBtn.addEventListener('click', () => {
         audio.ensureContextRunning();
         if (gameState.creatorMode || gameState.testMode) {
           exitToNormalMode();
@@ -2059,22 +2098,17 @@
         }
 
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
-        if (savedLic) {
-          proBtnText.classList.add('hidden');
-          proBtnSpinner.classList.remove('hidden');
-          toggleProBtn.disabled = true;
+        const isVerified = localStorage.getItem('ms_license_verified');
 
-          const check = await verifyLicenseCode(savedLic);
-
-          proBtnText.classList.remove('hidden');
-          proBtnSpinner.classList.add('hidden');
-          toggleProBtn.disabled = false;
-
-          if (check.valid) {
-            enterCreatorMode();
-            return;
-          }
+        if (savedLic && (isVerified === 'true' || FALLBACK_LICENSES.includes(savedLic))) {
+          // Entra istantaneamente senza attendere la chiamata a Google Sheets!
+          enterCreatorMode();
+          // Risincronizza in background
+          syncLessonsFromCloudSilently(savedLic);
+          return;
         }
+
+        // Se non ancora verificato, apre il popup per inserire la licenza
         licenseModal.classList.remove('hidden');
       });
 
@@ -2096,6 +2130,7 @@
 
         if (check.valid) {
           localStorage.setItem('ms_ear_trainer_teacher_license', code);
+          localStorage.setItem('ms_license_verified', 'true');
           licenseModal.classList.add('hidden');
           enterCreatorMode();
         } else {
@@ -2261,12 +2296,10 @@
         btnMainAction.classList.add('bg-coralBand');
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
-        // Se è attiva la tonalità casuale, cambia tonalità ad OGNI singola nota
         if (gameState.isRandomKeyMode) {
           gameState.keyRootMidi = getEffectiveKeyRoot('random');
         }
 
-        // Estrazione Drone
         let availableDroneIds = Array.from(teacherDroneNoteIds);
         if (availableDroneIds.length === 0) availableDroneIds = ['btn-1'];
         const pickedDroneId = availableDroneIds[Math.floor(Math.random() * availableDroneIds.length)];
@@ -2278,9 +2311,10 @@
         gameState.currentDroneItem = droneItem;
         gameState.currentDroneMidi = newDroneMidi;
 
-        // Se il drone è identico a prima rimane fisso senza stopparsi e ripartire
+        // Se il drone è diverso: crossfade dolce di 850ms tra i due droni
         if (!isSameDroneAsBefore) {
-          audio.startDrone(gameState.currentDroneMidi);
+          audio.transitionDrone(gameState.currentDroneMidi, 0.85);
+
           if (gameDroneWaveEl) {
             try { gameDroneWaveEl.remove(); } catch(e){}
             gameDroneWaveEl = null;
@@ -2288,13 +2322,13 @@
           const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
           gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
         } else {
+          // Drone identico: rimane continuo e fisso
           if (!gameDroneWaveEl || !gameDroneWaveEl.isConnected) {
             const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
             gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
           }
         }
 
-        // Esclusione assoluta della nota misteriosa uguale al drone attivo
         let candidateItems = intervalButtonsData.filter(i => i.semitones !== droneItem.semitones);
 
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
@@ -2338,8 +2372,8 @@
 
         const secretNoteMidi = gameState.keyRootMidi + pickedItem.semitones;
 
-        // Se il drone è identico, la nota segreta arriva molto prima (400ms invece di 1000ms)
-        const secretNoteDelay = isSameDroneAsBefore ? 400 : 1000;
+        // Se il drone è identico la nota arriva subito (400ms), se cambia si attende che il crossfade si completi (950ms)
+        const secretNoteDelay = isSameDroneAsBefore ? 400 : 950;
 
         setAppTimeout(() => {
           if (!gameState.active || !gameState.waitingForAnswer) return;
@@ -2354,9 +2388,9 @@
         gameState.isTransitioning = false;
         clearAppTimeouts();
 
-        // Fade out morbido invece di interruzione netta
-        audio.stopDrone(0.35);
-        audio.fadeSecretNote(0.35);
+        // Fade-out morbido di 800ms
+        audio.stopDrone(0.8);
+        audio.fadeSecretNote(0.45);
 
         if (gameDroneWaveEl) {
           try { gameDroneWaveEl.remove(); } catch(e){}
@@ -2486,7 +2520,7 @@
           // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
             
-            // Il drone non è mai la risposta: premendolo si riascolta il pedale continuo
+            // Il drone non è mai la risposta: premendolo si riascolta il pedale
             if (gameState.currentDroneItem && item.semitones === gameState.currentDroneItem.semitones) {
               audio.startDrone(gameState.currentDroneMidi);
               if (gameDroneWaveEl) {
@@ -2521,9 +2555,8 @@
                 btnMainAction.textContent = `Esatto! (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
                 gameState.batchCurrentNote++;
 
-                // Se il drone non cambia, transizione rapida (750ms anziché 1500ms)
                 const willLikelyKeepDrone = !gameState.isRandomKeyMode && (teacherDroneNoteIds.size <= 1);
-                const transitionDelay = willLikelyKeepDrone ? 750 : 1300;
+                const transitionDelay = willLikelyKeepDrone ? 750 : 1200;
 
                 setAppTimeout(() => {
                   if (gameState.active) playQuestionInBatch();
@@ -2564,15 +2597,13 @@
       promoCloseBtn.addEventListener('click', closeModalHandler);
       promoXBtn.addEventListener('click', closeModalHandler);
 
-      promoToTeacherBtn.addEventListener('click', async () => {
+      promoToTeacherBtn.addEventListener('click', () => {
         promoModal.classList.add('hidden');
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
-        if (savedLic) {
-          const check = await verifyLicenseCode(savedLic);
-          if (check.valid) {
-            enterCreatorMode();
-            return;
-          }
+        const isVerified = localStorage.getItem('ms_license_verified');
+        if (savedLic && (isVerified === 'true' || FALLBACK_LICENSES.includes(savedLic))) {
+          enterCreatorMode();
+          return;
         }
         licenseModal.classList.remove('hidden');
       });
