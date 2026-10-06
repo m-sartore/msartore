@@ -223,7 +223,7 @@
       <div id="header-stats" class="flex items-center gap-4 text-xs font-mono">
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Punteggio</span>
-          <span id="stat-score" class="font-extrabold text-ochreBand text-sm">0/5</span>
+          <span id="stat-score" class="font-extrabold text-tealBand text-sm">0/5</span>
         </div>
         <div class="w-[1px] h-5 bg-white/10"></div>
         <div class="text-center">
@@ -248,16 +248,12 @@
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">DOCENTE</span>
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
-        <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
+        <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-64 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
       </div>
-      <div class="flex items-center gap-2 self-end sm:self-auto">
-        <button id="creator-test-btn" class="px-3 py-1.5 rounded-xl bg-tealBand text-white font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all">
-          Prova Esercizio
-        </button>
-        <button id="creator-close-btn" class="px-3 py-1.5 rounded-xl bg-white/10 text-white/70 hover:text-white font-bold text-xs hover:bg-white/15 transition-all">
-          Chiudi
-        </button>
-      </div>
+      <!-- TASTO SOLO PROVA ESERCIZIO (CHIUDI È NELL'HEADER) -->
+      <button id="creator-test-btn" class="self-end sm:self-auto px-4 py-1.5 rounded-xl bg-tealBand text-white font-extrabold text-xs shadow-md hover:brightness-110 active:scale-95 transition-all">
+        Prova Esercizio
+      </button>
     </div>
   </div>
 
@@ -290,7 +286,7 @@
     </div>
   </div>
 
-  <!-- Banner Modalità Free -->
+  <!-- Banner Modalità Free (SOLO SCHERMATA INIZIALE LIBERA) -->
   <div id="free-notice" class="shrink-0 bg-petrol/20 border-b border-white/5 px-4 py-1 text-center text-[11px] text-white/60 font-medium">
     Modalità Libera: 5 note consecutive con la stessa base. Suona i tasti liberamente tra le serie!
   </div>
@@ -439,31 +435,23 @@
         <p id="summary-teacher" class="text-xs text-white/60 font-mono mt-0.5">Prof. Marco Sartore</p>
       </div>
 
-      <!-- Score Box: Punteggio a SINISTRA, Precisione a DESTRA -->
+      <!-- Score Box: Punteggio a SINISTRA, Precisione a DESTRA con colore dinamico -->
       <div class="grid grid-cols-2 gap-3 mb-6">
         <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Punteggio</span>
-          <span id="summary-score" class="text-2xl font-black text-ochreBand">5/5</span>
+          <span id="summary-score" class="text-2xl font-black transition-colors">5/5</span>
         </div>
         <div class="p-3.5 rounded-2xl bg-[#0D171C] border border-white/10 text-center">
           <span class="text-[10px] text-white/50 block font-mono uppercase tracking-wider">Precisione</span>
-          <span id="summary-acc" class="text-2xl font-black text-tealBand">100%</span>
+          <span id="summary-acc" class="text-2xl font-black transition-colors">100%</span>
         </div>
       </div>
 
-      <!-- Dettaglio Intervalli al 1° Colpo Senza Errori -->
-      <div class="mb-5">
-        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli indovinati al primo colpo:</span>
-        <div id="summary-stats-by-interval" class="space-y-1.5 mb-4">
-          <!-- Popolato dinamicamente con es. 3ª Min (3b): 2/2 al 1° colpo -->
-        </div>
-      </div>
-
-      <!-- Sequenza Intervalli Completati -->
+      <!-- Dettaglio Intervalli al 1° Colpo Senza Errori con colori graduati -->
       <div class="mb-6">
-        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Sequenza intervalli completati:</span>
-        <div id="summary-notes-list" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto p-1.5 bg-[#0D171C]/60 rounded-xl border border-white/5">
-          <!-- Popolato dinamicamente con i badge colorati -->
+        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli al primo colpo:</span>
+        <div id="summary-stats-by-interval" class="space-y-1.5">
+          <!-- Popolato dinamicamente -->
         </div>
       </div>
 
@@ -538,11 +526,11 @@
 
 
   <!-- ================================================================= -->
-  <!-- 7. JAVASCRIPT: AUDIO SINCRONO + CONTROLLO ERRORI E RIEPILOGO     -->
+  <!-- 7. JAVASCRIPT: LOGICA COMPLETA                                   -->
   <!-- ================================================================= -->
   <script>
     /* ================================================================ */
-    /* MODULO AUDIO (GESTIONE STATO 'INTERRUPTED' PER IPAD / CHROME)    */
+    /* MODULO AUDIO                                                     */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -896,6 +884,14 @@
         };
       }
 
+      // Funzione per ricavare il colore in base al rendimento (Verso il Verde o Verso il Rosso)
+      function getPerformanceColor(ratio) {
+        if (ratio >= 0.80) return '#379386'; // Verde Teal (Ottimo)
+        if (ratio >= 0.60) return '#E0C36F'; // Giallo Ocra (Buono)
+        if (ratio >= 0.40) return '#EBA066'; // Arancio Pesca (Sufficiente)
+        return '#E37055';                    // Rosso Corallo (Basso)
+      }
+
       intervalButtonsData.forEach(item => {
         const fraction = item.order / 12;
         const color = getColorForFraction(fraction);
@@ -932,9 +928,8 @@
         batchCurrentNote: 0,
         batchTotalNotes: 5,
         
-        // Tracciamento sessione corrente (azzera a inizio serie)
-        sessionFirstTryCorrectCount: 0, // Note azzeccate al 1° colpo senza errori
-        currentQuestionHasMistake: false, // Flag se per la domanda corrente c'è stato un errore
+        sessionFirstTryCorrectCount: 0,
+        currentQuestionHasMistake: false,
         
         isProStudent: false,
         allowedButtonIds: new Set(),
@@ -942,11 +937,9 @@
         exerciseTitle: 'Esercizio Intervalli',
         teacherCode: 'Prof. Marco Sartore',
         
-        completedNotesHistory: [], // Sequenza temporale note completate
-        intervalStatsTracker: {}   // Statistiche per intervallo { id: { name, degree, totalProposed, firstTrySuccess, color } }
+        intervalStatsTracker: {}
       };
 
-      // Set delle note selezionate dal docente sulla griglia
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
 
       // Elementi DOM Principali
@@ -966,7 +959,6 @@
       const creatorTopBar = document.getElementById('creator-top-bar');
       const creatorTitleInput = document.getElementById('creator-title-input');
       const creatorTestBtn = document.getElementById('creator-test-btn');
-      const creatorCloseBtn = document.getElementById('creator-close-btn');
 
       const testModeBar = document.getElementById('test-mode-bar');
       const testModeTitle = document.getElementById('test-mode-title');
@@ -986,7 +978,6 @@
       const summaryScore = document.getElementById('summary-score');
       const summaryAcc = document.getElementById('summary-acc');
       const summaryStatsByInterval = document.getElementById('summary-stats-by-interval');
-      const summaryNotesList = document.getElementById('summary-notes-list');
       const summaryCloseBtn = document.getElementById('summary-close-btn');
 
       const promoModal = document.getElementById('promo-modal');
@@ -1025,11 +1016,17 @@
       }
 
       function updateStatsUI() {
+        const ratio = gameState.batchTotalNotes > 0 ? (gameState.sessionFirstTryCorrectCount / gameState.batchTotalNotes) : 1;
+        const perfColor = getPerformanceColor(ratio);
+
         statScore.textContent = `${gameState.sessionFirstTryCorrectCount}/${gameState.batchTotalNotes}`;
-        const acc = gameState.batchCurrentNote > 1 
-          ? Math.round((gameState.sessionFirstTryCorrectCount / (gameState.batchCurrentNote - 1)) * 100) 
-          : 100;
+        statScore.style.color = perfColor;
+
+        const currentAttempts = Math.max(1, gameState.batchCurrentNote - 1);
+        const liveRatio = gameState.sessionFirstTryCorrectCount / currentAttempts;
+        const acc = Math.round(liveRatio * 100);
         statAcc.textContent = `${acc}%`;
+        statAcc.style.color = getPerformanceColor(liveRatio);
       }
 
       /* ================================================================ */
@@ -1058,6 +1055,8 @@
           }
           proTeacherId.textContent = `Docente: ${docenteParam}`;
           proBanner.classList.remove('hidden');
+          
+          // NASCONDE IL BANNER MODALITÀ LIBERA
           freeNotice.classList.add('hidden');
 
           if (rootParam === 'fixed-c') {
@@ -1074,7 +1073,6 @@
             }
           }
 
-          // Tonica sempre attiva
           gameState.allowedButtonIds = new Set();
           gameState.allowedButtonIds.add('btn-1');
           document.getElementById('btn-1').classList.add('active-in-exercise');
@@ -1122,6 +1120,9 @@
         document.body.classList.remove('test-mode');
         document.body.classList.add('creator-mode');
 
+        // NASCONDE IL BANNER MODALITÀ LIBERA
+        freeNotice.classList.add('hidden');
+
         testModeBar.classList.add('hidden');
         creatorTopBar.classList.remove('hidden');
         studentControlsRow.classList.add('hidden');
@@ -1131,7 +1132,6 @@
         toggleProBtn.classList.add('bg-ochreBand', 'text-appDark');
         toggleProBtn.textContent = 'CHIUDI';
 
-        // Tutti i bottoni visibili per la selezione
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
           if (el) el.classList.add('active-in-exercise');
@@ -1140,7 +1140,7 @@
         updateTeacherGridVisuals();
       }
 
-      // Ritorno alla schermata iniziale con TUTTI E 12 GLI INTERVALLI ATTIVI
+      // Ritorno alla schermata iniziale: TUTTI E 12 GLI INTERVALLI E BANNER LIBERO VISIBILE
       function exitToNormalMode() {
         if (gameState.active) stopGame();
 
@@ -1154,10 +1154,12 @@
         creatorControlsRow.classList.remove('flex');
         studentControlsRow.classList.remove('hidden');
 
+        // RIAPPARE IL BANNER DELLA MODALITÀ LIBERA
+        freeNotice.classList.remove('hidden');
+
         toggleProBtn.classList.remove('bg-ochreBand', 'text-appDark');
         toggleProBtn.textContent = 'PRO';
 
-        // Ripristina TUTTI i 18 pulsanti visibili ed elimina selezioni
         intervalButtonsData.forEach(item => {
           const el = document.getElementById(item.id);
           if (el) {
@@ -1169,10 +1171,12 @@
         gameState.batchTotalNotes = 5;
         btnMainAction.textContent = 'Inizia Serie (5 note)';
         statScore.textContent = `0/5`;
+        statScore.style.color = '#379386';
         statAcc.textContent = `100%`;
+        statAcc.style.color = '#379386';
       }
 
-      /* MODALITÀ DI PROVA ESERCIZIO (SOLO NOTE SCELTE DAL DOCENTE) */
+      /* MODALITÀ DI PROVA ESERCIZIO */
       function enterTestMode() {
         if (teacherSelectedNoteIds.size === 0) {
           alert('Seleziona almeno un intervallo sulla colonna prima di provare.');
@@ -1183,6 +1187,9 @@
         gameState.testMode = true;
         document.body.classList.remove('creator-mode');
         document.body.classList.add('test-mode');
+
+        // NASCONDE IL BANNER MODALITÀ LIBERA
+        freeNotice.classList.add('hidden');
 
         creatorTopBar.classList.add('hidden');
         creatorControlsRow.classList.add('hidden');
@@ -1196,7 +1203,6 @@
         gameState.rootMode = creatorRootSelect.value;
         gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 5;
 
-        // Isola visivamente solo le note scelte dal docente + tonica (1)
         gameState.allowedButtonIds = new Set(teacherSelectedNoteIds);
         gameState.allowedButtonIds.add('btn-1');
 
@@ -1213,12 +1219,13 @@
 
         btnMainAction.textContent = `Inizia Serie (${gameState.batchTotalNotes} note)`;
         statScore.textContent = `0/${gameState.batchTotalNotes}`;
+        statScore.style.color = '#379386';
         statAcc.textContent = `100%`;
+        statAcc.style.color = '#379386';
       }
 
       creatorTestBtn.addEventListener('click', enterTestMode);
       backToEditBtn.addEventListener('click', enterCreatorMode);
-      creatorCloseBtn.addEventListener('click', exitToNormalMode);
       testCloseBtn.addEventListener('click', exitToNormalMode);
 
       toggleProBtn.addEventListener('click', () => {
@@ -1295,13 +1302,10 @@
         gameState.active = true;
         gameState.batchCurrentNote = 1;
         
-        // AZZERA STATISTICHE PER LA SERIE CORRENTE
         gameState.sessionFirstTryCorrectCount = 0;
         gameState.currentQuestionHasMistake = false;
-        gameState.completedNotesHistory = [];
         gameState.intervalStatsTracker = {};
 
-        // Inizializza il tracker per tutti gli intervalli candidati della prova
         let candidateItems = intervalButtonsData.filter(i => i.semitones > 0);
         if ((gameState.isProStudent || gameState.testMode) && gameState.allowedButtonIds.size > 0) {
           candidateItems = candidateItems.filter(i => gameState.allowedButtonIds.has(i.id));
@@ -1318,7 +1322,9 @@
         });
 
         statScore.textContent = `0/${gameState.batchTotalNotes}`;
+        statScore.style.color = '#E37055';
         statAcc.textContent = `100%`;
+        statAcc.style.color = '#379386';
 
         batchBadge.classList.remove('hidden');
         batchBadge.classList.add('flex');
@@ -1346,7 +1352,7 @@
         if (!gameState.active) return;
 
         gameState.waitingForAnswer = true;
-        gameState.currentQuestionHasMistake = false; // Reset errore per la nuova domanda
+        gameState.currentQuestionHasMistake = false;
 
         btnMainAction.textContent = `Ascolta... (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
         btnMainAction.classList.remove('bg-tealBand');
@@ -1368,7 +1374,6 @@
         const pickedItem = candidateItems[Math.floor(Math.random() * candidateItems.length)];
         gameState.targetItem = pickedItem;
 
-        // Traccia la proposta per questo intervallo
         if (gameState.intervalStatsTracker[pickedItem.id]) {
           gameState.intervalStatsTracker[pickedItem.id].totalProposed++;
         }
@@ -1408,48 +1413,39 @@
         summaryTitle.textContent = gameState.exerciseTitle;
         summaryTeacher.textContent = gameState.isProStudent ? `Prof. ${gameState.teacherCode}` : 'Esercizio Docente';
         
-        // Punteggio: esattamente su quanti esercizi c'erano nella prova (es. 4/5)
-        summaryScore.textContent = `${gameState.sessionFirstTryCorrectCount}/${gameState.batchTotalNotes}`;
-        
-        // Precisione: percentuale su base serie
-        const acc = Math.round((gameState.sessionFirstTryCorrectCount / gameState.batchTotalNotes) * 100);
-        summaryAcc.textContent = `${acc}%`;
+        // Punteggio & Precisione con colorazione in palette dinamica
+        const finalRatio = gameState.batchTotalNotes > 0 ? (gameState.sessionFirstTryCorrectCount / gameState.batchTotalNotes) : 1;
+        const finalColor = getPerformanceColor(finalRatio);
 
-        // 1. Dettaglio per ogni intervallo presente nella prova: quante volte azzeccato al 1° colpo senza errori
+        summaryScore.textContent = `${gameState.sessionFirstTryCorrectCount}/${gameState.batchTotalNotes}`;
+        summaryScore.style.color = finalColor;
+        
+        const acc = Math.round(finalRatio * 100);
+        summaryAcc.textContent = `${acc}%`;
+        summaryAcc.style.color = finalColor;
+
+        // Dettaglio intervalli con colore dinamico verso verde o rosso
         summaryStatsByInterval.innerHTML = '';
         Object.keys(gameState.intervalStatsTracker).forEach(id => {
           const item = gameState.intervalStatsTracker[id];
           if (item.totalProposed > 0) {
             const row = document.createElement('div');
-            row.className = 'flex items-center justify-between text-xs px-3 py-1.5 rounded-lg bg-[#0D171C] border border-white/5 font-mono';
+            row.className = 'flex items-center justify-between text-xs px-3.5 py-2 rounded-xl bg-[#0D171C] border border-white/5 font-mono';
             
-            const isPerfect = item.firstTrySuccess === item.totalProposed;
+            const intervalRatio = item.firstTrySuccess / item.totalProposed;
+            const itemPerfColor = getPerformanceColor(intervalRatio);
+
             row.innerHTML = `
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${item.color}"></span>
                 <span class="text-white font-bold">${item.name} (${item.degree})</span>
               </div>
-              <div class="font-bold ${isPerfect ? 'text-tealBand' : (item.firstTrySuccess > 0 ? 'text-ochreBand' : 'text-coralBand')}">
+              <div class="font-extrabold" style="color: ${itemPerfColor}">
                 ${item.firstTrySuccess}/${item.totalProposed} al 1° colpo
               </div>
             `;
             summaryStatsByInterval.appendChild(row);
           }
-        });
-
-        // 2. Sequenza intervalli completati
-        summaryNotesList.innerHTML = '';
-        gameState.completedNotesHistory.forEach((note, idx) => {
-          const pill = document.createElement('div');
-          pill.className = 'px-2.5 py-1 rounded-lg text-xs font-bold font-mono flex items-center gap-1.5 border border-white/10';
-          pill.style.backgroundColor = '#15232A';
-          pill.style.color = note.color;
-          pill.innerHTML = `
-            <span class="text-white/40 text-[10px]">${idx + 1}.</span> 
-            <span>${note.name} (${note.degree})</span>
-            ${note.wasFirstTry ? '<span class="text-tealBand text-[10px]">✓</span>' : '<span class="text-coralBand text-[10px]">✕</span>'}
-          `;
-          summaryNotesList.appendChild(pill);
         });
 
         studentSummaryModal.classList.remove('hidden');
@@ -1487,7 +1483,6 @@
 
           // CASO A: MODALITÀ CREAZIONE DOCENTE
           if (gameState.creatorMode) {
-            // La tonica (tasto 1) suona sempre e non è deselezionabile
             if (item.id === 'btn-1') {
               audio.previewNote(60, 1.0);
               spawnPropagatingWave(btnEl, false);
@@ -1496,10 +1491,8 @@
 
             // SUONA SOLO SE VIENE ACCESA (COLORATA), TACE SE VIENE SPENTA
             if (teacherSelectedNoteIds.has(item.id)) {
-              // Si spegne: nessun suono!
               teacherSelectedNoteIds.delete(item.id);
             } else {
-              // Si accende: suona!
               teacherSelectedNoteIds.add(item.id);
               const previewMidi = 60 + item.semitones;
               audio.previewNote(previewMidi, 1.0);
@@ -1509,7 +1502,7 @@
             return;
           }
 
-          // CASO B: ESERCIZIO IN CORSO (Libero, Allievo PRO o Prova Docente)
+          // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
             
             if (item.semitones === 0) {
@@ -1520,7 +1513,6 @@
             const isCorrect = (item.semitones === gameState.targetItem.semitones);
 
             if (isCorrect) {
-              // Verifica se è stato azzeccato senza errori precedenti su questa domanda
               const wasFirstTry = !gameState.currentQuestionHasMistake;
               if (wasFirstTry) {
                 gameState.sessionFirstTryCorrectCount++;
@@ -1530,14 +1522,6 @@
               }
 
               updateStatsUI();
-
-              // Registra nella sequenza storica
-              gameState.completedNotesHistory.push({
-                degree: item.degree,
-                name: item.name,
-                color: item.color.rgb,
-                wasFirstTry: wasFirstTry
-              });
 
               gameState.waitingForAnswer = false;
               audio.fadeSecretNote(0.5);
@@ -1557,7 +1541,6 @@
                 
                 setTimeout(() => {
                   stopGame();
-                  // Se allievo PRO o prova docente: mostra la Scheda di Riepilogo
                   if (gameState.isProStudent || gameState.testMode) {
                     showStudentSummaryReport();
                   } else {
@@ -1567,7 +1550,6 @@
               }
 
             } else {
-              // ERRORE: la domanda corrente non è più al primo colpo
               gameState.currentQuestionHasMistake = true;
               btnEl.classList.add('shake-anim');
               btnEl.addEventListener('animationend', () => {
