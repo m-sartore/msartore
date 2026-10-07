@@ -1172,11 +1172,14 @@
     }
 
 
-    /* ================================================================ */
+   /* ================================================================ */
     /* LOGICA APPLICATIVA & CONTROLLER                                  */
     /* ================================================================ */
     document.addEventListener('DOMContentLoaded', () => {
-const handleUserAudioTouch = () => {
+
+      const audio = new AudioEngine();
+
+      const handleUserAudioTouch = () => {
         audio.unlockHardwareAudio();
         audio.ensureContextRunning();
       };
@@ -1186,9 +1189,6 @@ const handleUserAudioTouch = () => {
 
       document.addEventListener('visibilitychange', () => {
         // Nessun resume forzato senza tocco: evita i blocchi di autoplay e lo stato zombie di Safari
-      });
-     
-      
       });
 
       let activeTimers = [];
