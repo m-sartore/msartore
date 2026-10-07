@@ -782,8 +782,13 @@
     };
 
     /* ================================================================ */
-    /* MOTORE AUDIO CALIBRATO CON SBLOCCO MOBILE E CROSSFADE NATURALE   */
+    /* MOTORE AUDIO CALIBRATO CON SBLOCCO MOBILE, BYPASS LEVETTA E RESET*/
     /* ================================================================ */
+    // Micro-buffer audio silenzioso (WAV standard a 8000Hz 8-bit, 0.1s di silenzio assoluto)
+    // Forza iOS Safari a impostare la sessione audio di sistema in modalità "Playback",
+    // permettendo all'Ear Training di suonare anche se la levetta del Silenzioso di iPhone è attiva.
+    const SILENT_AUDIO_URI = "data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==";
+
     class AudioEngine {
       constructor() {
         this.ctx = null;
@@ -792,63 +797,62 @@
         this.secretVoice = null;
         this.isDronePlaying = false;
         this.secretTimeoutId = null;
-        this.silentAudioTag = null;
-        this.isUnlocked = false;
-      }
-
-      initSilentAudioTag() {
-        if (this.silentAudioTag) return;
-        try {
-          this.silentAudioTag = document.createElement('audio');
-          this.silentAudioTag.setAttribute('x-webkit-airplay', 'deny');
-          this.silentAudioTag.setAttribute('playsinline', '');
-          this.silentAudioTag.setAttribute('webkit-playsinline', '');
-          this.silentAudioTag.disableRemotePlayback = true;
-          this.silentAudioTag.preload = 'auto';
-          this.silentAudioTag.loop = true;
-          // Traccia WAV silenziosa per forzare la categoria audio iOS su 'Playback' (bypassa il selettore Silenzioso di iPhone)
-          this.silentAudioTag.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-          this.silentAudioTag.volume = 0.001;
-          this.silentAudioTag.load();
-        } catch(e) {}
-      }
-
-      playSilentAudioTag() {
-        if (!this.silentAudioTag) {
-          this.initSilentAudioTag();
-        }
-        if (this.silentAudioTag && this.silentAudioTag.paused) {
-          const p = this.silentAudioTag.play();
-          if (p && typeof p.catch === 'function') {
-            p.catch(() => {});
-          }
-        }
+        this.unlocked = false;
+        this.silentMediaEl = null;
       }
 
       ensureContextRunning() {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!this.ctx || this.ctx.state === 'closed') {
+        if (!AudioContextClass) return null;
+
+        // Se il contesto non esiste, è chiuso o è rimasto bloccato in stato "interrupted" (tipico bug standby di WebKit su iPad/iPhone)
+        if (!this.ctx || this.ctx.state === 'closed' || this.ctx.state === 'interrupted') {
+          try {
+            if (this.ctx) {
+              this.ctx.close().catch(() => {});
+            }
+          } catch(e) {}
           this.ctx = new AudioContextClass();
           this.initLimiter();
         }
-        if (this.ctx.state === 'suspended' || this.ctx.state === 'interrupted') {
+
+        if (this.ctx.state === 'suspended') {
           this.ctx.resume().catch(() => {});
         }
         return this.ctx;
       }
 
       unlockHardwareAudio() {
-        this.playSilentAudioTag();
-        const ctx = this.ensureContextRunning();
-        if (!ctx) return;
+        if (this.unlocked) return;
+        this.unlocked = true;
+
+        // 1. Bypass Levetta Silenzioso iPhone: avvia la riproduzione del silenzio su elemento <audio> nativo
         try {
-          const buffer = ctx.createBuffer(1, 1, ctx.sampleRate || 44100);
-          const source = ctx.createBufferSource();
-          source.buffer = buffer;
-          source.connect(ctx.destination);
-          source.start(0);
+          if (!this.silentMediaEl) {
+            this.silentMediaEl = document.createElement('audio');
+            this.silentMediaEl.setAttribute('playsinline', '');
+            this.silentMediaEl.setAttribute('webkit-playsinline', '');
+            this.silentMediaEl.setAttribute('loop', '');
+            this.silentMediaEl.src = SILENT_AUDIO_URI;
+            this.silentMediaEl.volume = 1;
+            const playPromise = this.silentMediaEl.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(() => {});
+            }
+          }
         } catch(e) {}
-        this.isUnlocked = true;
+
+        // 2. Sblocco Web Audio API una tantum con la frequenza nativa del dispositivo (evita crash CoreAudio su iPad)
+        const ctx = this.ensureContextRunning();
+        if (ctx) {
+          try {
+            const buffer = ctx.createBuffer(1, 1, ctx.sampleRate || 44100);
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(ctx.destination);
+            source.start(0);
+          } catch(e) {}
+        }
       }
 
       initLimiter() {
@@ -867,12 +871,13 @@
       }
 
       createVoiceGroup(freq, targetMasterGain = 0.35) {
-        const now = Math.max(0, this.ctx.currentTime);
-        const masterGain = this.ctx.createGain();
+        const ctx = this.ensureContextRunning();
+        const now = Math.max(0, ctx.currentTime);
+        const masterGain = ctx.createGain();
         masterGain.gain.setValueAtTime(0, now);
-        masterGain.connect(this.compressor || this.ctx.destination);
+        masterGain.connect(this.compressor || ctx.destination);
 
-        const filter = this.ctx.createBiquadFilter();
+        const filter = ctx.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(Math.min(freq * 3.8, 9500), now);
         filter.Q.setValueAtTime(0.65, now);
@@ -889,8 +894,8 @@
         const subGains = [];
 
         partials.forEach(p => {
-          const osc = this.ctx.createOscillator();
-          const pGain = this.ctx.createGain();
+          const osc = ctx.createOscillator();
+          const pGain = ctx.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq * p.mult, now);
           pGain.gain.setValueAtTime(p.gain, now);
@@ -906,7 +911,7 @@
           oscillators,
           subGains,
           stopAndDispose: (fadeSec = 0.8) => {
-            const t = Math.max(0, this.ctx.currentTime);
+            const t = Math.max(0, ctx.currentTime);
             try {
               masterGain.gain.cancelScheduledValues(t);
               masterGain.gain.setValueAtTime(masterGain.gain.value, t);
@@ -931,7 +936,7 @@
       }
 
       transitionDrone(newMidiNote, fadeDuration = 0.85) {
-        this.ensureContextRunning();
+        const ctx = this.ensureContextRunning();
 
         if (this.droneVoice) {
           this.droneVoice.stopAndDispose(fadeDuration);
@@ -939,10 +944,10 @@
         }
 
         const freq = this.midiToFreq(newMidiNote);
-        const now = Math.max(0, this.ctx.currentTime) + 0.12;
+        const now = Math.max(0, ctx.currentTime) + 0.05;
 
         this.droneVoice = this.createVoiceGroup(freq, 0.20);
-        this.droneVoice.masterGain.gain.setValueAtTime(0, now);
+        this.droneVoice.masterGain.gain.setValueAtTime(0.0001, now);
         this.droneVoice.masterGain.gain.linearRampToValueAtTime(0.20, now + 0.65);
         this.droneVoice.oscillators.forEach(osc => osc.start(now));
         this.isDronePlaying = true;
@@ -960,14 +965,14 @@
       }
 
       playSecretNote(midiNote, durationSeconds = 3.6) {
-        this.ensureContextRunning();
+        const ctx = this.ensureContextRunning();
         this.stopSecretNoteImmediate(0.3);
 
         const freq = this.midiToFreq(midiNote);
-        const now = Math.max(0, this.ctx.currentTime) + 0.01;
+        const now = Math.max(0, ctx.currentTime) + 0.01;
 
         this.secretVoice = this.createVoiceGroup(freq, 0.38);
-        this.secretVoice.masterGain.gain.setValueAtTime(0, now);
+        this.secretVoice.masterGain.gain.setValueAtTime(0.0001, now);
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.38, now + 0.12);
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.26, now + 1.2);
 
@@ -1011,13 +1016,13 @@
       }
 
       previewNote(midiNote, duration = 1.0) {
-        this.ensureContextRunning();
-        if (!this.ctx) return;
+        const ctx = this.ensureContextRunning();
+        if (!ctx) return;
         const freq = this.midiToFreq(midiNote);
-        const now = Math.max(0, this.ctx.currentTime) + 0.005;
+        const now = Math.max(0, ctx.currentTime) + 0.005;
 
         const voice = this.createVoiceGroup(freq, 0.32);
-        voice.masterGain.gain.setValueAtTime(0, now);
+        voice.masterGain.gain.setValueAtTime(0.0001, now);
         voice.masterGain.gain.linearRampToValueAtTime(0.32, now + 0.06);
 
         const fadeOutStart = Math.max(now + 0.4, now + duration - 0.35);
@@ -1171,10 +1176,7 @@
     /* LOGICA APPLICATIVA & CONTROLLER                                  */
     /* ================================================================ */
     document.addEventListener('DOMContentLoaded', () => {
-
-      const audio = new AudioEngine();
-
-      const handleUserAudioTouch = () => {
+const handleUserAudioTouch = () => {
         audio.unlockHardwareAudio();
         audio.ensureContextRunning();
       };
@@ -1183,14 +1185,10 @@
       });
 
       document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
-          audio.ensureContextRunning();
-          audio.playSilentAudioTag();
-        } else {
-          if (audio.silentAudioTag && !audio.silentAudioTag.paused) {
-            try { audio.silentAudioTag.pause(); } catch(e) {}
-          }
-        }
+        // Nessun resume forzato senza tocco: evita i blocchi di autoplay e lo stato zombie di Safari
+      });
+     
+      
       });
 
       let activeTimers = [];
@@ -1519,6 +1517,7 @@
           btn.dataset.midi = String(item.midi);
 
           // Stato selezionato: colore pieno e pulito della schermata iniziale SENZA glow e senza bordino chiaro
+         // Stato selezionato: colore pieno e pulito della schermata iniziale, con bordino dello stesso colore esatto (nessun filetto chiaro)
           if (isSelected) {
             btn.style.backgroundColor = colorObj.rgb;
             btn.style.border = `2.5px solid ${colorObj.rgba(0.9)}`;
