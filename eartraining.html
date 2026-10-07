@@ -1549,14 +1549,10 @@
             btn.innerHTML = `<span class="text-xs sm:text-sm font-extrabold tracking-tight leading-none">${item.name}</span>`;
           }
 
-          btn.addEventListener('click', () => {
+btn.addEventListener('click', () => {
             audio.unlockHardwareAudio();
             audio.ensureContextRunning();
             const midiVal = parseInt(btn.dataset.midi, 10);
-
-            // Suona esattamente la nota della tonalità cliccata!
-            const noteToHear = getEffectiveKeyRoot(midiVal);
-            audio.previewNote(noteToHear, 1.0);
 
             if (teacherSelectedKeyMidis.has(midiVal)) {
               if (teacherSelectedKeyMidis.size > 1) {
@@ -1564,11 +1560,18 @@
               }
             } else {
               teacherSelectedKeyMidis.add(midiVal);
+              // Suona la nota solo quando viene selezionata / aggiunta
+              const noteToHear = getEffectiveKeyRoot(midiVal);
+              audio.previewNote(noteToHear, 1.0);
             }
 
             renderCircleOfFifths();
             updateKeysButtonLabel();
           });
+
+
+
+          
 
           circleOfFifthsContainer.appendChild(btn);
         });
@@ -2650,7 +2653,10 @@
 
       function showStudentSummaryReport() {
         summaryTitle.textContent = gameState.exerciseTitle;
-        summaryTeacher.textContent = gameState.isProStudent ? `Prof. ${gameState.teacherCode}` : 'Esercizio Docente';
+        const teacherName = gameState.teacherCode.startsWith('Prof.') 
+          ? gameState.teacherCode 
+          : `Prof. ${gameState.teacherCode}`;
+        summaryTeacher.textContent = gameState.isProStudent ? teacherName : 'Esercizio Docente';
         
         const finalRatio = gameState.batchTotalNotes > 0 ? (gameState.sessionFirstTryCorrectCount / gameState.batchTotalNotes) : 1;
         const finalColor = getPerformanceColor(finalRatio);
