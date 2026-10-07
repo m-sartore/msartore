@@ -792,6 +792,37 @@
         this.secretVoice = null;
         this.isDronePlaying = false;
         this.secretTimeoutId = null;
+        this.silentAudioTag = null;
+        this.isUnlocked = false;
+      }
+
+      initSilentAudioTag() {
+        if (this.silentAudioTag) return;
+        try {
+          this.silentAudioTag = document.createElement('audio');
+          this.silentAudioTag.setAttribute('x-webkit-airplay', 'deny');
+          this.silentAudioTag.setAttribute('playsinline', '');
+          this.silentAudioTag.setAttribute('webkit-playsinline', '');
+          this.silentAudioTag.disableRemotePlayback = true;
+          this.silentAudioTag.preload = 'auto';
+          this.silentAudioTag.loop = true;
+          // Traccia WAV silenziosa per forzare la categoria audio iOS su 'Playback' (bypassa il selettore Silenzioso di iPhone)
+          this.silentAudioTag.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+          this.silentAudioTag.volume = 0.001;
+          this.silentAudioTag.load();
+        } catch(e) {}
+      }
+
+      playSilentAudioTag() {
+        if (!this.silentAudioTag) {
+          this.initSilentAudioTag();
+        }
+        if (this.silentAudioTag && this.silentAudioTag.paused) {
+          const p = this.silentAudioTag.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch(() => {});
+          }
+        }
       }
 
       ensureContextRunning() {
@@ -807,15 +838,17 @@
       }
 
       unlockHardwareAudio() {
+        this.playSilentAudioTag();
         const ctx = this.ensureContextRunning();
         if (!ctx) return;
         try {
-          const buffer = ctx.createBuffer(1, 1, 22050);
+          const buffer = ctx.createBuffer(1, 1, ctx.sampleRate || 44100);
           const source = ctx.createBufferSource();
           source.buffer = buffer;
           source.connect(ctx.destination);
           source.start(0);
         } catch(e) {}
+        this.isUnlocked = true;
       }
 
       initLimiter() {
@@ -1152,6 +1185,11 @@
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
           audio.ensureContextRunning();
+          audio.playSilentAudioTag();
+        } else {
+          if (audio.silentAudioTag && !audio.silentAudioTag.paused) {
+            try { audio.silentAudioTag.pause(); } catch(e) {}
+          }
         }
       });
 
@@ -1480,10 +1518,10 @@
           btn.style.transition = 'transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
           btn.dataset.midi = String(item.midi);
 
-          // Stato selezionato: colore pieno e pulito della schermata iniziale SENZA glow
+          // Stato selezionato: colore pieno e pulito della schermata iniziale SENZA glow e senza bordino chiaro
           if (isSelected) {
             btn.style.backgroundColor = colorObj.rgb;
-            btn.style.border = '2.5px solid rgba(255, 255, 255, 0.25)';
+            btn.style.border = `2.5px solid ${colorObj.rgba(0.9)}`;
             btn.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.45)'; // Stessa identica ombra d'appoggio sobria della schermata principale
             btn.style.opacity = '1';
             btn.style.filter = 'none';
@@ -1513,6 +1551,7 @@
           }
 
           btn.addEventListener('click', () => {
+            audio.unlockHardwareAudio();
             audio.ensureContextRunning();
             const midiVal = parseInt(btn.dataset.midi, 10);
 
@@ -2273,6 +2312,7 @@
       /* CLICK PRO: ACCESSO LOCALE ISTANTANEO (ZERO ATTESA)               */
       /* ================================================================ */
       toggleProBtn.addEventListener('click', () => {
+        audio.unlockHardwareAudio();
         audio.ensureContextRunning();
         if (gameState.creatorMode || gameState.testMode) {
           exitToNormalMode();
@@ -2294,6 +2334,7 @@
       closeLicenseModal.addEventListener('click', () => licenseModal.classList.add('hidden'));
 
       activateLicenseBtn.addEventListener('click', async () => {
+        audio.unlockHardwareAudio();
         audio.ensureContextRunning();
         const code = licenseInput.value.trim();
         if (!code) return;
@@ -2379,6 +2420,7 @@
       }
 
       creatorCopyLinkBtn.addEventListener('click', () => {
+        audio.unlockHardwareAudio();
         audio.ensureContextRunning();
         
         const titleStr = creatorTitleInput.value.trim();
@@ -2449,6 +2491,7 @@
       /* GESTIONE SERIE ESERCIZIO & REPORT REALE                          */
       /* ================================================================ */
       function startBatchExercise() {
+        audio.unlockHardwareAudio();
         audio.ensureContextRunning();
         clearAppTimeouts();
 
@@ -2652,12 +2695,14 @@
       });
 
       btnMainAction.addEventListener('click', () => {
+        audio.unlockHardwareAudio();
         audio.ensureContextRunning();
         if (gameState.active) stopGame();
         else startBatchExercise();
       });
 
       btnReplay.addEventListener('click', () => {
+        audio.unlockHardwareAudio();
         audio.ensureContextRunning();
         if (!gameState.active || !gameState.targetItem) return;
         const secretNoteMidi = gameState.keyRootMidi + gameState.targetItem.semitones;
@@ -2672,6 +2717,7 @@
         if (!btnEl) return;
 
         btnEl.addEventListener('click', () => {
+          audio.unlockHardwareAudio();
           audio.ensureContextRunning();
 
           if (gameState.isTransitioning) return;
