@@ -481,11 +481,11 @@
       <!-- Row 14 Alternativo: Controlli Docente -->
       <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-1.5 pt-1 opacity-0 translate-y-2">
         
-        <!-- RIGA 1: PULSANTE TONALITÀ MULTIPLE + NUMERO NOTE + PULSANTE DRONI -->
+        <!-- RIGA 1: PULSANTE NOTA DI PARTENZA + NUMERO NOTE + PULSANTE DRONI -->
         <div class="flex items-center justify-between gap-1.5 text-xs w-full max-w-sm">
           
           <button type="button" id="creator-keys-btn" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-1.5 text-white font-semibold focus:outline-none hover:border-ochreBand text-xs flex items-center justify-between truncate transition-all shadow-sm">
-            <span id="creator-keys-btn-label" class="truncate">Tonalità: Do (1)</span>
+            <span id="creator-keys-btn-label" class="truncate">Nota di partenza: Do (1)</span>
             <span class="text-[9px] text-ochreBand ml-1.5 shrink-0">▼</span>
           </button>
 
@@ -534,26 +534,20 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- 4. MODALE SELEZIONE TONALITÀ: CICLO DELLE QUINTE -->
+  <!-- 4. MODALE: SCEGLI LA NOTA DI PARTENZA      -->
   <!-- ========================================== -->
   <div id="keys-selector-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 hidden">
     <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-4 sm:p-5 max-w-sm w-full shadow-2xl flex flex-col items-center my-auto">
       
-      <div class="flex items-center justify-between w-full pb-2 mb-2 border-b border-white/10 shrink-0">
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">TONALITÀ</span>
-          <h3 class="text-sm font-extrabold text-white">Ciclo delle Quinte</h3>
-        </div>
+      <!-- Intestazione pulita e minimale -->
+      <div class="flex items-center justify-between w-full pb-3 mb-2 border-b border-white/10 shrink-0">
+        <h3 class="text-sm font-extrabold text-white">Scegli la nota di partenza</h3>
         <button id="close-keys-modal-btn" class="text-white/60 hover:text-white px-2 py-1 text-sm font-bold">✕</button>
       </div>
-      
-      <p class="text-[11px] text-white/60 mb-2 text-center leading-tight shrink-0">
-        Tocca le note per accenderle con la loro palette o spegnerle.
-      </p>
 
-      <!-- RUOTA CIRCOLARE DELLE QUINTE PULITA (SENZA PALLINO CENTRALE) -->
-      <div id="circle-of-fifths-container" class="relative w-[280px] h-[280px] mx-auto my-1 flex items-center justify-center shrink-0">
-        <!-- I 12 cerchi con palette del brand vengono generati qui -->
+      <!-- Ruota delle note senza badge o testo esplicativo superfluo -->
+      <div id="circle-of-fifths-container" class="relative w-[280px] h-[280px] mx-auto my-2 flex items-center justify-center shrink-0">
+        <!-- I 12 cerchi con palette del brand esatta vengono generati qui -->
       </div>
 
       <button id="confirm-keys-btn" type="button" class="w-full mt-3 py-2.5 rounded-xl bg-tealBand text-white font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md shrink-0">
@@ -588,7 +582,8 @@
       </div>
 
       <div class="mb-5">
-        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli al primo colpo:</span>
+        <!-- Titolo professionale pulito -->
+        <span class="text-[11px] font-mono uppercase text-white/60 block mb-2 font-bold">Intervalli riconosciuti:</span>
         <div id="summary-stats-by-interval" class="space-y-1.5 max-h-48 overflow-y-auto pr-1"></div>
       </div>
 
@@ -734,7 +729,7 @@
       'VIP-EAR-TRAIN'
     ];
 
-    // Struttura del Ciclo delle Quinte (orario da ore 12:00)
+    // Struttura circolare delle note di partenza
     const CIRCLE_OF_FIFTHS = [
       { midi: 60, name: 'Do', sub: '' },               // 12:00
       { midi: 67, name: 'Sol', sub: '' },              // 1:00
@@ -1302,7 +1297,7 @@
 
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
       let teacherDroneNoteIds = new Set(['btn-1']);
-      let teacherSelectedKeyMidis = new Set([60]);
+      let teacherSelectedKeyMidis = new Set([60]); // Di default: Do (60)
       const creatorDroneWaves = new Map();
 
       // In creazione esercizio il docente sente sempre e solo in Do Maggiore (C4 = 60)
@@ -1313,7 +1308,7 @@
       function getEffectiveKeyRoot(midiVal) {
         let midi = parseInt(midiVal, 10) || 60;
         if (midi >= 67) {
-          midi -= 12; // Da Sol a Si scala all'ottava inferiore
+          midi -= 12; // Da Sol a Si scala all'ottava inferiore per evitare suoni striduli
         }
         return midi;
       }
@@ -1448,7 +1443,7 @@
       });
 
       /* ================================================================ */
-      /* RUOTA CIRCOLARE DELLE QUINTE CON PALETTE BRAND VIVIDA            */
+      /* RUOTA DELLE NOTE DI PARTENZA CON PALETTE ESATTA (SENZA GLOW)     */
       /* ================================================================ */
       function renderCircleOfFifths() {
         circleOfFifthsContainer.innerHTML = '';
@@ -1467,7 +1462,7 @@
 
           const isSelected = teacherSelectedKeyMidis.has(item.midi);
 
-          // Calcola il colore identico alla palette degli intervalli
+          // Calcola il colore della palette degli intervalli
           const fraction = ((item.midi - 60 + 12) % 12) / 12;
           const colorObj = getColorForFraction(fraction);
 
@@ -1482,29 +1477,28 @@
           btn.style.left = `${posX}px`;
           btn.style.top = `${posY}px`;
           btn.style.margin = '0';
-          btn.style.transition = 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)';
+          btn.style.transition = 'transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
           btn.dataset.midi = String(item.midi);
 
-          // Stile selezionato vs spento chiarissimo e netto
+          // Stato selezionato: colore pieno e pulito della schermata iniziale SENZA glow
           if (isSelected) {
             btn.style.backgroundColor = colorObj.rgb;
-            btn.style.border = '2.5px solid rgba(255, 255, 255, 0.95)';
-            btn.style.boxShadow = `0 4px 16px ${colorObj.rgba(0.75)}`;
+            btn.style.border = '2.5px solid rgba(255, 255, 255, 0.25)';
+            btn.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.45)'; // Stessa identica ombra d'appoggio sobria della schermata principale
             btn.style.opacity = '1';
             btn.style.filter = 'none';
 
-            // Contrasto testo nitido per colori caldi
             if (fraction >= 0.40 && fraction <= 0.65) {
               btn.style.color = '#121F24';
             } else {
               btn.style.color = '#FFFFFF';
             }
           } else {
-            // Stato grigio spento
-            btn.style.backgroundColor = '#152229';
-            btn.style.border = '2px solid rgba(255, 255, 255, 0.14)';
+            // Stato grigio spento in penombra
+            btn.style.backgroundColor = '#131F25';
+            btn.style.border = '2px solid rgba(255, 255, 255, 0.12)';
             btn.style.boxShadow = 'none';
-            btn.style.opacity = '0.28';
+            btn.style.opacity = '0.25';
             btn.style.filter = 'grayscale(100%)';
             btn.style.color = 'rgba(255, 255, 255, 0.4)';
           }
@@ -1546,14 +1540,14 @@
         const count = teacherSelectedKeyMidis.size;
         if (count === 1) {
           const singleMidi = Array.from(teacherSelectedKeyMidis)[0];
-          creatorKeysBtnLabel.textContent = `Tonalità: ${KEY_NAMES_ITA[singleMidi] || 'Do'} (1)`;
+          creatorKeysBtnLabel.textContent = `Nota di partenza: ${KEY_NAMES_ITA[singleMidi] || 'Do'} (1)`;
         } else if (count === 12) {
-          creatorKeysBtnLabel.textContent = `Tonalità: Tutte (12)`;
+          creatorKeysBtnLabel.textContent = `Nota di partenza: Tutte (12)`;
         } else if (count <= 2) {
           const names = Array.from(teacherSelectedKeyMidis).map(m => KEY_NAMES_ITA[m]).join(', ');
-          creatorKeysBtnLabel.textContent = `Tonalità: ${names}`;
+          creatorKeysBtnLabel.textContent = `Nota di partenza: ${names}`;
         } else {
-          creatorKeysBtnLabel.textContent = `Tonalità: ${count} scelte`;
+          creatorKeysBtnLabel.textContent = `Nota di partenza: ${count} scelte`;
         }
       }
 
@@ -2500,7 +2494,7 @@
         btnMainAction.classList.add('bg-coralBand');
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
-        // Estrazione Tonalità per questa nota tra quelle scelte dal docente
+        // Estrazione della nota di partenza per questa specifica domanda
         if (gameState.poolKeyMidis && gameState.poolKeyMidis.length > 0) {
           const chosenKeyMidi = gameState.poolKeyMidis[Math.floor(Math.random() * gameState.poolKeyMidis.length)];
           gameState.keyRootMidi = getEffectiveKeyRoot(chosenKeyMidi);
@@ -2636,13 +2630,14 @@
             const intervalRatio = item.firstTrySuccess / item.totalProposed;
             const itemPerfColor = getPerformanceColor(intervalRatio);
 
+            // Report pulito con soli numeri (es. 3/3, 5/6)
             row.innerHTML = `
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${item.color}"></span>
                 <span class="text-white font-bold">${item.label}</span>
               </div>
-              <div class="font-extrabold shrink-0" style="color: ${itemPerfColor}">
-                ${item.firstTrySuccess}/${item.totalProposed} al 1° colpo
+              <div class="font-extrabold font-mono text-sm shrink-0" style="color: ${itemPerfColor}">
+                ${item.firstTrySuccess}/${item.totalProposed}
               </div>
             `;
             summaryStatsByInterval.appendChild(row);
@@ -2683,7 +2678,7 @@
 
           // CASO A: MODALITÀ CREAZIONE DOCENTE (SEMPRE IN DO MAGGIORE)
           if (gameState.creatorMode) {
-            const baseMidi = getCreatorBaseMidi(); // 60
+            const baseMidi = getCreatorBaseMidi(); // 60 (Do)
             
             if (gameState.droneSelectionMode) {
               if (teacherDroneNoteIds.has(item.id)) {
