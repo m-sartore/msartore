@@ -278,7 +278,7 @@
         </div>
       </div>
 
-      <!-- Statistiche (visibili solo per allievi o durante le prove) -->
+      <!-- Statistiche (visibili per allievi o prove) -->
       <div id="header-stats" class="flex items-center gap-3 text-xs font-mono">
         <div class="text-center">
           <span class="text-[9px] text-white/50 block tracking-wider uppercase font-sans">Punteggio</span>
@@ -291,7 +291,7 @@
         </div>
       </div>
 
-      <!-- Badge Nome Docente (visibile all'istante quando il docente è in console PRO) -->
+      <!-- Badge Nome Docente -->
       <div id="header-teacher-badge" class="hidden items-center gap-1.5 px-3 py-1 rounded-full bg-ochreBand/15 border border-ochreBand/40 text-xs font-semibold text-white">
         <span class="w-2 h-2 rounded-full bg-ochreBand"></span>
         <span id="teacher-header-name" class="font-bold text-white truncate max-w-[170px] sm:max-w-xs">Docente</span>
@@ -313,9 +313,8 @@
     <div class="max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs">
       <div class="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
         <label for="creator-title-input" class="text-white/70 font-semibold shrink-0">Titolo Lezione:</label>
-        <input type="text" id="creator-title-input" value="Lezione 3 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand">
+        <input type="text" id="creator-title-input" value="" placeholder="es. Lezione 1 - Le Terze" class="flex-1 sm:w-56 bg-[#0D171C] border border-ochreBand/40 rounded-lg px-2.5 py-1 text-white text-xs font-bold focus:outline-none focus:border-ochreBand placeholder:text-white/30 placeholder:font-normal">
       </div>
-      <!-- Pulsanti centrati quando vanno a capo su schermi piccoli -->
       <div class="flex items-center justify-center gap-2 w-full sm:w-auto">
         <button id="creator-archive-btn" class="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all">
           Archivio
@@ -482,24 +481,13 @@
       <!-- Row 14 Alternativo: Controlli Docente -->
       <div id="creator-controls-row" style="grid-row: 14; grid-column: 1 / span 3;" class="hidden smooth-drawer w-full flex-col items-center justify-center gap-1.5 pt-1 opacity-0 translate-y-2">
         
-        <!-- RIGA 1: TONALITÀ + NUMERO NOTE + PULSANTE DRONI -->
+        <!-- RIGA 1: PULSANTE TONALITÀ MULTIPLE + NUMERO NOTE + PULSANTE DRONI -->
         <div class="flex items-center justify-between gap-1.5 text-xs w-full max-w-sm">
           
-          <select id="creator-key-select" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2 py-1.5 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
-            <option value="60">Tonalità: Do</option>
-            <option value="61">Tonalità: Do♯ / Re♭</option>
-            <option value="62">Tonalità: Re</option>
-            <option value="63">Tonalità: Re♯ / Mi♭</option>
-            <option value="64">Tonalità: Mi</option>
-            <option value="65">Tonalità: Fa</option>
-            <option value="66">Tonalità: Fa♯ / Sol♭</option>
-            <option value="67">Tonalità: Sol</option>
-            <option value="68">Tonalità: Sol♯ / La♭</option>
-            <option value="69">Tonalità: La</option>
-            <option value="70">Tonalità: La♯ / Si♭</option>
-            <option value="71">Tonalità: Si</option>
-            <option value="random">Tonalità: Casuale</option>
-          </select>
+          <button type="button" id="creator-keys-btn" class="flex-1 bg-[#15232A] border border-white/20 rounded-xl px-2.5 py-1.5 text-white font-semibold focus:outline-none hover:border-ochreBand text-xs flex items-center justify-between truncate transition-all shadow-sm">
+            <span id="creator-keys-btn-label" class="truncate">Tonalità: Do (1)</span>
+            <span class="text-[9px] text-ochreBand ml-1.5 shrink-0">▼</span>
+          </button>
 
           <select id="creator-count-select" class="w-24 bg-[#15232A] border border-white/20 rounded-xl px-2 py-1.5 text-white font-medium focus:outline-none focus:border-ochreBand text-xs">
             <option value="1">1 Nota</option>
@@ -546,7 +534,41 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- 4. MODALE SCHEDA DI RIEPILOGO ALLIEVO      -->
+  <!-- 4. MODALE SELEZIONE TONALITÀ MULTIPLE      -->
+  <!-- ========================================== -->
+  <div id="keys-selector-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl flex flex-col my-auto">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">TONALITÀ</span>
+          <h3 class="text-sm font-extrabold text-white">Scegli le Tonalità</h3>
+        </div>
+        <button id="close-keys-modal-btn" class="text-white/60 hover:text-white px-2 py-1 text-sm font-bold">✕</button>
+      </div>
+      
+      <p class="text-[11px] text-white/60 mb-3 leading-relaxed">
+        Spunta le tonalità per questo esercizio. Durante la serie, ogni nota estrarrà una tonalità casuale tra quelle selezionate.
+      </p>
+
+      <div class="flex gap-2 mb-3">
+        <button id="keys-select-all-btn" type="button" class="flex-1 py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[11px] transition-all">
+          Tutte (12)
+        </button>
+        <button id="keys-select-do-btn" type="button" class="flex-1 py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[11px] transition-all">
+          Solo Do
+        </button>
+      </div>
+
+      <div id="keys-checkbox-grid" class="grid grid-cols-2 gap-1.5 max-h-56 overflow-y-auto pr-1 mb-4"></div>
+
+      <button id="confirm-keys-btn" type="button" class="w-full py-2.5 rounded-xl bg-tealBand text-white font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md">
+        Conferma Scelta
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 5. MODALE SCHEDA DI RIEPILOGO ALLIEVO      -->
   <!-- ========================================== -->
   <div id="student-summary-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden overflow-y-auto">
     <div class="bg-appCard border border-tealBand/40 rounded-3xl p-5 sm:p-7 max-w-md w-full shadow-2xl relative my-auto">
@@ -583,7 +605,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 5. MODALE CONFERMA ELIMINAZIONE LEZIONE    -->
+  <!-- 6. MODALE CONFERMA ELIMINAZIONE LEZIONE    -->
   <!-- ========================================== -->
   <div id="delete-confirm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-coralBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center">
@@ -603,7 +625,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 6. MODALE SOVRASCRITTURA LEZIONE ESISTENTE -->
+  <!-- 7. MODALE SOVRASCRITTURA LEZIONE ESISTENTE -->
   <!-- ========================================== -->
   <div id="overwrite-confirm-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center relative">
@@ -623,7 +645,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 7. MODALE DUPLICATO CON STESSI PARAMETRI   -->
+  <!-- 8. MODALE DUPLICATO CON STESSI PARAMETRI   -->
   <!-- ========================================== -->
   <div id="duplicate-config-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center relative">
@@ -643,7 +665,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 8. MODALE PROMO (UTENTE FREE)              -->
+  <!-- 9. MODALE PROMO (UTENTE FREE)              -->
   <!-- ========================================== -->
   <div id="promo-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-ochreBand/30 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative text-center">
@@ -666,7 +688,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- 9. MODALE DI SBLOCCO LICENZA DOCENTE       -->
+  <!-- 10. MODALE DI SBLOCCO LICENZA DOCENTE      -->
   <!-- ========================================== -->
   <div id="license-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
     <div class="bg-appCard border border-white/15 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
@@ -679,13 +701,14 @@
       </div>
 
       <p class="text-xs text-white/80 leading-relaxed mb-4">
-        Inserisci il tuo <strong>Codice Licenza</strong> per sbloccare la console interattiva e generare i link personalizzati per i tuoi studenti.
+        Inserisci il tuo <strong>Codice Licenza</strong> per sbloccare la console interattiva e generare i link per i tuoi studenti.
       </p>
 
       <div class="mb-4">
         <label class="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">Codice Licenza</label>
         <div class="flex gap-2">
-          <input type="text" id="license-input" placeholder="es. PRO-MARCO-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-ochreBand font-mono uppercase">
+          <!-- Senza classe uppercase: mostra maiuscole e minuscole reali -->
+          <input type="text" id="license-input" placeholder="es. Pro-Marco-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-ochreBand font-mono">
           <button id="activate-license-btn" class="px-4 py-2 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all flex items-center justify-center min-w-[80px]">
             <span id="activate-btn-text">Sblocca</span>
             <span id="activate-btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-appDark border-t-transparent rounded-full animate-spin"></span>
@@ -704,7 +727,7 @@
 
 
   <!-- ================================================================= -->
-  <!-- 10. JAVASCRIPT: LOGICA APPLICATIVA COMPLETA                       -->
+  <!-- 11. JAVASCRIPT: LOGICA APPLICATIVA COMPLETA                       -->
   <!-- ================================================================= -->
   <script>
     const LICENSE_API_URL = "https://script.google.com/macros/s/AKfycbxJpT9N_Wd-vrF_DJTmmV0d5BC5wB5KJxLkf-DyJAYRt3_r1813HhY6o-3iJHv2sw9l/exec";
@@ -714,6 +737,21 @@
       'DOCENTE-2026',
       'SARTORE-PIANO',
       'VIP-EAR-TRAIN'
+    ];
+
+    const KEYS_LIST = [
+      { midi: 60, name: 'Do' },
+      { midi: 61, name: 'Do♯ / Re♭' },
+      { midi: 62, name: 'Re' },
+      { midi: 63, name: 'Re♯ / Mi♭' },
+      { midi: 64, name: 'Mi' },
+      { midi: 65, name: 'Fa' },
+      { midi: 66, name: 'Fa♯ / Sol♭' },
+      { midi: 67, name: 'Sol' },
+      { midi: 68, name: 'Sol♯ / La♭' },
+      { midi: 69, name: 'La' },
+      { midi: 70, name: 'La♯ / Si♭' },
+      { midi: 71, name: 'Si' }
     ];
 
     const KEY_NAMES_ITA = {
@@ -728,8 +766,7 @@
       '68': 'Sol♯ / La♭',
       '69': 'La',
       '70': 'La♯ / Si♭',
-      '71': 'Si',
-      'random': 'Casuale'
+      '71': 'Si'
     };
 
     const defaultGridRows = {
@@ -832,13 +869,11 @@
           filter,
           oscillators,
           subGains,
-          // Rilascio esponenziale progressivo e naturale tramite setTargetAtTime
           stopAndDispose: (fadeSec = 0.8) => {
             const t = Math.max(0, this.ctx.currentTime);
             try {
               masterGain.gain.cancelScheduledValues(t);
               masterGain.gain.setValueAtTime(masterGain.gain.value, t);
-              // Costante di tempo esponenziale per sfumare senza scatti o tagli
               masterGain.gain.setTargetAtTime(0, t, Math.max(0.08, fadeSec / 3.2));
             } catch(e) {
               try { masterGain.gain.linearRampToValueAtTime(0, t + fadeSec); } catch(err){}
@@ -859,7 +894,6 @@
         };
       }
 
-      // Transizione incrociata tra droni: sfuma il vecchio dolcemente mentre il nuovo entra
       transitionDrone(newMidiNote, fadeDuration = 0.85) {
         this.ensureContextRunning();
 
@@ -901,7 +935,6 @@
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.38, now + 0.12);
         this.secretVoice.masterGain.gain.linearRampToValueAtTime(0.26, now + 1.2);
 
-        // Decadimento finale morbido
         const fadeStart = Math.max(now + 1.5, now + durationSeconds - 0.7);
         this.secretVoice.masterGain.gain.setValueAtTime(0.26, fadeStart);
         this.secretVoice.masterGain.gain.setTargetAtTime(0, fadeStart, 0.22);
@@ -1229,7 +1262,7 @@
         testMode: false,
         droneSelectionMode: false,
         
-        isRandomKeyMode: false,
+        poolKeyMidis: [60],
         keyRootMidi: 60,
         currentDroneItem: null,
         currentDroneMidi: 60,
@@ -1252,25 +1285,20 @@
 
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
       let teacherDroneNoteIds = new Set(['btn-1']);
+      let teacherSelectedKeyMidis = new Set([60]); // Di default Tonalità: Do (60)
       const creatorDroneWaves = new Map();
 
-      function getEffectiveKeyRoot(keyVal) {
-        let midi = 60;
-        if (keyVal === 'random') {
-          const keys = [60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71];
-          midi = keys[Math.floor(Math.random() * keys.length)];
-        } else {
-          midi = parseInt(keyVal, 10) || 60;
-        }
-
-        if (midi >= 67) {
-          midi -= 12;
-        }
-        return midi;
+      // In modalità creazione docente, il docente sente SEMPRE in Do Maggiore (C4 = 60)
+      function getCreatorBaseMidi() {
+        return 60;
       }
 
-      function getCreatorBaseMidi() {
-        return getEffectiveKeyRoot(creatorKeySelect.value);
+      function getEffectiveKeyRoot(midiVal) {
+        let midi = parseInt(midiVal, 10) || 60;
+        if (midi >= 67) {
+          midi -= 12; // Da Sol a Si scala all'ottava inferiore
+        }
+        return midi;
       }
 
       function addCreatorDroneWave(itemId) {
@@ -1333,7 +1361,16 @@
 
       const studentControlsRow = document.getElementById('student-controls-row');
       const creatorControlsRow = document.getElementById('creator-controls-row');
-      const creatorKeySelect = document.getElementById('creator-key-select');
+      
+      const creatorKeysBtn = document.getElementById('creator-keys-btn');
+      const creatorKeysBtnLabel = document.getElementById('creator-keys-btn-label');
+      const keysSelectorModal = document.getElementById('keys-selector-modal');
+      const closeKeysModalBtn = document.getElementById('close-keys-modal-btn');
+      const confirmKeysBtn = document.getElementById('confirm-keys-btn');
+      const keysSelectAllBtn = document.getElementById('keys-select-all-btn');
+      const keysSelectDoBtn = document.getElementById('keys-select-do-btn');
+      const keysCheckboxGrid = document.getElementById('keys-checkbox-grid');
+
       const creatorCountSelect = document.getElementById('creator-count-select');
       const creatorDroneBtn = document.getElementById('creator-drone-btn');
       const creatorHelperText = document.getElementById('creator-helper-text');
@@ -1394,6 +1431,75 @@
       window.addEventListener('orientationchange', () => {
         setTimeout(updateAllActiveWavesPositions, 100);
       });
+
+      /* ================================================================ */
+      /* GESTIONE SELETTORE MULTIPLO TONALITÀ                             */
+      /* ================================================================ */
+      function renderKeysCheckboxGrid() {
+        keysCheckboxGrid.innerHTML = '';
+        KEYS_LIST.forEach(k => {
+          const label = document.createElement('label');
+          label.className = 'flex items-center gap-2 p-2 rounded-xl bg-[#0D171C] border border-white/10 hover:border-ochreBand/40 cursor-pointer text-xs select-none transition-all';
+          const isChecked = teacherSelectedKeyMidis.has(k.midi);
+          label.innerHTML = `
+            <input type="checkbox" data-midi="${k.midi}" ${isChecked ? 'checked' : ''} class="key-checkbox accent-[#E0C36F] w-4 h-4 rounded cursor-pointer">
+            <span class="text-white font-semibold truncate">${k.name}</span>
+          `;
+          label.querySelector('.key-checkbox').addEventListener('change', (e) => {
+            const midiVal = parseInt(e.target.dataset.midi, 10);
+            if (e.target.checked) {
+              teacherSelectedKeyMidis.add(midiVal);
+            } else {
+              if (teacherSelectedKeyMidis.size > 1) {
+                teacherSelectedKeyMidis.delete(midiVal);
+              } else {
+                e.target.checked = true; // Almeno una tonalità deve rimanere attiva
+              }
+            }
+            updateKeysButtonLabel();
+          });
+          keysCheckboxGrid.appendChild(label);
+        });
+      }
+
+      function updateKeysButtonLabel() {
+        const count = teacherSelectedKeyMidis.size;
+        if (count === 1) {
+          const singleMidi = Array.from(teacherSelectedKeyMidis)[0];
+          creatorKeysBtnLabel.textContent = `Tonalità: ${KEY_NAMES_ITA[singleMidi] || 'Do'} (1)`;
+        } else if (count === 12) {
+          creatorKeysBtnLabel.textContent = `Tonalità: Tutte (12)`;
+        } else if (count <= 2) {
+          const names = Array.from(teacherSelectedKeyMidis).map(m => KEY_NAMES_ITA[m]).join(', ');
+          creatorKeysBtnLabel.textContent = `Tonalità: ${names}`;
+        } else {
+          creatorKeysBtnLabel.textContent = `Tonalità: ${count} scelte`;
+        }
+      }
+
+      creatorKeysBtn.addEventListener('click', () => {
+        renderKeysCheckboxGrid();
+        keysSelectorModal.classList.remove('hidden');
+      });
+
+      const closeKeysModal = () => keysSelectorModal.classList.add('hidden');
+      closeKeysModalBtn.addEventListener('click', closeKeysModal);
+      confirmKeysBtn.addEventListener('click', closeKeysModal);
+
+      keysSelectAllBtn.addEventListener('click', () => {
+        KEYS_LIST.forEach(k => teacherSelectedKeyMidis.add(k.midi));
+        renderKeysCheckboxGrid();
+        updateKeysButtonLabel();
+      });
+
+      keysSelectDoBtn.addEventListener('click', () => {
+        teacherSelectedKeyMidis.clear();
+        teacherSelectedKeyMidis.add(60);
+        renderKeysCheckboxGrid();
+        updateKeysButtonLabel();
+      });
+
+      updateKeysButtonLabel();
 
       /* ================================================================ */
       /* SISTEMA DI RIDISTRIBUZIONE VERTICALE (COLONNA CENTRALE FISSA)   */
@@ -1563,7 +1669,6 @@
       function parseKeyToMidi(rawKey) {
         if (!rawKey) return '60';
         rawKey = String(rawKey).trim().toLowerCase();
-        if (rawKey === 'random' || rawKey === 'casuale') return 'random';
         if (/^\d+$/.test(rawKey)) return rawKey;
         for (const [code, label] of Object.entries(KEY_NAMES_ITA)) {
           if (label.toLowerCase() === rawKey || label.toLowerCase().includes(rawKey)) {
@@ -1604,7 +1709,7 @@
             }
           }
         } catch(e) {
-          console.warn('Sync cloud silenzioso completato o timeout.');
+          console.warn('Sync cloud completato o timeout.');
         }
       }
 
@@ -1632,9 +1737,19 @@
 
           row.querySelector('.load-lesson-btn').addEventListener('click', () => {
             creatorTitleInput.value = l.title;
-            creatorKeySelect.value = parseKeyToMidi(l.keyRoot || l.rootMode);
             creatorCountSelect.value = String(l.notesCount || 10);
             
+            // Ripristina tonalità salvate
+            teacherSelectedKeyMidis.clear();
+            if (Array.isArray(l.keys) && l.keys.length > 0) {
+              l.keys.forEach(k => teacherSelectedKeyMidis.add(parseInt(k, 10)));
+            } else if (l.keyRoot) {
+              const parsedKeys = String(l.keyRoot).split(',').map(s => parseInt(parseKeyToMidi(s.trim()), 10));
+              parsedKeys.forEach(k => teacherSelectedKeyMidis.add(k));
+            }
+            if (teacherSelectedKeyMidis.size === 0) teacherSelectedKeyMidis.add(60);
+            updateKeysButtonLabel();
+
             let ids = [];
             if (Array.isArray(l.noteIds)) {
               ids = l.noteIds.map(token => token.trim().startsWith('btn-') ? token.trim() : ('btn-' + token.trim()));
@@ -1732,16 +1847,18 @@
         if (e.key === 'Escape') {
           if (!overwriteConfirmModal.classList.contains('hidden')) closeOverwriteModal();
           if (!duplicateConfigModal.classList.contains('hidden')) closeDuplicateModal();
+          if (!keysSelectorModal.classList.contains('hidden')) closeKeysModal();
         }
       });
 
       /* ================================================================ */
-      /* VERIFICA LICENZA OTTIMIZZATA (CON CACHE E TIMEOUT VELOCE)        */
+      /* VERIFICA LICENZA (MAIUSCOLE E MINUSCOLE REALI)                   */
       /* ================================================================ */
       async function verifyLicenseCode(code) {
-        code = code.trim().toUpperCase();
+        code = code.trim();
+        const upper = code.toUpperCase();
 
-        if (FALLBACK_LICENSES.includes(code)) {
+        if (FALLBACK_LICENSES.includes(upper) || FALLBACK_LICENSES.includes(code)) {
           localStorage.setItem('ms_license_verified', 'true');
           localStorage.setItem('ms_teacher_name', 'Prof. Marco Sartore');
           return { valid: true, teacher: 'Prof. Marco Sartore' };
@@ -1750,7 +1867,7 @@
         const cachedCode = localStorage.getItem('ms_ear_trainer_teacher_license');
         const cachedTeacher = localStorage.getItem('ms_teacher_name');
         const cachedValid = localStorage.getItem('ms_license_verified');
-        if (cachedValid === 'true' && cachedCode === code && cachedTeacher) {
+        if (cachedValid === 'true' && cachedCode && (cachedCode === code || cachedCode.toUpperCase() === upper) && cachedTeacher) {
           return { valid: true, teacher: cachedTeacher };
         }
 
@@ -1773,7 +1890,7 @@
               }
             }
           } catch(err) {
-            console.warn('Verifica remota lenta o non disponibile, utilizzo fallback.');
+            console.warn('Verifica remota non disponibile o timeout.');
           }
         }
 
@@ -1792,7 +1909,7 @@
         const docenteParam = params.get('docente');
         const notesParam = params.get('notes');
         const dronesParam = params.get('drones');
-        const keyParam = params.get('key');
+        const keysParam = params.get('keys') || params.get('key');
         const titleParam = params.get('title');
         const countParam = params.get('count');
 
@@ -1811,9 +1928,16 @@
           proBanner.classList.remove('hidden');
           freeNotice.classList.add('hidden');
 
-          if (keyParam) {
-            gameState.isRandomKeyMode = (keyParam === 'random');
-            gameState.keyRootMidi = getEffectiveKeyRoot(keyParam);
+          if (keysParam) {
+            const tokens = decodeURIComponent(keysParam).split(',');
+            const parsed = [];
+            tokens.forEach(t => {
+              const m = parseInt(parseKeyToMidi(t.trim()), 10);
+              if (!isNaN(m)) parsed.push(m);
+            });
+            gameState.poolKeyMidis = parsed.length > 0 ? parsed : [60];
+          } else {
+            gameState.poolKeyMidis = [60];
           }
 
           if (countParam) {
@@ -2016,7 +2140,7 @@
 
           gameState.batchTotalNotes = 5;
           gameState.keyRootMidi = 60;
-          gameState.isRandomKeyMode = false;
+          gameState.poolKeyMidis = [60];
           btnMainAction.textContent = 'Inizia Serie (5 note)';
           statScore.textContent = `0/5`;
           statScore.style.color = '#379386';
@@ -2055,12 +2179,11 @@
           testModeBar.classList.remove('opacity-0', '-translate-y-2');
         });
 
-        testModeTitle.textContent = creatorTitleInput.value.trim() || 'Esercizio Docente';
+        testModeTitle.textContent = creatorTitleInput.value.trim() || 'Anteprima Esercizio';
         studentControlsRow.classList.remove('hidden');
 
-        gameState.exerciseTitle = creatorTitleInput.value.trim() || 'Esercizio Docente';
-        gameState.isRandomKeyMode = (creatorKeySelect.value === 'random');
-        gameState.keyRootMidi = getEffectiveKeyRoot(creatorKeySelect.value);
+        gameState.exerciseTitle = creatorTitleInput.value.trim() || 'Anteprima Esercizio';
+        gameState.poolKeyMidis = Array.from(teacherSelectedKeyMidis);
         gameState.batchTotalNotes = parseInt(creatorCountSelect.value, 10) || 10;
 
         gameState.allowedButtonIds = new Set(teacherSelectedNoteIds);
@@ -2100,15 +2223,12 @@
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         const isVerified = localStorage.getItem('ms_license_verified');
 
-        if (savedLic && (isVerified === 'true' || FALLBACK_LICENSES.includes(savedLic))) {
-          // Entra istantaneamente senza attendere la chiamata a Google Sheets!
+        if (savedLic && (isVerified === 'true' || FALLBACK_LICENSES.includes(savedLic.toUpperCase()))) {
           enterCreatorMode();
-          // Risincronizza in background
           syncLessonsFromCloudSilently(savedLic);
           return;
         }
 
-        // Se non ancora verificato, apre il popup per inserire la licenza
         licenseModal.classList.remove('hidden');
       });
 
@@ -2116,7 +2236,7 @@
 
       activateLicenseBtn.addEventListener('click', async () => {
         audio.ensureContextRunning();
-        const code = licenseInput.value.trim().toUpperCase();
+        const code = licenseInput.value.trim();
         if (!code) return;
 
         activateBtnText.classList.add('hidden');
@@ -2138,10 +2258,10 @@
         }
       });
 
-      function generateTeacherShareUrl() {
+      function generateTeacherShareUrl(titleVal) {
         const activeLicense = localStorage.getItem('ms_ear_trainer_teacher_license') || 'PRO-MARCO-2026';
-        const titleVal = encodeURIComponent(creatorTitleInput.value.trim() || 'Lezione');
-        const keyVal = creatorKeySelect.value;
+        const titleEnc = encodeURIComponent(titleVal);
+        const keysVal = Array.from(teacherSelectedKeyMidis).join(',');
         const countVal = creatorCountSelect.value;
 
         const selectedDegrees = Array.from(teacherSelectedNoteIds)
@@ -2155,7 +2275,7 @@
           .join(',');
 
         const baseUrl = window.location.origin + window.location.pathname;
-        return `${baseUrl}?docente=${activeLicense}&notes=${selectedDegrees}&drones=${selectedDrones}&key=${keyVal}&title=${titleVal}&count=${countVal}`;
+        return `${baseUrl}?docente=${activeLicense}&notes=${selectedDegrees}&drones=${selectedDrones}&keys=${keysVal}&title=${titleEnc}&count=${countVal}`;
       }
 
       function executeSaveAndCopy(saveData) {
@@ -2173,7 +2293,14 @@
             .filter(Boolean)
             .join(',');
 
-          const rootLabel = KEY_NAMES_ITA[saveData.keyRoot] || saveData.keyRoot;
+          // Dicitura chiara per la colonna F
+          let rootLabel = 'Do';
+          if (saveData.keys.length === 12) {
+            rootLabel = 'Tutte le 12 tonalità';
+          } else {
+            rootLabel = saveData.keys.map(m => KEY_NAMES_ITA[m] || m).join(', ');
+          }
+
           const cloudSaveUrl = `${LICENSE_API_URL}?action=saveLesson&code=${encodeURIComponent(activeLicense)}&id=${encodeURIComponent(saveData.id)}&title=${encodeURIComponent(saveData.title)}&notes=${encodeURIComponent(notesStr)}&drones=${encodeURIComponent(dronesStr)}&root=${encodeURIComponent(rootLabel)}&key=${encodeURIComponent(saveData.keyRoot)}&count=${saveData.notesCount}&url=${encodeURIComponent(saveData.url)}`;
           
           fetch(cloudSaveUrl).catch(() => {});
@@ -2195,13 +2322,25 @@
 
       creatorCopyLinkBtn.addEventListener('click', () => {
         audio.ensureContextRunning();
+        
+        // Controllo titolo obbligatorio
+        const titleStr = creatorTitleInput.value.trim();
+        if (!titleStr) {
+          creatorTitleInput.focus();
+          creatorTitleInput.classList.add('border-coralBand', 'ring-2', 'ring-coralBand/60');
+          setTimeout(() => {
+            creatorTitleInput.classList.remove('ring-2', 'ring-coralBand/60');
+          }, 2500);
+          alert('Attenzione: inserisci un titolo per la lezione prima di salvarla o copiare il link.');
+          return;
+        }
+
         if (teacherSelectedNoteIds.size === 0) {
           alert('Seleziona almeno una nota sulla colonna per l\'esercizio.');
           return;
         }
 
-        const titleStr = creatorTitleInput.value.trim() || 'Lezione';
-        const shareUrl = generateTeacherShareUrl();
+        const shareUrl = generateTeacherShareUrl(titleStr);
         const existingList = getSavedLessons();
         const existingLessonWithSameTitle = existingList.find(l => l.title.toLowerCase() === titleStr.toLowerCase());
 
@@ -2210,7 +2349,8 @@
           title: titleStr,
           date: new Date().toLocaleDateString('it-IT', { day: 'numeric', month: 'short' }),
           notesCount: parseInt(creatorCountSelect.value, 10) || 10,
-          keyRoot: creatorKeySelect.value,
+          keys: Array.from(teacherSelectedKeyMidis),
+          keyRoot: Array.from(teacherSelectedKeyMidis).join(','),
           noteIds: Array.from(teacherSelectedNoteIds),
           droneIds: Array.from(teacherDroneNoteIds),
           url: shareUrl
@@ -2224,11 +2364,12 @@
         }
 
         const duplicateLesson = existingList.find(l => {
-          const sameKey = String(l.keyRoot || l.rootMode).toLowerCase() === String(candidateSaveData.keyRoot).toLowerCase();
+          const lKeys = new Set(l.keys || (l.keyRoot ? String(l.keyRoot).split(',').map(Number) : [60]));
+          const sameKeys = areSetsEqual(lKeys, teacherSelectedKeyMidis);
           const sameCount = Number(l.notesCount) === Number(candidateSaveData.notesCount);
           const sameNotes = areSetsEqual(new Set(l.noteIds || []), teacherSelectedNoteIds);
           const sameDrones = areSetsEqual(new Set(l.droneIds || ['btn-1']), teacherDroneNoteIds);
-          return sameKey && sameCount && sameNotes && sameDrones;
+          return sameKeys && sameCount && sameNotes && sameDrones;
         });
 
         if (duplicateLesson) {
@@ -2266,7 +2407,7 @@
 
         if (!gameState.isProStudent && !gameState.testMode) {
           gameState.keyRootMidi = 60;
-          gameState.isRandomKeyMode = false;
+          gameState.poolKeyMidis = [60];
         }
 
         statScore.textContent = `0/${gameState.batchTotalNotes}`;
@@ -2296,10 +2437,15 @@
         btnMainAction.classList.add('bg-coralBand');
         batchProgress.textContent = `${gameState.batchCurrentNote}/${gameState.batchTotalNotes}`;
 
-        if (gameState.isRandomKeyMode) {
-          gameState.keyRootMidi = getEffectiveKeyRoot('random');
+        // Estrazione Tonalità per questa nota tra quelle scelte dal docente
+        if (gameState.poolKeyMidis && gameState.poolKeyMidis.length > 0) {
+          const chosenKeyMidi = gameState.poolKeyMidis[Math.floor(Math.random() * gameState.poolKeyMidis.length)];
+          gameState.keyRootMidi = getEffectiveKeyRoot(chosenKeyMidi);
+        } else {
+          gameState.keyRootMidi = 60;
         }
 
+        // Estrazione Drone
         let availableDroneIds = Array.from(teacherDroneNoteIds);
         if (availableDroneIds.length === 0) availableDroneIds = ['btn-1'];
         const pickedDroneId = availableDroneIds[Math.floor(Math.random() * availableDroneIds.length)];
@@ -2322,7 +2468,6 @@
           const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
           gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
         } else {
-          // Drone identico: rimane continuo e fisso
           if (!gameDroneWaveEl || !gameDroneWaveEl.isConnected) {
             const droneBtnEl = document.getElementById(droneItem.id) || document.getElementById('btn-1');
             gameDroneWaveEl = spawnPropagatingWave(droneBtnEl, true);
@@ -2371,8 +2516,6 @@
         gameState.currentTargetTrackerKey = intervalUnifiedLabel;
 
         const secretNoteMidi = gameState.keyRootMidi + pickedItem.semitones;
-
-        // Se il drone è identico la nota arriva subito (400ms), se cambia si attende che il crossfade si completi (950ms)
         const secretNoteDelay = isSameDroneAsBefore ? 400 : 950;
 
         setAppTimeout(() => {
@@ -2388,7 +2531,6 @@
         gameState.isTransitioning = false;
         clearAppTimeouts();
 
-        // Fade-out morbido di 800ms
         audio.stopDrone(0.8);
         audio.fadeSecretNote(0.45);
 
@@ -2477,8 +2619,9 @@
 
           if (gameState.isTransitioning) return;
 
-          // CASO A: MODALITÀ CREAZIONE DOCENTE
+          // CASO A: MODALITÀ CREAZIONE DOCENTE (SEMPRE IN DO MAGGIORE)
           if (gameState.creatorMode) {
+            const baseMidi = getCreatorBaseMidi(); // 60
             
             if (gameState.droneSelectionMode) {
               if (teacherDroneNoteIds.has(item.id)) {
@@ -2486,12 +2629,10 @@
                   teacherDroneNoteIds.delete(item.id);
                   removeCreatorDroneWave(item.id);
                 } else {
-                  const baseMidi = getCreatorBaseMidi();
                   audio.previewNote(baseMidi + item.semitones, 1.4);
                 }
               } else {
                 teacherDroneNoteIds.add(item.id);
-                const baseMidi = getCreatorBaseMidi();
                 audio.previewNote(baseMidi + item.semitones, 1.4);
                 addCreatorDroneWave(item.id);
               }
@@ -2500,7 +2641,6 @@
             }
 
             if (item.id === 'btn-1') {
-              const baseMidi = getCreatorBaseMidi();
               audio.previewNote(baseMidi, 1.0);
               return;
             }
@@ -2509,7 +2649,6 @@
               teacherSelectedNoteIds.delete(item.id);
             } else {
               teacherSelectedNoteIds.add(item.id);
-              const baseMidi = getCreatorBaseMidi();
               audio.previewNote(baseMidi + item.semitones, 1.0);
             }
 
@@ -2520,7 +2659,6 @@
           // CASO B: ESERCIZIO IN CORSO
           if (gameState.active && gameState.waitingForAnswer) {
             
-            // Il drone non è mai la risposta: premendolo si riascolta il pedale
             if (gameState.currentDroneItem && item.semitones === gameState.currentDroneItem.semitones) {
               audio.startDrone(gameState.currentDroneMidi);
               if (gameDroneWaveEl) {
@@ -2555,7 +2693,7 @@
                 btnMainAction.textContent = `Esatto! (${gameState.batchCurrentNote}/${gameState.batchTotalNotes})`;
                 gameState.batchCurrentNote++;
 
-                const willLikelyKeepDrone = !gameState.isRandomKeyMode && (teacherDroneNoteIds.size <= 1);
+                const willLikelyKeepDrone = (gameState.poolKeyMidis.length <= 1) && (teacherDroneNoteIds.size <= 1);
                 const transitionDelay = willLikelyKeepDrone ? 750 : 1200;
 
                 setAppTimeout(() => {
@@ -2584,7 +2722,7 @@
             }
 
           } else if (!gameState.active) {
-            // CASO C: MODALITÀ LIBERA FUORI ESERCIZIO
+            // CASO C: MODALITÀ LIBERA
             const previewMidi = 60 + item.semitones;
             audio.previewNote(previewMidi, 1.2);
             spawnPropagatingWave(btnEl, false);
@@ -2601,7 +2739,7 @@
         promoModal.classList.add('hidden');
         const savedLic = localStorage.getItem('ms_ear_trainer_teacher_license');
         const isVerified = localStorage.getItem('ms_license_verified');
-        if (savedLic && (isVerified === 'true' || FALLBACK_LICENSES.includes(savedLic))) {
+        if (savedLic && (isVerified === 'true' || FALLBACK_LICENSES.includes(savedLic.toUpperCase()))) {
           enterCreatorMode();
           return;
         }
