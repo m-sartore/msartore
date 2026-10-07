@@ -9,7 +9,7 @@
   <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👂</text></svg>">
 
-  <!-- Controllo istantaneo Allievo PRO per azzerare il FOUC/sfarfallio Free -->
+  <!-- Controllo istantaneo Allievo PRO: previene FOUC/sfarfallio Free fin dal primo frame -->
   <script>
     (function() {
       try {
@@ -90,7 +90,7 @@
       overflow: hidden;
     }
 
-    /* Griglia a colonna rigorosamente simmetrica */
+    /* Griglia a colonna simmetrica */
     .ear-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
@@ -534,34 +534,35 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- 4. MODALE SELEZIONE TONALITÀ MULTIPLE      -->
+  <!-- 4. MODALE SELEZIONE TONALITÀ: CICLO DELLE QUINTE -->
   <!-- ========================================== -->
-  <div id="keys-selector-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl flex flex-col my-auto">
-      <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+  <div id="keys-selector-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 hidden">
+    <div class="bg-appCard border border-ochreBand/40 rounded-3xl p-4 sm:p-5 max-w-sm w-full shadow-2xl flex flex-col items-center my-auto">
+      
+      <div class="flex items-center justify-between w-full pb-2 mb-2 border-b border-white/10 shrink-0">
         <div class="flex items-center gap-2">
           <span class="px-2 py-0.5 rounded bg-ochreBand text-appDark font-black font-mono text-[10px]">TONALITÀ</span>
-          <h3 class="text-sm font-extrabold text-white">Scegli le Tonalità</h3>
+          <h3 class="text-sm font-extrabold text-white">Ciclo delle Quinte</h3>
         </div>
         <button id="close-keys-modal-btn" class="text-white/60 hover:text-white px-2 py-1 text-sm font-bold">✕</button>
       </div>
       
-      <p class="text-[11px] text-white/60 mb-3 leading-relaxed">
-        Spunta le tonalità per questo esercizio. Durante la serie, ogni nota estrarrà una tonalità casuale tra quelle selezionate.
+      <p class="text-[11px] text-white/60 mb-2 text-center leading-tight shrink-0">
+        Tocca le note per attivarle o spegnerle.
       </p>
 
-      <div class="flex gap-2 mb-3">
-        <button id="keys-select-all-btn" type="button" class="flex-1 py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[11px] transition-all">
-          Tutte (12)
-        </button>
-        <button id="keys-select-do-btn" type="button" class="flex-1 py-1 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-[11px] transition-all">
-          Solo Do
-        </button>
+      <!-- RUOTA CIRCOLARE DELLE QUINTE CON PALLINI BRAND -->
+      <div id="circle-of-fifths-container" class="relative w-[284px] h-[284px] mx-auto my-1 flex items-center justify-center shrink-0">
+        <!-- Badge centrale riassuntivo -->
+        <div class="absolute inset-0 m-auto w-24 h-24 rounded-full flex flex-col items-center justify-center pointer-events-none border border-white/10 bg-[#111D23]/85 backdrop-blur-sm z-10 shadow-lg">
+          <span class="text-[9px] font-mono tracking-wider text-white/50 uppercase">Tonalità</span>
+          <span id="fifths-center-count" class="text-2xl font-black text-ochreBand">1</span>
+          <span class="text-[9px] text-white/40 font-mono">attive</span>
+        </div>
+        <!-- I 12 pallini vengono generati dinamicamente posizionati a 360° -->
       </div>
 
-      <div id="keys-checkbox-grid" class="grid grid-cols-2 gap-1.5 max-h-56 overflow-y-auto pr-1 mb-4"></div>
-
-      <button id="confirm-keys-btn" type="button" class="w-full py-2.5 rounded-xl bg-tealBand text-white font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md">
+      <button id="confirm-keys-btn" type="button" class="w-full mt-3 py-2.5 rounded-xl bg-tealBand text-white font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md shrink-0">
         Conferma Scelta
       </button>
     </div>
@@ -707,7 +708,7 @@
       <div class="mb-4">
         <label class="block text-[11px] font-mono uppercase tracking-wider text-white/70 mb-1.5 font-bold">Codice Licenza</label>
         <div class="flex gap-2">
-          <!-- Senza classe uppercase: mostra maiuscole e minuscole reali -->
+          <!-- Mostra maiuscole e minuscole reali senza classe uppercase -->
           <input type="text" id="license-input" placeholder="es. Pro-Marco-2026" class="flex-1 bg-[#0D171C] border border-white/20 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-ochreBand font-mono">
           <button id="activate-license-btn" class="px-4 py-2 rounded-xl bg-ochreBand text-appDark font-extrabold text-xs uppercase hover:brightness-110 transition-all flex items-center justify-center min-w-[80px]">
             <span id="activate-btn-text">Sblocca</span>
@@ -739,19 +740,20 @@
       'VIP-EAR-TRAIN'
     ];
 
-    const KEYS_LIST = [
-      { midi: 60, name: 'Do' },
-      { midi: 61, name: 'Do♯ / Re♭' },
-      { midi: 62, name: 'Re' },
-      { midi: 63, name: 'Re♯ / Mi♭' },
-      { midi: 64, name: 'Mi' },
-      { midi: 65, name: 'Fa' },
-      { midi: 66, name: 'Fa♯ / Sol♭' },
-      { midi: 67, name: 'Sol' },
-      { midi: 68, name: 'Sol♯ / La♭' },
-      { midi: 69, name: 'La' },
-      { midi: 70, name: 'La♯ / Si♭' },
-      { midi: 71, name: 'Si' }
+    // Struttura del Ciclo delle Quinte (disposte in senso orario a partire dalle ore 12:00)
+    const CIRCLE_OF_FIFTHS = [
+      { midi: 60, name: 'Do', sub: '' },               // 12:00
+      { midi: 67, name: 'Sol', sub: '' },              // 1:00
+      { midi: 62, name: 'Re', sub: '' },               // 2:00
+      { midi: 69, name: 'La', sub: '' },               // 3:00
+      { midi: 64, name: 'Mi', sub: '' },               // 4:00
+      { midi: 71, name: 'Si', sub: '' },               // 5:00
+      { midi: 66, name: 'Fa♯', sub: 'Sol♭' },          // 6:00
+      { midi: 61, name: 'Do♯', sub: 'Re♭' },          // 7:00
+      { midi: 68, name: 'Sol♯', sub: 'La♭' },          // 8:00
+      { midi: 63, name: 'Re♯', sub: 'Mi♭' },          // 9:00
+      { midi: 70, name: 'La♯', sub: 'Si♭' },          // 10:00
+      { midi: 65, name: 'Fa', sub: '' }                // 11:00
     ];
 
     const KEY_NAMES_ITA = {
@@ -791,7 +793,7 @@
     };
 
     /* ================================================================ */
-    /* MOTORE AUDIO CALIBRATO CON CROSSFADE E RILASCIO NATURALE         */
+    /* MOTORE AUDIO CALIBRATO CON SBLOCCO MOBILE E CROSSFADE NATURALE   */
     /* ================================================================ */
     class AudioEngine {
       constructor() {
@@ -813,6 +815,19 @@
           this.ctx.resume().catch(() => {});
         }
         return this.ctx;
+      }
+
+      // Sblocco hardware esplicito per browser iOS Safari e Android Chrome
+      unlockHardwareAudio() {
+        const ctx = this.ensureContextRunning();
+        if (!ctx) return;
+        try {
+          const buffer = ctx.createBuffer(1, 1, 22050);
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          source.connect(ctx.destination);
+          source.start(0);
+        } catch(e) {}
       }
 
       initLimiter() {
@@ -1138,9 +1153,20 @@
 
       const audio = new AudioEngine();
 
-      const unlockAudioTouch = () => audio.ensureContextRunning();
-      ['touchstart', 'pointerdown', 'touchend', 'click'].forEach(evt => {
-        document.addEventListener(evt, unlockAudioTouch, { once: true, passive: true });
+      // Risveglio e sblocco hardware audio continuo su tutti gli eventi utente
+      const handleUserAudioTouch = () => {
+        audio.unlockHardwareAudio();
+        audio.ensureContextRunning();
+      };
+      ['touchstart', 'touchend', 'pointerdown', 'click'].forEach(evt => {
+        document.addEventListener(evt, handleUserAudioTouch, { passive: true });
+      });
+
+      // Risveglio immediato dell'audio al ritorno da background / sblocco schermo
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          audio.ensureContextRunning();
+        }
       });
 
       let activeTimers = [];
@@ -1285,10 +1311,10 @@
 
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
       let teacherDroneNoteIds = new Set(['btn-1']);
-      let teacherSelectedKeyMidis = new Set([60]); // Di default Tonalità: Do (60)
+      let teacherSelectedKeyMidis = new Set([60]); // Di default: Do (60)
       const creatorDroneWaves = new Map();
 
-      // In modalità creazione docente, il docente sente SEMPRE in Do Maggiore (C4 = 60)
+      // In modalità creazione docente: SEMPRE Do Maggiore (C4 = 60)
       function getCreatorBaseMidi() {
         return 60;
       }
@@ -1296,7 +1322,7 @@
       function getEffectiveKeyRoot(midiVal) {
         let midi = parseInt(midiVal, 10) || 60;
         if (midi >= 67) {
-          midi -= 12; // Da Sol a Si scala all'ottava inferiore
+          midi -= 12; // Da Sol in poi va all'ottava inferiore
         }
         return midi;
       }
@@ -1367,9 +1393,8 @@
       const keysSelectorModal = document.getElementById('keys-selector-modal');
       const closeKeysModalBtn = document.getElementById('close-keys-modal-btn');
       const confirmKeysBtn = document.getElementById('confirm-keys-btn');
-      const keysSelectAllBtn = document.getElementById('keys-select-all-btn');
-      const keysSelectDoBtn = document.getElementById('keys-select-do-btn');
-      const keysCheckboxGrid = document.getElementById('keys-checkbox-grid');
+      const circleOfFifthsContainer = document.getElementById('circle-of-fifths-container');
+      const fifthsCenterCount = document.getElementById('fifths-center-count');
 
       const creatorCountSelect = document.getElementById('creator-count-select');
       const creatorDroneBtn = document.getElementById('creator-drone-btn');
@@ -1433,33 +1458,94 @@
       });
 
       /* ================================================================ */
-      /* GESTIONE SELETTORE MULTIPLO TONALITÀ                             */
+      /* COSTRUZIONE DINAMICA DELLA RUOTA DEL CICLO DELLE QUINTE         */
       /* ================================================================ */
-      function renderKeysCheckboxGrid() {
-        keysCheckboxGrid.innerHTML = '';
-        KEYS_LIST.forEach(k => {
-          const label = document.createElement('label');
-          label.className = 'flex items-center gap-2 p-2 rounded-xl bg-[#0D171C] border border-white/10 hover:border-ochreBand/40 cursor-pointer text-xs select-none transition-all';
-          const isChecked = teacherSelectedKeyMidis.has(k.midi);
-          label.innerHTML = `
-            <input type="checkbox" data-midi="${k.midi}" ${isChecked ? 'checked' : ''} class="key-checkbox accent-[#E0C36F] w-4 h-4 rounded cursor-pointer">
-            <span class="text-white font-semibold truncate">${k.name}</span>
-          `;
-          label.querySelector('.key-checkbox').addEventListener('change', (e) => {
-            const midiVal = parseInt(e.target.dataset.midi, 10);
-            if (e.target.checked) {
-              teacherSelectedKeyMidis.add(midiVal);
-            } else {
+      function renderCircleOfFifths() {
+        // Rimuove eventuali cerchi precedenti lasciando intatto il badge centrale
+        const oldBtns = circleOfFifthsContainer.querySelectorAll('.fifths-circle-btn');
+        oldBtns.forEach(b => b.remove());
+
+        const total = 12;
+        const R = 110; // Raggio del cerchio in pixel
+        const centerX = 142; // Centro del container (284 / 2)
+        const centerY = 142;
+        const btnRadius = 22; // Raggio dei cerchi (diametro 44px)
+
+        CIRCLE_OF_FIFTHS.forEach((item, idx) => {
+          // Angolo di 30° per ogni spicchio, partendo da ore 12:00 (-90°)
+          const angleDeg = (idx * 30) - 90;
+          const angleRad = angleDeg * (Math.PI / 180);
+
+          const posX = centerX + (R * Math.cos(angleRad)) - btnRadius;
+          const posY = centerY + (R * Math.sin(angleRad)) - btnRadius;
+
+          const isSelected = teacherSelectedKeyMidis.has(item.midi);
+
+          // Calcola il colore brand per ciascuna nota
+          const fraction = ((item.midi - 60 + 12) % 12) / 12;
+          const colorObj = getColorForFraction(fraction);
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'fifths-circle-btn round-note-btn text-white absolute';
+          btn.style.width = '44px';
+          btn.style.height = '44px';
+          btn.style.left = `${posX}px`;
+          btn.style.top = `${posY}px`;
+          btn.style.position = 'absolute';
+          btn.style.margin = '0';
+          btn.style.transformOrigin = 'center center';
+          btn.dataset.midi = String(item.midi);
+
+          // Stile attivo o spento in penombra
+          if (isSelected) {
+            btn.style.backgroundColor = colorObj.rgb;
+            btn.style.borderColor = 'rgba(255, 255, 255, 0.9)';
+            btn.style.opacity = '1';
+            btn.style.filter = 'none';
+            btn.style.boxShadow = `0 4px 14px ${colorObj.rgba(0.6)}`;
+          } else {
+            btn.style.backgroundColor = '#131F25';
+            btn.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+            btn.style.opacity = '0.22';
+            btn.style.filter = 'grayscale(100%)';
+            btn.style.boxShadow = 'none';
+          }
+
+          if (item.sub) {
+            btn.innerHTML = `
+              <span class="text-[10px] leading-none block font-extrabold tracking-tight">${item.name}</span>
+              <span class="text-[8px] leading-none block opacity-80 font-bold mt-0.5">${item.sub}</span>
+            `;
+          } else {
+            btn.innerHTML = `<span class="text-xs sm:text-sm font-extrabold tracking-tight leading-none">${item.name}</span>`;
+          }
+
+          btn.addEventListener('click', () => {
+            audio.ensureContextRunning();
+            const midiVal = parseInt(btn.dataset.midi, 10);
+
+            if (teacherSelectedKeyMidis.has(midiVal)) {
               if (teacherSelectedKeyMidis.size > 1) {
                 teacherSelectedKeyMidis.delete(midiVal);
               } else {
-                e.target.checked = true; // Almeno una tonalità deve rimanere attiva
+                // Almeno una tonalità deve rimanere attiva
+                audio.previewNote(getCreatorBaseMidi(), 0.8);
               }
+            } else {
+              teacherSelectedKeyMidis.add(midiVal);
+              // L'ascolto di anteprima del docente rimane sempre in Do
+              audio.previewNote(getCreatorBaseMidi(), 0.8);
             }
+
+            renderCircleOfFifths();
             updateKeysButtonLabel();
           });
-          keysCheckboxGrid.appendChild(label);
+
+          circleOfFifthsContainer.appendChild(btn);
         });
+
+        fifthsCenterCount.textContent = String(teacherSelectedKeyMidis.size);
       }
 
       function updateKeysButtonLabel() {
@@ -1478,26 +1564,13 @@
       }
 
       creatorKeysBtn.addEventListener('click', () => {
-        renderKeysCheckboxGrid();
+        renderCircleOfFifths();
         keysSelectorModal.classList.remove('hidden');
       });
 
       const closeKeysModal = () => keysSelectorModal.classList.add('hidden');
       closeKeysModalBtn.addEventListener('click', closeKeysModal);
       confirmKeysBtn.addEventListener('click', closeKeysModal);
-
-      keysSelectAllBtn.addEventListener('click', () => {
-        KEYS_LIST.forEach(k => teacherSelectedKeyMidis.add(k.midi));
-        renderKeysCheckboxGrid();
-        updateKeysButtonLabel();
-      });
-
-      keysSelectDoBtn.addEventListener('click', () => {
-        teacherSelectedKeyMidis.clear();
-        teacherSelectedKeyMidis.add(60);
-        renderKeysCheckboxGrid();
-        updateKeysButtonLabel();
-      });
 
       updateKeysButtonLabel();
 
@@ -1902,7 +1975,7 @@
       }
 
       /* ================================================================ */
-      /* CONTROLLO LINK ALLIEVO PRO                                       */
+      /* CONTROLLO LINK ALLIEVO PRO: PERSISTENZA GARANTITA SENZA TIMEOUT  */
       /* ================================================================ */
       async function checkUrlForProStudent() {
         const params = new URLSearchParams(window.location.search);
@@ -1913,6 +1986,7 @@
         const titleParam = params.get('title');
         const countParam = params.get('count');
 
+        // Se il link contiene il parametro docente e le note dell'esercizio, l'allievo è PRO in modo garantito!
         if (docenteParam) {
           gameState.isProStudent = true;
           document.body.classList.add('student-pro-mode');
@@ -1927,6 +2001,13 @@
           }
           proBanner.classList.remove('hidden');
           freeNotice.classList.add('hidden');
+
+          // Recupera il nome docente dalla memoria locale se già salvato in precedenza
+          const cachedTeacher = localStorage.getItem('ms_saved_student_teacher_' + docenteParam);
+          if (cachedTeacher) {
+            gameState.teacherCode = cachedTeacher;
+            proTeacherId.textContent = `${gameState.teacherCode}`;
+          }
 
           if (keysParam) {
             const tokens = decodeURIComponent(keysParam).split(',');
@@ -1984,19 +2065,14 @@
 
           applyAdaptiveGridLayout();
 
-          const licCheck = await verifyLicenseCode(docenteParam);
-          if (licCheck.valid) {
-            gameState.teacherCode = licCheck.teacher || docenteParam;
-            proTeacherId.textContent = `${gameState.teacherCode}`;
-          } else {
-            gameState.isProStudent = false;
-            document.body.classList.remove('student-pro-mode');
-            toggleProBtn.classList.remove('hidden');
-            toggleProBtn.style.display = '';
-            proBanner.classList.add('hidden');
-            freeNotice.classList.remove('hidden');
-            resetDefaultGridLayout();
-          }
+          // Interroga il foglio Google SOLO per aggiornare il nome del docente in background (non blocca MAI l'esercizio!)
+          verifyLicenseCode(docenteParam).then(licCheck => {
+            if (licCheck && licCheck.valid && licCheck.teacher) {
+              gameState.teacherCode = licCheck.teacher;
+              proTeacherId.textContent = `${gameState.teacherCode}`;
+              localStorage.setItem('ms_saved_student_teacher_' + docenteParam, licCheck.teacher);
+            }
+          }).catch(() => {});
         }
       }
 
@@ -2049,7 +2125,6 @@
         document.body.classList.remove('test-mode');
         document.body.classList.add('creator-mode');
 
-        // Mostra Nome Docente salvato in memoria all'istante
         const savedTeacherName = localStorage.getItem('ms_teacher_name') || 'Prof. Marco Sartore';
         teacherHeaderName.textContent = savedTeacherName;
         headerStats.classList.add('hidden');
@@ -2293,7 +2368,6 @@
             .filter(Boolean)
             .join(',');
 
-          // Dicitura chiara per la colonna F
           let rootLabel = 'Do';
           if (saveData.keys.length === 12) {
             rootLabel = 'Tutte le 12 tonalità';
@@ -2323,7 +2397,6 @@
       creatorCopyLinkBtn.addEventListener('click', () => {
         audio.ensureContextRunning();
         
-        // Controllo titolo obbligatorio
         const titleStr = creatorTitleInput.value.trim();
         if (!titleStr) {
           creatorTitleInput.focus();
@@ -2457,7 +2530,6 @@
         gameState.currentDroneItem = droneItem;
         gameState.currentDroneMidi = newDroneMidi;
 
-        // Se il drone è diverso: crossfade dolce di 850ms tra i due droni
         if (!isSameDroneAsBefore) {
           audio.transitionDrone(gameState.currentDroneMidi, 0.85);
 
