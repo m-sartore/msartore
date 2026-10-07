@@ -190,8 +190,8 @@
       }
     }
 
-    /* GRAFICA MODALITÀ CREAZIONE DOCENTE */
-    body.creator-mode .round-note-btn:not(.teacher-selected):not(.drone-note) {
+    /* GRAFICA MODALITÀ CREAZIONE DOCENTE: limitata ESCLUSIVAMENTE alla griglia di gioco */
+    body.creator-mode .ear-grid .round-note-btn:not(.teacher-selected):not(.drone-note) {
       opacity: 0.20 !important;
       filter: grayscale(100%) !important;
       box-shadow: none !important;
@@ -548,18 +548,12 @@
       </div>
       
       <p class="text-[11px] text-white/60 mb-2 text-center leading-tight shrink-0">
-        Tocca le note per attivarle o spegnerle.
+        Tocca le note per accenderle con la loro palette o spegnerle.
       </p>
 
-      <!-- RUOTA CIRCOLARE DELLE QUINTE CON PALLINI BRAND -->
-      <div id="circle-of-fifths-container" class="relative w-[284px] h-[284px] mx-auto my-1 flex items-center justify-center shrink-0">
-        <!-- Badge centrale riassuntivo -->
-        <div class="absolute inset-0 m-auto w-24 h-24 rounded-full flex flex-col items-center justify-center pointer-events-none border border-white/10 bg-[#111D23]/85 backdrop-blur-sm z-10 shadow-lg">
-          <span class="text-[9px] font-mono tracking-wider text-white/50 uppercase">Tonalità</span>
-          <span id="fifths-center-count" class="text-2xl font-black text-ochreBand">1</span>
-          <span class="text-[9px] text-white/40 font-mono">attive</span>
-        </div>
-        <!-- I 12 pallini vengono generati dinamicamente posizionati a 360° -->
+      <!-- RUOTA CIRCOLARE DELLE QUINTE PULITA (SENZA PALLINO CENTRALE) -->
+      <div id="circle-of-fifths-container" class="relative w-[280px] h-[280px] mx-auto my-1 flex items-center justify-center shrink-0">
+        <!-- I 12 cerchi con palette del brand vengono generati qui -->
       </div>
 
       <button id="confirm-keys-btn" type="button" class="w-full mt-3 py-2.5 rounded-xl bg-tealBand text-white font-extrabold text-xs uppercase hover:brightness-110 active:scale-95 transition-all shadow-md shrink-0">
@@ -740,7 +734,7 @@
       'VIP-EAR-TRAIN'
     ];
 
-    // Struttura del Ciclo delle Quinte (disposte in senso orario a partire dalle ore 12:00)
+    // Struttura del Ciclo delle Quinte (orario da ore 12:00)
     const CIRCLE_OF_FIFTHS = [
       { midi: 60, name: 'Do', sub: '' },               // 12:00
       { midi: 67, name: 'Sol', sub: '' },              // 1:00
@@ -817,7 +811,6 @@
         return this.ctx;
       }
 
-      // Sblocco hardware esplicito per browser iOS Safari e Android Chrome
       unlockHardwareAudio() {
         const ctx = this.ensureContextRunning();
         if (!ctx) return;
@@ -1153,7 +1146,6 @@
 
       const audio = new AudioEngine();
 
-      // Risveglio e sblocco hardware audio continuo su tutti gli eventi utente
       const handleUserAudioTouch = () => {
         audio.unlockHardwareAudio();
         audio.ensureContextRunning();
@@ -1162,7 +1154,6 @@
         document.addEventListener(evt, handleUserAudioTouch, { passive: true });
       });
 
-      // Risveglio immediato dell'audio al ritorno da background / sblocco schermo
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
           audio.ensureContextRunning();
@@ -1311,10 +1302,10 @@
 
       let teacherSelectedNoteIds = new Set(['btn-3b', 'btn-3', 'btn-5']);
       let teacherDroneNoteIds = new Set(['btn-1']);
-      let teacherSelectedKeyMidis = new Set([60]); // Di default: Do (60)
+      let teacherSelectedKeyMidis = new Set([60]);
       const creatorDroneWaves = new Map();
 
-      // In modalità creazione docente: SEMPRE Do Maggiore (C4 = 60)
+      // In creazione esercizio il docente sente sempre e solo in Do Maggiore (C4 = 60)
       function getCreatorBaseMidi() {
         return 60;
       }
@@ -1322,7 +1313,7 @@
       function getEffectiveKeyRoot(midiVal) {
         let midi = parseInt(midiVal, 10) || 60;
         if (midi >= 67) {
-          midi -= 12; // Da Sol in poi va all'ottava inferiore
+          midi -= 12; // Da Sol a Si scala all'ottava inferiore
         }
         return midi;
       }
@@ -1394,7 +1385,6 @@
       const closeKeysModalBtn = document.getElementById('close-keys-modal-btn');
       const confirmKeysBtn = document.getElementById('confirm-keys-btn');
       const circleOfFifthsContainer = document.getElementById('circle-of-fifths-container');
-      const fifthsCenterCount = document.getElementById('fifths-center-count');
 
       const creatorCountSelect = document.getElementById('creator-count-select');
       const creatorDroneBtn = document.getElementById('creator-drone-btn');
@@ -1458,22 +1448,18 @@
       });
 
       /* ================================================================ */
-      /* COSTRUZIONE DINAMICA DELLA RUOTA DEL CICLO DELLE QUINTE         */
+      /* RUOTA CIRCOLARE DELLE QUINTE CON PALETTE BRAND VIVIDA            */
       /* ================================================================ */
       function renderCircleOfFifths() {
-        // Rimuove eventuali cerchi precedenti lasciando intatto il badge centrale
-        const oldBtns = circleOfFifthsContainer.querySelectorAll('.fifths-circle-btn');
-        oldBtns.forEach(b => b.remove());
+        circleOfFifthsContainer.innerHTML = '';
 
-        const total = 12;
-        const R = 110; // Raggio del cerchio in pixel
-        const centerX = 142; // Centro del container (284 / 2)
-        const centerY = 142;
-        const btnRadius = 22; // Raggio dei cerchi (diametro 44px)
+        const R = 108; // Raggio cerchio in pixel
+        const centerX = 140;
+        const centerY = 140;
+        const btnRadius = 22; // Raggio pulsanti (diametro 44px)
 
         CIRCLE_OF_FIFTHS.forEach((item, idx) => {
-          // Angolo di 30° per ogni spicchio, partendo da ore 12:00 (-90°)
-          const angleDeg = (idx * 30) - 90;
+          const angleDeg = (idx * 30) - 90; // Inizia a ore 12:00 (-90°)
           const angleRad = angleDeg * (Math.PI / 180);
 
           const posX = centerX + (R * Math.cos(angleRad)) - btnRadius;
@@ -1481,41 +1467,52 @@
 
           const isSelected = teacherSelectedKeyMidis.has(item.midi);
 
-          // Calcola il colore brand per ciascuna nota
+          // Calcola il colore identico alla palette degli intervalli
           const fraction = ((item.midi - 60 + 12) % 12) / 12;
           const colorObj = getColorForFraction(fraction);
 
           const btn = document.createElement('button');
           btn.type = 'button';
-          btn.className = 'fifths-circle-btn round-note-btn text-white absolute';
+          btn.className = 'fifths-key-node text-white font-sans font-extrabold flex flex-col items-center justify-center cursor-pointer select-none';
+          
           btn.style.width = '44px';
           btn.style.height = '44px';
+          btn.style.borderRadius = '9999px';
+          btn.style.position = 'absolute';
           btn.style.left = `${posX}px`;
           btn.style.top = `${posY}px`;
-          btn.style.position = 'absolute';
           btn.style.margin = '0';
-          btn.style.transformOrigin = 'center center';
+          btn.style.transition = 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)';
           btn.dataset.midi = String(item.midi);
 
-          // Stile attivo o spento in penombra
+          // Stile selezionato vs spento chiarissimo e netto
           if (isSelected) {
             btn.style.backgroundColor = colorObj.rgb;
-            btn.style.borderColor = 'rgba(255, 255, 255, 0.9)';
+            btn.style.border = '2.5px solid rgba(255, 255, 255, 0.95)';
+            btn.style.boxShadow = `0 4px 16px ${colorObj.rgba(0.75)}`;
             btn.style.opacity = '1';
             btn.style.filter = 'none';
-            btn.style.boxShadow = `0 4px 14px ${colorObj.rgba(0.6)}`;
+
+            // Contrasto testo nitido per colori caldi
+            if (fraction >= 0.40 && fraction <= 0.65) {
+              btn.style.color = '#121F24';
+            } else {
+              btn.style.color = '#FFFFFF';
+            }
           } else {
-            btn.style.backgroundColor = '#131F25';
-            btn.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-            btn.style.opacity = '0.22';
-            btn.style.filter = 'grayscale(100%)';
+            // Stato grigio spento
+            btn.style.backgroundColor = '#152229';
+            btn.style.border = '2px solid rgba(255, 255, 255, 0.14)';
             btn.style.boxShadow = 'none';
+            btn.style.opacity = '0.28';
+            btn.style.filter = 'grayscale(100%)';
+            btn.style.color = 'rgba(255, 255, 255, 0.4)';
           }
 
           if (item.sub) {
             btn.innerHTML = `
               <span class="text-[10px] leading-none block font-extrabold tracking-tight">${item.name}</span>
-              <span class="text-[8px] leading-none block opacity-80 font-bold mt-0.5">${item.sub}</span>
+              <span class="text-[8px] leading-none block font-bold mt-0.5 opacity-80">${item.sub}</span>
             `;
           } else {
             btn.innerHTML = `<span class="text-xs sm:text-sm font-extrabold tracking-tight leading-none">${item.name}</span>`;
@@ -1525,17 +1522,16 @@
             audio.ensureContextRunning();
             const midiVal = parseInt(btn.dataset.midi, 10);
 
+            // Suona esattamente la nota della tonalità cliccata!
+            const noteToHear = getEffectiveKeyRoot(midiVal);
+            audio.previewNote(noteToHear, 1.0);
+
             if (teacherSelectedKeyMidis.has(midiVal)) {
               if (teacherSelectedKeyMidis.size > 1) {
                 teacherSelectedKeyMidis.delete(midiVal);
-              } else {
-                // Almeno una tonalità deve rimanere attiva
-                audio.previewNote(getCreatorBaseMidi(), 0.8);
               }
             } else {
               teacherSelectedKeyMidis.add(midiVal);
-              // L'ascolto di anteprima del docente rimane sempre in Do
-              audio.previewNote(getCreatorBaseMidi(), 0.8);
             }
 
             renderCircleOfFifths();
@@ -1544,8 +1540,6 @@
 
           circleOfFifthsContainer.appendChild(btn);
         });
-
-        fifthsCenterCount.textContent = String(teacherSelectedKeyMidis.size);
       }
 
       function updateKeysButtonLabel() {
@@ -1812,7 +1806,6 @@
             creatorTitleInput.value = l.title;
             creatorCountSelect.value = String(l.notesCount || 10);
             
-            // Ripristina tonalità salvate
             teacherSelectedKeyMidis.clear();
             if (Array.isArray(l.keys) && l.keys.length > 0) {
               l.keys.forEach(k => teacherSelectedKeyMidis.add(parseInt(k, 10)));
@@ -1975,7 +1968,7 @@
       }
 
       /* ================================================================ */
-      /* CONTROLLO LINK ALLIEVO PRO: PERSISTENZA GARANTITA SENZA TIMEOUT  */
+      /* CONTROLLO LINK ALLIEVO PRO: PERSISTENZA GARANTITA                */
       /* ================================================================ */
       async function checkUrlForProStudent() {
         const params = new URLSearchParams(window.location.search);
@@ -1986,7 +1979,6 @@
         const titleParam = params.get('title');
         const countParam = params.get('count');
 
-        // Se il link contiene il parametro docente e le note dell'esercizio, l'allievo è PRO in modo garantito!
         if (docenteParam) {
           gameState.isProStudent = true;
           document.body.classList.add('student-pro-mode');
@@ -2002,7 +1994,6 @@
           proBanner.classList.remove('hidden');
           freeNotice.classList.add('hidden');
 
-          // Recupera il nome docente dalla memoria locale se già salvato in precedenza
           const cachedTeacher = localStorage.getItem('ms_saved_student_teacher_' + docenteParam);
           if (cachedTeacher) {
             gameState.teacherCode = cachedTeacher;
@@ -2065,7 +2056,6 @@
 
           applyAdaptiveGridLayout();
 
-          // Interroga il foglio Google SOLO per aggiornare il nome del docente in background (non blocca MAI l'esercizio!)
           verifyLicenseCode(docenteParam).then(licCheck => {
             if (licCheck && licCheck.valid && licCheck.teacher) {
               gameState.teacherCode = licCheck.teacher;
